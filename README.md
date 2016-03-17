@@ -1,7 +1,9 @@
 # CS171 Team Project
 Final team project for CS171 Spring 2016
 
-Team:
+"The Team that has no name"
+
+### Team:
 
 Dion Hagan
 
@@ -11,7 +13,25 @@ Malcolm Mason Rodriguez
 
 David Wihl
 
-Current Proposal:
+# Current Proposal:
+
+(Draft for review) [Proposal](proposal.md)
+
+# Where to Find Things:
+
+[Trello Board for this project](https://trello.com/b/zguJ72GM)
+
+[Current Public Site](http://www.chanceme.info/) (that we will rip and replace)
+
+[Short Slide Deck](https://docs.google.com/presentation/d/1-M2xu4Usn6qCjNl93VRYZrHv3u72vqYo7gsnn-YyYDA/edit?usp=sharing) that gives an overview.
+
+Way too long [business plan (incl. personas)](https://docs.google.com/document/d/1mQBaiMpOU0Eh4kdLWQTzs3X2g4Pm-BecExju6vv58gU/edit?usp=sharing)
+
+Prior [CS109 github site](https://github.com/wihl/cs109-groupproj-college) and [Project Description](http://project.chanceme.info)
+
+[Responsive Design Prototype](https://github.com/wihl/chanceme-site/tree/gh-pages)
+
+[Heroku Dashboard](https://dashboard.heroku.com/apps/boiling-forest-8250/resources) (where the current Python-based backend lives). Ask David for access - you'll need a Heroku account.
 
 # git Notes
 
