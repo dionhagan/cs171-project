@@ -1,4 +1,10 @@
 "use strict";
+// Class to store user input
+function FormData(sat) {
+  /* initial user input with rational defaults */
+  this.sat = parseInt(sat) || 1200;
+  return this;
+}
 
 // From http://stackoverflow.com/questions/8674618/adding-options-to-select-with-javascript
 // Populate drop downs with a set of values
@@ -29,3 +35,21 @@ $(document).ready(function() {
   populateSelect('apnum',0,10);
   populateSelect('sat2ave',0,10);
 });
+
+// Be responsive
+window.addEventListener("resize", function(){
+  d3.select("body").selectAll("svg").remove();
+  updatePredictionViz();
+}, false);
+
+document.getElementById("btn-predict").onclick = function() {
+  // get form data
+  var formData = new FormData(
+    document.getElementById("sat").value
+  );
+
+  // call the prediction
+  p171.predictions = predict(formData);
+  console.log(p171.predictions);
+  updatePredictionViz();
+}
