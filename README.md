@@ -1,7 +1,7 @@
 # CS171 Team Project
 Final team project for CS171 Spring 2016
 
-"The Team that has no name"
+Team Braavos
 
 ### Team:
 
@@ -13,13 +13,13 @@ Malcolm Mason Rodriguez
 
 David Wihl
 
-# Current Proposal:
-
-(Draft for review) [Proposal](proposal.md)
-
 # Where to Find Things:
 
 [Trello Board for this project](https://trello.com/b/zguJ72GM)
+
+[Slack Channel](https://braavos171.slack.com/messages/general/)
+
+[Project Proposal](proposal.md) (submitted 3/21/16)
 
 [Current Public Site](http://www.chanceme.info/) (that we will rip and replace)
 
