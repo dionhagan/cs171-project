@@ -1,0 +1,280 @@
+/* CS171, Team Braavos */
+
+@import "chanceme/variables";
+@import "chanceme/mixins";
+
+/*** Main Styles ***/
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  height: 100%;
+  font-size: 100%;
+  font-family: "palatino linotype","Helvetica Neue",Helvetica,$safeFonts;
+}
+
+
+h3, label, button {
+  @extend %heading-fonts;
+}
+
+h1 {
+  @extend h3;
+  color: black;
+  margin-left: auto;
+  margin-right: auto;
+  text-transform: uppercase;
+  width: 66%;
+}
+
+.wrapper {
+  width: 97%;
+  max-width: 1200px;
+  margin: 0  auto;
+  float: none;
+  background-color: #fff;
+}
+
+h3 {
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
+.wrapper {
+  img {
+    @include img-defaults;
+  }
+
+  /* For non-"picture" images */
+  .img-responsive {
+    @include img-defaults(responsive);
+  }
+}
+
+footer {
+  position: absolute;
+  width:100%;
+  clear: both;
+  padding: 2em 0;
+  margin-top: 1em;
+  color: #999;
+  font-size: 0.8em;
+  background-color: transparentize($shadowColor,0.8);
+  text-align: center;
+}
+
+/*** Panel ***/
+.panel {
+  font-size: 0.9em;
+  box-shadow: gray 3px 5px 10px;
+
+  .fieldset {
+    margin-bottom: 0.7em;
+  }
+
+  label {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 0.5em;
+    text-shadow: rgba(220, 20, 60, 0.2) 1px 1px 0, rgba(220, 20, 60, 0.2) 1px 1px 0, rgba(220, 20, 60, 0.2) 2px 2px 0;
+  }
+
+  li {
+    list-style: none;
+    select {
+      box-shadow: crimson 1px 1px 3px;
+    }
+    &::after {
+      @include row-after;
+    }
+  }
+}
+
+.panel-heading {
+  background-color: black;
+}
+
+.panel-title {
+  color:white;
+  text-align: center;
+  margin: 0;
+  padding: 1em;
+  background-color: black;
+}
+
+.panel-footer {
+  text-align: center;
+  margin-top: 1em;
+  padding: 0.25em;
+
+  button {
+    box-shadow: crimson 2px 5px 10px;
+  }
+}
+
+/*** Navigation ***/
+nav {
+  background-color: darkred;
+  @extend %heading-fonts;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    overflow: auto;
+
+    a {
+      color: saturate(white, 100%);
+      text-decoration: none;
+      text-shadow: 1px 2px 2px black;
+      padding: {
+        left: 1.5em;
+        top: 0.75em;
+        bottom: 0.75em;
+      }
+      float: left;
+
+      &:hover {
+        color: #a16100;
+      }
+    }
+  }
+}
+
+
+/*** Grid system - 6 columns ***/
+.row::after {
+    @include row-after;
+}
+[class*='col-'] {
+  margin-left: 4%;
+  float: left;
+  min-height: 1px;
+}
+
+.col-1 {
+  width: 12%;
+}
+.col-2 {
+  width: 28%;
+}
+.col-3 {
+  width: 44%;
+}
+.col-4 {
+  width: 60%;
+}
+.col-5 {
+  width: 76%;
+}
+.col-6 {
+  width: 92%;
+}
+.col-offset-1 {
+  margin-left: 20%;
+}
+.col-offset-2 {
+  margin-left: 36%;
+}
+.col-offset-3 {
+  margin-left: 52%;
+}
+
+/*** Media queries ***/
+
+/* Small mobile portrait Screen Sizes */
+@media only screen and (max-width: $smallPixelMax) {
+  [class*='col-'] {
+    width: 100%;
+    float: none;
+    margin-left: 0;
+  }
+  .col-4-6 {
+    width: 100%;
+  }
+}
+
+/* Medium screen width for larger phones and tablets */
+@media only screen and
+  (min-width: ($smallPixelMax + 1)) and (max-width: $mediumPixelMax)  {
+
+  .col-1,
+  .col-2,
+  .col-3 {
+    width: 44%;
+  }
+  .col-4,
+  .col-5,
+  .col-6 {
+    width: 92%;
+  }
+
+  .col-offset-1,
+  .col-offset-2,
+  .col-offset-3 {
+    margin-left: 4%
+  }
+  .col-4-6 {
+    width: 92%;
+  }
+}
+
+@media only screen and
+  (min-width: ($mediumPixelMax + 1))  {
+    .col-4-6 {
+      width: 60%;
+    }
+}
+
+/*** Headers ***/
+header h1 {
+  text-align: center;
+  color: white;
+  text-shadow: 2px 5px 5px black;
+}
+
+/* Small header */
+@media only screen and (max-width: $smallPixelMax)  {
+  header {
+    background: url(../img/gates-sm.jpg) no-repeat;
+    width: 100%;
+    height: 6em;
+    h1 {
+      padding: 0.75em;
+      font-size: 1.25em;
+      margin-top:0;
+    }
+  }
+}
+
+/* Medium header */
+@media only screen and (min-width: ($smallPixelMax + 1)) and (max-width: $mediumPixelMax)  {
+  header {
+    background: url(../img/gates-lg.jpg) no-repeat;
+    height: 10em;
+    h1 {
+      padding: 1em;
+      font-size: 1.4em;
+      margin-top: 1.25em;
+    }
+  }
+}
+
+/* Large header */
+@media only screen and (min-width: ($mediumPixelMax + 1))  {
+  header {
+    background: url(../img/gates-lg.jpg) no-repeat;
+    height: 12em;
+    h1 {
+      padding: 1.25em;
+      font-size: 2em;
+      margin-top: 1em;
+    }
+  }
+}

@@ -1,0 +1,20 @@
+@mixin img-defaults($imgtype: nonresponsive) {
+  height: auto;
+  display: block;
+  @if $imgtype == nonresponsive {
+    width: auto;
+  } @else {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+@mixin row-after {
+  content:"";
+  display: table;
+  clear:both;
+}
+
+%heading-fonts {
+  font-family: "Roboto", "League Spartan", "Avenir Black", "futura_md_btbold", $safeFonts;
+}

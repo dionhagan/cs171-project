@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+
+  <!-- Favicon -->
+  <!-- Generated from http://www.favicon-generator.org/ -->
+  <link rel="apple-touch-icon" sizes="57x57" href="favicons/apple-touch-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="favicons/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="favicons/apple-touch-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="favicons/apple-touch-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="favicons/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="favicons/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="favicons/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon-180x180.png">
+  <link rel="icon" type="image/png" href="favicons/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="favicons/favicon-194x194.png" sizes="194x194">
+  <link rel="icon" type="image/png" href="favicons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/png" href="favicons/android-chrome-192x192.png" sizes="192x192">
+  <link rel="icon" type="image/png" href="favicons/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="favicons/manifest.json">
+  <link rel="mask-icon" href="favicons/safari-pinned-tab.svg">
+  <link rel="shortcut icon" href="favicons/favicon.ico">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="msapplication-TileImage" content="favicons/mstile-144x144.png">
+  <meta name="msapplication-config" content="favicons/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/chanceme.min.css">
+  <title>ChanceMe - College Admissions Predictions</title>
+</head>
+
+<body>
+  <div class="wrapper">
+    <!-- Header -->
+    <div class="row">
+      <header class="col-6">
+        <h1>Learn Your Chances of Getting into an Elite College</h1>
+      </header>
+    </div>
+
+    <!--- Nav -->
+    <div class="row">
+      <nav class="col-6">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="howitworks.html">How It Works</a></li>
+          <li><a href="testpage.html">Test Page</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Main area -->
+    <div class="row">
+      <div class="col-6">
+        <p>
+          We have analyzed the acceptance results for 5000 students making 15000 college applications to the top 25 U.S. Colleges. From this we have built a series of statistical models to predict the probabilities of being accepted at an elite school.
+          <a href="howitworks.html">Learn more</a>
+        </p>
+      </div>
+    </div>
+    <!-- User input panel -->
+    <div class="row">
+      <div class="col-offset-1 col-4-6">
+        <div class="panel">
+          <div class="panel-heading">
+            <h3 class="panel-title">Try it now</h3>
+          </div>
+          <div class="fieldset">
+            <ul>
+              <li>
+                <label for="sat" class="col-3">SAT Composite Score:</label>
+                <select class="form-control col-3" id="sat">
+                  <option value=0>I have not taken the SAT...</option>
+                </select>
+              </li>
+              <li>
+                <label for="act" class="col-3">ACT Composite Score:</label>
+                <select class="form-control col-3" id="act">
+                  <option value=0>I have not taken the ACT...</option>
+                </select>
+              </li>
+              <li>
+                <label for="gpa" class="col-3">GPA (unweighted):</label>
+                <select class="form-control col-3" id="gpa">
+                  <option>4.0</option>
+                  <option>3.9</option>
+                  <option>3.8</option>
+                  <option>3.7</option>
+                  <option>3.6</option>
+                  <option>3.5</option>
+                  <option>3.4</option>
+                  <option>3.3</option>
+                  <option>3.2</option>
+                  <option>3.1</option>
+                  <option>3.0</option>
+                  <option>2.9</option>
+                  <option>2.8</option>
+                  <option>2.7</option>
+                  <option>2.6</option>
+                  <option>2.5</option>
+                  <option>2.4</option>
+                  <option>2.3</option>
+                  <option>2.2</option>
+                  <option>2.1</option>
+                  <option>2.0</option>
+                  <option value="1.9">1.9 or lower</option>
+                </select>
+              </li>
+              <li>
+                <label for="apnum" class="col-3">Number of AP exams taken:</label>
+                <select class="form-control col-3" id="apnum">
+                </select>
+              </li>
+              <li>
+                <label for="apave" class="col-3">Average AP score</label>
+                <select class="form-control col-3" id="apave">
+                  <option>0.0</option>
+                  <option>0.1</option>
+                  <option>0.2</option>
+                  <option>0.3</option>
+                  <option>0.4</option>
+                  <option>0.5</option>
+                  <option>0.6</option>
+                  <option>0.7</option>
+                  <option>0.8</option>
+                  <option>0.9</option>
+                  <option>1.0</option>
+                  <option>1.1</option>
+                  <option>1.2</option>
+                  <option>1.3</option>
+                  <option>1.4</option>
+                  <option>1.5</option>
+                  <option>1.6</option>
+                  <option>1.7</option>
+                  <option>1.8</option>
+                  <option>1.9</option>
+                  <option>2.0</option>
+                  <option>2.1</option>
+                  <option>2.2</option>
+                  <option>2.3</option>
+                  <option>2.4</option>
+                  <option>2.5</option>
+                  <option>2.6</option>
+                  <option>2.7</option>
+                  <option>2.8</option>
+                  <option>2.9</option>
+                  <option>3.0</option>
+                  <option>3.1</option>
+                  <option>3.2</option>
+                  <option>3.3</option>
+                  <option>3.4</option>
+                  <option>3.5</option>
+                  <option>3.6</option>
+                  <option>3.7</option>
+                  <option>3.8</option>
+                  <option>3.9</option>
+                  <option>4.0</option>
+                  <option>4.1</option>
+                  <option>4.2</option>
+                  <option>4.3</option>
+                  <option>4.4</option>
+                  <option>4.5</option>
+                  <option>4.6</option>
+                  <option>4.7</option>
+                  <option>4.8</option>
+                  <option>4.9</option>
+                  <option>5.0</option>
+                </select>
+              </li>
+              <li>
+                <label for="sat2ave" class="col-3">Number of SAT Subject tests taken:</label>
+                <select class="form-control col-3" id="sat2ave">
+                </select>
+              </li>
+              <li>
+                <label for="hs" class="col-3">What type of high school did you attend?</label>
+                <select class="form-control col-3" id="hs">
+                  <option value="0" selected>Public</option>
+                  <option value="1">Private</option>
+                  <option value="2">Parochial</option>
+                  <option value="3">Homeschool</option>
+                </select>
+              </li>
+              <li>
+                <label for="gender" class="col-3">What gender do you identify as?</label>
+                <select class="form-control col-3" id="gender">
+                  <option value="1" selected>Female</option>
+                  <option value="-1">Male</option>
+                  <option value="0">Other</option>
+                </select>
+              </li>
+              <li>
+                <label for="race" class="col-3">What ethnicity do you identify as?</label>
+                <select class="form-control col-3" id="race">
+                  <option value="1">African American/Black</option>
+                  <option value="2">Hispanic/Latino</option>
+                  <option value="0">Asian</option>
+                  <option value="-1">Middle Eastern</option>
+                  <option value="3">Pacific Islander</option>
+                  <option value="4">Native American</option>
+                  <option value="-2" selected>White</option>
+                  <option value="5">Other</option>
+                </select>
+              </li>
+              <li>
+                <label for="college" class="col-3">Which college are you applying to:</label>
+                <select class="form-control col-3" id="college">
+                  <option value="Brown">Brown</option>
+                  <option value="CalTech">CalTech</option>
+                  <option value="CarnegieMellon">CarnegieMellon</option>
+                  <option value="Columbia">Columbia</option>
+                  <option value="Cornell">Cornell</option>
+                  <option value="Dartmouth">Dartmouth</option>
+                  <option value="Duke">Duke</option>
+                  <option value="Emory">Emory</option>
+                  <option value="Georgetown">Georgetown</option>
+                  <option value="Harvard">Harvard</option>
+                  <option value="JohnsHopkins">JohnsHopkins</option>
+                  <option value="MIT">MIT</option>
+                  <option value="Northwestern">Northwestern</option>
+                  <option value="NotreDame">NotreDame</option>
+                  <option value="Princeton">Princeton</option>
+                  <option value="Rice">Rice</option>
+                  <option value="Stanford">Stanford</option>
+                  <option value="UCB">UCB</option>
+                  <option value="UChicago">UChicago</option>
+                  <option value="UCLA">UCLA</option>
+                  <option value="UPenn">UPenn</option>
+                  <option value="USC">USC</option>
+                  <option value="Vanderbilt">Vanderbilt</option>
+                  <option value="WashU">WashU</option>
+                  <option value="Yale">Yale</option>
+                </select>
+              </li>
+            </ul>
+          </div>
+          <div class="panel-footer col-6">
+            <button id="btn-predict" type="submit" class="btn btn-default">What are my chances?</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prediction Visualization -->
+    <div class="row">
+      <div class="col-6">
+        <div id="prediction-viz"></div>
+      </div>
+    </div>
+
+    <!-- filler and footer -->
+    <div id="wrapper_footer"></div>
+  </div>
+  <footer id="footer">
+    <a href="http://www.cs171.org/">CS171</a> Team Braavos
+  </footer>
+
+  <!-- Use jQuery from CDN -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="js/d3.min.js"></script>
+  <script src="js/globals.js"></script>
+  <script src="js/form.js"></script>
+  <script src="js/predict.js"></script>
+  <script src="js/predictViz.js"></script>
+</body>
+
+</html>
