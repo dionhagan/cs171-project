@@ -1,10 +1,4 @@
 "use strict";
-// Class to store user input
-function FormData(sat) {
-  /* initial user input with rational defaults */
-  this.sat = parseInt(sat) || 1200;
-  return this;
-}
 
 // From http://stackoverflow.com/questions/8674618/adding-options-to-select-with-javascript
 // Populate drop downs with a set of values
@@ -44,9 +38,13 @@ window.addEventListener("resize", function(){
 
 document.getElementById("btn-predict").onclick = function() {
   // get form data
-  var formData = new FormData(
-    document.getElementById("sat").value
-  );
+  var formData = {}
+  var form = $('div.fieldset ul li select')
+  
+  for (var i=0; i<form.length; i++) {
+    var input = form[i];
+    formData[input.id] = input.value;
+  }
 
   // call the prediction
   p171.predictions = predict(formData);
