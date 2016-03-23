@@ -268,8 +268,71 @@
   <script src="js/d3.min.js"></script>
   <script src="js/globals.js"></script>
   <script src="js/form.js"></script>
+  <script src="js/randomforest.js"></script>
+    <script>
+    d3.csv('../webservice/collegedata_normalized.csv', function (data){
+      
+        console.log(data);
+        
+        // PREPROCESSING
+        
+        // fill missing values
+        var cols = Object.keys(data);
+        var medians = {};
+        
+        for (var j = 0; j < cols.length; j++) {
+            // get current property median
+            var med = d3.median(data, function (d) {
+                return d[cols[j]];
+            });
+            
+            console.log()
+            // add to medians object
+            medians[cols[j]] = med;
+        }
+        
+        console.log(medians)
+        
+        
+        // train-test split
+        var train = [];
+        var test = [];
+
+        var split = Math.round(+data.length * .7);
+
+        for (var i = 0; i < data.length; i++) {
+            if (i <= split) {
+            train.push(data[i]);
+            }
+            else {
+            test.push(data[i]);
+            }
+        }
+
+        //console.log(train);
+        //console.log(test);
+
+        // // initialize classifier
+        // var forest = new forestjs.RandomForest();
+
+        // // set Options
+        // var options = {};
+        // options.numTrees = 100; // defaults
+        // options.maxDepth = 4;
+        // options.numTries = 10;
+
+        // // extract label column
+        // var labels = train.acceptStatus;
+        // delete train.acceptStatus;
+
+        // // train classifier
+        // forest.train(train, labels, options);
+
+  });
+  </script>
   <script src="js/predict.js"></script>
   <script src="js/predictViz.js"></script>
+  
 </body>
 
 </html>

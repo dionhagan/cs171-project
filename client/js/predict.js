@@ -2,6 +2,7 @@
 
 function predict(formData) {
   // TODO: call webservice or JavaScript Random Forest
+  
 
   // XXX: mock prediction generator. Remove later.
   var predictions = [
