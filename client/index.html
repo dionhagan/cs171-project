@@ -276,23 +276,47 @@
         
         // PREPROCESSING
         
+        // transform all quantitative variables
+        data.forEach(function (d) {
+            d.AP = +d.AP;
+            d.GPA = +d.AP;
+            d.GPA_w = +d.GPA_w;
+            d.MinorityGender = +d.MinorityGender;
+            d.SATsubject = +d.SATsubject;
+            d.acceptStatus = +d.acceptStatus;
+            d.acceptrate = +d.acceptrate;
+            d.admissionstest = +d.admissionstest;
+            d.alumni = +d.alumni;
+            d.averageAP = +d.averageAP;
+            d.earlyAppl = +d.earlyAppl;
+            d.female = +d.female;
+            d.finAidPct = +d.finAidPct;
+            d.instatePct = +d.instatePct;
+            d.intendedgradyear = +d.intendedgradyear;
+            d.international = +d.international;
+            d.outofstate = +d.outofstate;
+            d.public = +d.public;
+            d.schooltype = +d.schooltype;
+            d.size = +d.size;
+            d.sports = +d.sports; 
+        });
+        
         // fill missing values
-        var cols = Object.keys(data);
+        var cols = Object.keys(data[0]);
         var medians = {};
         
         for (var j = 0; j < cols.length; j++) {
+            
             // get current property median
             var med = d3.median(data, function (d) {
                 return d[cols[j]];
             });
             
-            console.log()
             // add to medians object
             medians[cols[j]] = med;
         }
         
-        console.log(medians)
-        
+        console.log(medians);
         
         // train-test split
         var train = [];
@@ -309,25 +333,34 @@
             }
         }
 
-        //console.log(train);
-        //console.log(test);
+        console.log(train.length);
+        console.log(test.length);
 
-        // // initialize classifier
-        // var forest = new forestjs.RandomForest();
+        // initialize classifier
+        var forest = new forestjs.RandomForest();
 
-        // // set Options
-        // var options = {};
-        // options.numTrees = 100; // defaults
-        // options.maxDepth = 4;
-        // options.numTries = 10;
+        // set Options
+        var options = {};
+        options.numTrees = 100; // defaults
+        options.maxDepth = 4;
+        options.numTries = 10;
 
-        // // extract label column
-        // var labels = train.acceptStatus;
-        // delete train.acceptStatus;
+        // extract label column
+        var labels = [];
+        train.forEach(function (d) {
+            labels.push(d.acceptStatus);
+            delete d.acceptStatus;
+        });
+        console.log(labels);
+        console.log(train);
 
-        // // train classifier
-        // forest.train(train, labels, options);
-
+        // train classifier
+        forest.train(train, labels, options);
+        
+        var pred = forest.predictOne(test[0]);
+        var preds = forest.predict(test);
+        
+        console.log(preds);
   });
   </script>
   <script src="js/predict.js"></script>
