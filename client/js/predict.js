@@ -1,15 +1,5 @@
 "use strict";
 
-queue()
-    .defer(d3.csv, "data/college_data.csv")
-    .defer(d3.csv, "data/collegelist.csv")
-    .await(ready);
-
-function ready(err, collegeData, collegeList) {
-  console.log(collegeData);
-  console.log(collegeList);
-}
-
 function predict(formData) {
   // TODO: call webservice or JavaScript Random Forest
   console.log(formData);
