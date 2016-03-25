@@ -19,4 +19,6 @@ function storeData(err, collegeData, collegeList) {
     var college = collegeList[i];
     p171.colleges[college.name] = college;
   }
+  // TODO: populate drop down list of colleges from this data (currently hard coded)
+
 }
