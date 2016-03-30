@@ -351,13 +351,14 @@
             labels.push(d.acceptStatus);
             delete d.acceptStatus;
         });
+        
         console.log(labels);
         console.log(train);
 
         // train classifier
         forest.train(train, labels, options);
-        
-        var pred = forest.predictOne(test[0]);
+    
+        // predict on test data
         var preds = forest.predict(test);
         
         console.log(preds);
