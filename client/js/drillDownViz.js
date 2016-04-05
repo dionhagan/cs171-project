@@ -1,19 +1,28 @@
 var Scatter = function(_parentElement) {
-  this.parentElement = _parentElement;
+  this.parentElement = d3.select("#" + _parentElement);
+  this.plotElement = this.parentElement.select("#plot");
+  this.selectorsElement = this.parentElement.select("#selectors")
+    .style({
+      position: "relative",
+      float: "right"
+    });
+  console.log(this.selectorsElement)
   this.data = p171.data.raw;
-  this.addSelectors();
-  this.initVis();
+  this.createSelectors();
+  this.createFilters();
+  this.initVis();  
+  
 }
 
 Scatter.prototype.initVis = function() {
   var vis = this;
 
-  vis.margin = p171.margin
+  vis.margin = p171.margin;
   vis.width = 800 - vis.margin.left - vis.margin.right,
   vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
-  vis.svg = d3.select("#" + vis.parentElement).append("svg")
+  vis.svg = vis.plotElement.append("svg")
       .attr("width", vis.width + vis.margin.left + vis.margin.right)
       .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
     .append("g")
@@ -25,13 +34,13 @@ Scatter.prototype.initVis = function() {
   vis.y = d3.scale.linear()
     .range([vis.height, 0]);
 
-  vis.svg.append("g")
+  vis.xAxis = vis.svg.append("g")
     .attr({
       class: "x-axis",
       transform: "translate(0,"+vis.height+")"
     })
 
-  vis.svg.append("g")
+  vis.yAxis = vis.svg.append("g")
     .attr({
       class: "y-axis"
     })
@@ -42,14 +51,37 @@ Scatter.prototype.initVis = function() {
 Scatter.prototype.updateVis = function() {
   var vis = this;
 
+  // Filter data based on user selections
   var categoryX = vis.xCategory.property('value');
   var categoryY = vis.yCategory.property('value');
   var college = vis.collegeSelector.property('value');
 
+  console.log('Updating Visualization');
+
   vis.data = p171.data.raw.filter(function(d){
-    return college == 'All' ? true : d.collegeID == college;
+
+    var collegeFilter = college == 'All' ? true : d.collegeID == college;
+    var factorFilter = true;
+    var filters = vis.filters;
+
+    for (factor in vis.filters) {
+      for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
+        var subFactor = p171.data.nomFactors[factor][subFactorIndex];
+        var isChecked = vis.filters[factor][subFactor];
+        if (!isChecked) {
+          if (subFactorIndex==0 && d[factor]==1) {
+            factorFilter = false
+          } else if (subFactorIndex==1 && d[factor]==-1) {
+            factorFilter = false;
+          }
+        }
+      }
+    }
+
+    return collegeFilter && factorFilter;
   });
 
+  // Create axes for graph
   vis.x
     .domain([
       d3.min(vis.data, function(d){ return d[categoryX]; }), 
@@ -62,14 +94,23 @@ Scatter.prototype.updateVis = function() {
       d3.max(vis.data, function(d){ return d[categoryY]; })
     ])
 
-  vis.xAxis = d3.svg.axis()
+  var xAxis = d3.svg.axis()
     .scale(vis.x)
     .orient("bottom");
 
-  vis.yAxis = d3.svg.axis()
+  var yAxis = d3.svg.axis()
     .scale(vis.y)
     .orient("left");
+
+  vis.xAxis
+    .transition().duration(300)
+    .call(xAxis);
+
+  vis.yAxis
+    .transition().duration(300)
+    .call(yAxis);
   
+  // Create data points in scatter plot
   vis.points = vis.svg.selectAll(".points")
     .data(vis.data);
   
@@ -87,24 +128,98 @@ Scatter.prototype.updateVis = function() {
     });
 
   vis.points.exit().remove();
-
-  d3.select('.x-axis')
-    .transition().duration(300)
-    .call(vis.xAxis);
-
-  d3.select('.y-axis')
-    .transition().duration(300)
-    .call(vis.yAxis);
 }
 
-Scatter.prototype.addSelectors = function() {
+Scatter.prototype.createFilters = function() {
+  var vis = this;
+
+  // Create title for filter section
+  vis.selectorsElement.append("b")
+    .text("Filters: ");
+
+  vis.selectorsElement.append("br");
+
+  // Create form element to hold checkboxes
+  var filters = vis.selectorsElement.append("form")
+    .attr({
+      id: "filters",
+      class: "form-horizontal",
+      role: "form"
+    })
+
+  // Create object in vis to store filter options
+  vis.filters = {};
+
+  // Get factors that need to be filtered
+  var factorsToFilter = Object.keys(p171.data.nomFactors);
+
+  // Create a form group for each application factor 
+  for (var factorIndex=0; factorIndex<factorsToFilter.length; factorIndex++) {
+    var factor = factorsToFilter[factorIndex];
+
+    filters.append("div")
+      .attr("class","filter-label")
+      .text(factor)
+    
+    vis.filters[factor] = {};
+    
+    for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
+      var subFactor = p171.data.nomFactors[factor][subFactorIndex];
+      // Set initial filter status for each sub factor
+      vis.filters[factor][subFactor] = true;
+
+      // Append form group
+      var formGroup = filters.append("div")
+        .attr("class","form-group");
+
+      formGroup.append("label")
+        .attr({
+          class: "control-label col-sm-2",
+          for: subFactor
+        })
+        .text(subFactor);
+
+      formGroup.append("div")
+          .append("input")
+            .attr({
+              class:"form-control",
+              id: subFactor.replace(" ","_"),
+              value: factor,
+              type: "checkbox",
+              checked: ""
+            })
+            .on("change", function() {
+              var checkBox = this;
+              var factor = checkBox.value;
+              var subFactor = checkBox.id.replace("_"," ");
+              vis.updateFilters(factor, subFactor);
+            });
+    }
+    
+
+
+    
+  }
+}
+
+Scatter.prototype.updateFilters = function(factor, subFactor) {
+  var vis = this;
+  var prevValue = vis.filters[factor][subFactor];
+
+  vis.filters[factor][subFactor] = prevValue ? false : true;
+
+  vis.updateVis();
+}
+
+Scatter.prototype.createSelectors = function() {
   var vis = this; 
 
-  var options = p171.data.mainCategories;
+  var options = p171.data.quantFactors;
 
-  var parentElement = d3.select("#"+this.parentElement)
+  vis.selectorsElement.append("b")
+    .text("X Axis: ");
 
-  vis.xCategory = parentElement.append("select")
+  vis.xCategory = vis.selectorsElement.append("select")
     .attr({
       id:'category-selector',
     })
@@ -124,7 +239,12 @@ Scatter.prototype.addSelectors = function() {
   vis.xCategory
     .property('value','GPA');
 
-  vis.yCategory = parentElement.append("select")
+  vis.selectorsElement.append("br");
+
+  vis.selectorsElement.append("b")
+    .text("Y Axis: ")
+
+  vis.yCategory = vis.selectorsElement.append("select")
     .attr({
       id:'category-selector',
     })
@@ -144,7 +264,10 @@ Scatter.prototype.addSelectors = function() {
   vis.yCategory
     .property('value','admissionstest');
 
-  vis.collegeSelector = parentElement.append("select")
+  vis.selectorsElement.append("b")
+    .text("College: ");
+
+  vis.collegeSelector = vis.selectorsElement.append("select")
     .attr({
       id:"college-selector"
     })
@@ -166,7 +289,7 @@ Scatter.prototype.addSelectors = function() {
 }
 
 var Histogram = function(_parentElement, _data) {
-  this.parentElement = _parentElement;
+  this.parentElement = d3.select("#" + _parentElement);
   this.addSelectors();
   this.updateData();
   this.initVis();
@@ -181,7 +304,7 @@ Histogram.prototype.initVis = function () {
   vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
-  vis.svg = d3.select("#" + vis.parentElement).append("svg")
+  vis.svg = vis.parentElement.append("svg")
       .attr("width", vis.width + vis.margin.left + vis.margin.right)
       .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
     .append("g")
@@ -195,7 +318,7 @@ Histogram.prototype.initVis = function () {
   vis.y = d3.scale.linear()
     .range([vis.height, 0]);
 
-  vis.svg.append("g")
+  vis.xAxis = vis.svg.append("g")
     .attr({
       class: "x-axis",
       transform: "translate(0,"+vis.height+")"
@@ -222,7 +345,7 @@ Histogram.prototype.updateVis = function() {
   vis.y
     .domain([0, d3.max(vis.histogramData, function(d){ return d.y; })]);
 
-  vis.xAxis = d3.svg.axis()
+  var xAxis = d3.svg.axis()
     .scale(vis.x)
     .orient("bottom");
   
@@ -266,9 +389,9 @@ Histogram.prototype.updateVis = function() {
 
   vis.labels.exit().remove();
 
-  d3.select('.x-axis')
+  vis.xAxis
     .transition().duration(300)
-    .call(vis.xAxis);
+    .call(xAxis);
 }
 
 Histogram.prototype.updateData = function() {
@@ -283,11 +406,9 @@ Histogram.prototype.updateData = function() {
 Histogram.prototype.addSelectors = function() {
   var vis = this;
 
-  var options = p171.data.mainCategories;
+  var options = p171.data.mainFactors;
 
-  var parentElement = d3.select("#"+this.parentElement)
-
-  vis.categorySelector = parentElement.append("select")
+  vis.categorySelector = vis.parentElement.append("select")
     .attr({
       id:'category-selector',
     })
@@ -307,7 +428,7 @@ Histogram.prototype.addSelectors = function() {
   vis.categorySelector
     .property('value','admissionstest');
 
-  vis.collegeSelector = parentElement.append("select")
+  vis.collegeSelector = vis.parentElement.append("select")
     .attr({
       id:"college-selector"
     })

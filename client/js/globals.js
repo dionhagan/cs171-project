@@ -28,20 +28,29 @@ function storeData(err, collegeList, appData, appDataNorm, callback) {
     p171.data.colleges[collegeInfo.name] = collegeInfo;
   }
 
-  var mainCategories = [
+  var quantFactors = [
     "AP",
     "averageAP",
     "GPA",
     "GPA_w",
-    "MinorityGender",
-    "MinorityRace",
     "SATsubject",
-    "acceptStatus",
     "admissionstest",
-    "alumni"
   ];
+
+  var nomFactors = {
+    "sports": ["Played Sports", "Didn't Play Sports"],
+    "schooltype": ["Public", "Private"],
+    "outofstate": ["Local", "Out of State"],
+    "international": ["Domestic", "International"],
+    "female": ["Female", "Male"],
+    "earlyAppl": ["Applied Early", "Didn't Apply Early"],
+    "alumni": ["Has Legacy", "No Legacy"],
+    "MinorityRace": ["Is Racial Minority","Isn't Racial Minority"]
+  };
   
-  p171.data.mainCategories = mainCategories;
+  p171.data.quantFactors = quantFactors;
+  p171.data.nomFactors = nomFactors;
+  p171.data.mainFactors = quantFactors.concat(Object.keys(nomFactors));
 
   p171.data.colleges['All'] = {};
 
@@ -49,18 +58,19 @@ function storeData(err, collegeList, appData, appDataNorm, callback) {
     var sample = appData[sampleIndex];
     var college = sample.collegeID;
 
-    for (var categoryIndex=0; categoryIndex<mainCategories.length; categoryIndex++) {
-      var category = mainCategories[categoryIndex];
+    for (var factorIndex=0; factorIndex<p171.data.mainFactors.length; factorIndex++) {
+
+      var factor = p171.data.mainFactors[factorIndex];
       var collegeInfo = p171.data.colleges[college];
-      var value = +sample[category];
+      var value = +sample[factor];
+      appData[sampleIndex][factor] = value;
+      if (!(factor in collegeInfo)) p171.data.colleges[college][factor] = [];
 
-      if (!(category in collegeInfo)) p171.data.colleges[college][category] = [];
-
-      if (!(category in p171.data.colleges['All'])) p171.data.colleges['All'][category] = [];
+      if (!(factor in p171.data.colleges['All'])) p171.data.colleges['All'][factor] = [];
 
       if (!isNaN(value)) {
-        p171.data.colleges[college][category].push(value);
-        p171.data.colleges['All'][category].push(value);
+        p171.data.colleges[college][factor].push(value);
+        p171.data.colleges['All'][factor].push(value);
       }
     }
   }
@@ -69,6 +79,6 @@ function storeData(err, collegeList, appData, appDataNorm, callback) {
 }
 
 function createVis() {
-  //p171.hist = new Histogram("histograms");
-  p171.scatter = new Scatter("scatter");
+  p171.hist = new Histogram("distribution");
+  p171.scatter = new Scatter("scatter-plot");
 }
