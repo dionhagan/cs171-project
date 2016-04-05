@@ -33,6 +33,7 @@ function predict(formData) {
       // calculate standard admissions test score
       var admissionstest;
 
+      // take largest score and standardize
       if (formData.act == 0 && formData.sat == 0) {
         admissionstest = 0;
       }
@@ -53,9 +54,12 @@ function predict(formData) {
 
       // update script src url w/ new values
 
+      var new_src = BASE_URL + 
+
+      $('#predictions').attr('src', new_src)
+
     });
   });
-
 
   console.log(preds);
 
