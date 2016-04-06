@@ -22,13 +22,13 @@ function predict(formData) {
   d3.csv('../client/data/normalize_means.csv', function(meanData) {
     d3.csv('../client/data/normalize_stds.csv', function(stdData) {
 
-      means = meanData;
-      stds = stdData;
+      means = meanData[0];
+      stds = stdData[0];
 
       // standardize values
-      formData.apave = (formData.apave - means.averageAP) / stds.averageAP;
-      formData.gpa = (formData.gpa - means.GPA) / stds.GPA;
-      formData.sat2ave = (formData.sat2ave - means.SATsubject) / stds.SATsubject;
+      formData.apave = (formData.apave - +means.averageAP) / +stds.averageAP;
+      formData.gpa = (formData.gpa - +means.GPA) / +stds.GPA;
+      formData.sat2ave = (formData.sat2ave - +means.SATsubject) / +stds.SATsubject;
 
       // calculate standard admissions test score
       var admissionstest;
