@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+</style>
+
+<body>
+  <h3>Invoking a cross domain web service</h3>
+
+
+  <p>
+    Invoking a webservice from another domain is typically not allowed.
+    This can be circumvented using JSONP.
+    See this <a href="http://stackoverflow.com/questions/2067472/what-is-jsonp-all-about">
+      SO post</a>
+  </p>
+
+<p>Open the web console to see the results from the webservice</p>
+
+<script>
+function myCallback(dataWeGotViaJsonp){
+    console.log(dataWeGotViaJsonp);
+}
+</script>
+<!--
+When running the webservice locally ("$ python flaskapp.py") use
+       src="http://127.0.0.1:5000/predict?admissionstest=0.976899206&AP=7&averageAP=1.06733864&SATsubject=0.324271565&GPA=-0.187109979&schooltype=0&intendedgradyear=2017&female=1&MinorityRace=0&international=0&sports=0&earlyAppl=0&alumni=0&outofstate=0&acceptrate=0.151&size=6621&public=0&finAidPct=0&instatePct=0&callback=myCallback">
+When running the webservice in production, use
+    src="http://ws.chanceme.info/predict?admissionstest=0.976899206&AP=7&averageAP=1.06733864&SATsubject=0.324271565&GPA=-0.187109979&schooltype=0&intendedgradyear=2017&female=1&MinorityRace=0&international=0&sports=0&earlyAppl=0&alumni=0&outofstate=0&acceptrate=0.151&size=6621&public=0&finAidPct=0&instatePct=0&callback=myCallback">
+-->
+
+<script type="text/javascript"
+    src="http://ws.chanceme.info/predict?admissionstest=0.976899206&AP=7&averageAP=1.06733864&SATsubject=0.324271565&GPA=-0.187109979&schooltype=0&intendedgradyear=2017&female=1&MinorityRace=0&international=0&sports=0&earlyAppl=0&alumni=0&outofstate=0&acceptrate=0.151&size=6621&public=0&finAidPct=0&instatePct=0&callback=myCallback">
+</script>

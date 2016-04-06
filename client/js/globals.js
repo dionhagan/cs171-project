@@ -49,6 +49,7 @@ function storeData(err, collegeList, appData, appDataNorm, callback) {
     var collegeInfo = collegeList[collegeIndex];
     p171.data.colleges[collegeInfo.name] = collegeInfo;
   }
+<<<<<<< HEAD
 
   var quantFactors = [
     "AP",
@@ -106,3 +107,8 @@ function createVis() {
 }
 
 
+=======
+  // TODO: populate drop down list of colleges from this data (currently hard coded)
+
+}
+>>>>>>> origin/master

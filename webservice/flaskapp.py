@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import jsonify, request
+from functools import wraps
 
 import os
 import pandas as pd
@@ -50,7 +51,7 @@ def genPredictionList(vals):
     global ws_cols
     global clf
     global colleges
-    X = pd.Series(dict((name, float(val)) for name, val in vals))
+    X = pd.Series(dict((name, float(val)) for name, val in vals if name != 'callback'))
     if clf is None: load_classifier()
     preds = []
     for i, row in colleges.df.iterrows():
@@ -61,11 +62,32 @@ def genPredictionList(vals):
     return preds
     #e.g.  [{'college':'harvard', 'prob':y}, {'college':'yale', 'prob':0.25}, {'college':'brown', 'prob':0.89}]
 
+def jsonp(func):
+    """
+    Wraps JSONified output for JSONP requests.
+    See https://gist.github.com/aisipos/1094140
+    """
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        callback = request.args.get('callback', False)
+        if callback:
+            resp = func(*args, **kwargs)
+            resp.set_data('{}({})'.format(
+                str(callback),
+                resp.get_data(as_text=True)
+            ))
+            resp.mimetype = 'application/javascript'
+            return resp
+        else:
+            return func(*args, **kwargs)
+    return decorated_function
+
 @app.route('/')
 def hello_world():
     return "Welcome to the Team Ivy Web Service"
 
 @app.route("/predict")
+@jsonp
 def predict():
     preds = genPredictionList(request.args.iteritems())
     return jsonify(preds = preds)
