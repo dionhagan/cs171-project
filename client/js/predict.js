@@ -3,7 +3,8 @@
 function predict(formData) {
 
   // TODO: call webservice or JavaScript Random Forest
-  console.log(formData);
+
+  //console.log(formData);
 
   // base url for webservice request src
   var BASE_URL = "http://ws.chanceme.info/predict?"
@@ -52,8 +53,8 @@ function predict(formData) {
         }
       }
 
-      console.log("formData: ");
-      console.log(formData);
+      //console.log("formData: ");
+      //console.log(formData);
 
       // built new request url
       var new_src = BASE_URL + 
@@ -78,11 +79,11 @@ function predict(formData) {
                     "instatePct=0&" +
                     "callback=getJSON";
 
-      console.log("new_src: ");
+      //console.log("new_src: ");
       console.log(new_src);
 
       // update src
-      //$("#predictions").attr("src", new_src);
+      $("#predictions").attr("src", new_src);
 
     });
   });
