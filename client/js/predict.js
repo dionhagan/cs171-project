@@ -39,17 +39,17 @@ function predict(formData) {
         admissionstest = 0;
       }
       else if (formData.act != 0 && formData.sat == 0) {
-        admissionstest = (formData.sat - means.admissionstest) / std.admissionstest;
+        admissionstest = (formData.sat - means.admissionstest) / stds.admissionstest;
       }
       else if (formData.act == 0 && formData.sat != 0) {
-        admissionstest = (act2sat[formData.act] - means.admissionstest) / std.admissionstest;
+        admissionstest = (act2sat[formData.act] - means.admissionstest) / stds.admissionstest;
       }
       else {
         if (formData.sat > act2sat[formData.act]) {
-          admissionstest = (formData.sat - means.admissionstest) / std.admissionstest;
+          admissionstest = (formData.sat - means.admissionstest) / stds.admissionstest;
         }
         else {
-          admissionstest = (act2sat[formData.act] - means.admissionstest) / std.admissionstest;
+          admissionstest = (act2sat[formData.act] - means.admissionstest) / stds.admissionstest;
         }
       }
 
