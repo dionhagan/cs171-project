@@ -6,6 +6,28 @@ p171.margin          = {top: 60, right: 20, bottom: 60, left: 60};
 p171.padding         = {top: 20, right: 0, bottom: 100, left: 40};
 p171.aspect         = 1.1; // charts will be 10% taller than wide
 
+// Store user data from cookies
+p171.user = {};
+
+var convertFormVar = {
+  sat:"admissionstest",
+  gpa:"GPA",
+  apnum:"AP",
+  apave: "averageAP",
+  sat2ave: "SATsubject",
+  hs: "schooltype",
+  gender: "Female",
+  race: "MinorityRace",
+  college: "collegeID"
+}
+
+var cookies = document.cookie.split("; ")
+for (var i=0; i<cookies.length; i++) {
+  var cname = cookies[i].split("=")[0];
+  var value = cookies[i].split("=")[1];
+  p171.user[convertFormVar[cname]] = !isNaN(value) ? +value : value;
+}
+
 // Store data set globally
 p171.data = {}; 
 
@@ -40,8 +62,8 @@ function storeData(err, collegeList, appData, appDataNorm, callback) {
   var nomFactors = {
     "sports": ["Played Sports", "Didn't Play Sports"],
     "schooltype": ["Public", "Private"],
-    "outofstate": ["Local", "Out of State"],
-    "international": ["Domestic", "International"],
+    "outofstate": ["Out of State", "Local"],
+    "international": ["International","Domestic"],
     "female": ["Female", "Male"],
     "earlyAppl": ["Applied Early", "Didn't Apply Early"],
     "alumni": ["Has Legacy", "No Legacy"],
@@ -79,6 +101,8 @@ function storeData(err, collegeList, appData, appDataNorm, callback) {
 }
 
 function createVis() {
-  p171.hist = new Histogram("distribution");
+  //p171.hist = new Histogram("distribution");
   p171.scatter = new Scatter("scatter-plot");
 }
+
+

@@ -18,7 +18,7 @@ function FormData(userInput) {
     var value = userInput[inputName];
     var defaultValue = defaultValues[inputName];
     if (inputName == 'college') {
-      this['college'] = value in p171.colleges ? value : defaultValue;
+      this['college'] = value in p171.data.colleges ? value : defaultValue;
     } else {
       this[inputName] = !isNaN(value) ? +value : defaultValue;
     }
@@ -71,10 +71,29 @@ document.getElementById("btn-predict").onclick = function() {
   for (var i=0; i<form.length; i++) {
     var input = form[i];
     userInput[input.id] = input.value;
+    setCookie(input.id, input.value, 1);
   }
 
   // call the prediction
   p171.predictions = predict( new FormData(userInput) );
   console.log(p171.predictions);
   updatePredictionViz();
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
 }

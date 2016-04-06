@@ -6,7 +6,6 @@ var Scatter = function(_parentElement) {
       position: "relative",
       float: "right"
     });
-  console.log(this.selectorsElement)
   this.data = p171.data.raw;
   this.createSelectors();
   this.createFilters();
@@ -19,7 +18,7 @@ Scatter.prototype.initVis = function() {
 
   vis.margin = p171.margin;
   vis.width = 800 - vis.margin.left - vis.margin.right,
-  vis.height = 600 - vis.margin.top - vis.margin.bottom;
+  vis.height = 700 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
   vis.svg = vis.plotElement.append("svg")
@@ -29,21 +28,60 @@ Scatter.prototype.initVis = function() {
       .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
   vis.x = d3.scale.linear()
-    .range([0, vis.width]);
+    .range([0, vis.width]).nice();
 
   vis.y = d3.scale.linear()
-    .range([vis.height, 0]);
+    .range([vis.height, 0]).nice();
 
-  vis.xAxis = vis.svg.append("g")
+  vis.container = vis.svg.append("g")
+
+  vis.xAxisGroup = vis.svg.append("g")
+      .attr({
+        class: "x-axis axis",
+        transform: "translate(0,"+vis.height+")"
+      });
+    /*.append("text")
+      .attr({
+        class:"axis-label",
+        x: vis.width,
+        y: -vis.margin.left,
+        transform: "rotate(-90)",
+        dy: ".71em"
+      })
+      .style("text-anchor", "end")*/
+
+  vis.yAxisGroup = vis.svg.append("g")
+      .attr({ class: "y-axis axis" })
+    /*.append("text")
+      .attr({
+        class:"axis-label",
+        y: -vis.margin.left,
+        transform: "rotate(-90)",
+        dy: ".71em"
+      })
+      .style("text-anchor", "end")*/
+
+  vis.zoomBehavior = d3.behavior.zoom()
+    .x(vis.x)
+    .y(vis.y)
+    .scaleExtent([1,100])
+    .on("zoom", zoom);
+
+  vis.container
+    .call(vis.zoomBehavior);
+
+  vis.background = vis.container.append("rect")
     .attr({
-      class: "x-axis",
-      transform: "translate(0,"+vis.height+")"
+      height: vis.height,
+      width: vis.width,
+      class: "vis-background"
     })
 
-  vis.yAxis = vis.svg.append("g")
-    .attr({
-      class: "y-axis"
-    })
+  vis.drag = d3.behavior.drag()
+    .origin(function(d) { return d; })
+    //.on("dragstart", dragstarted)
+    //.on("drag", dragged)
+    //.on("dragend", dragended);
 
   vis.updateVis();
 }
@@ -52,17 +90,17 @@ Scatter.prototype.updateVis = function() {
   var vis = this;
 
   // Filter data based on user selections
-  var categoryX = vis.xCategory.property('value');
-  var categoryY = vis.yCategory.property('value');
-  var college = vis.collegeSelector.property('value');
+  var categoryX = vis.xCategory.property('value'),
+      categoryY = vis.yCategory.property('value'),
+      college = vis.collegeSelector.property('value');
 
   console.log('Updating Visualization');
 
   vis.data = p171.data.raw.filter(function(d){
 
-    var collegeFilter = college == 'All' ? true : d.collegeID == college;
-    var factorFilter = true;
-    var filters = vis.filters;
+    var collegeFilter = college == 'All' ? true : d.collegeID == college,
+        factorFilter = true,
+        filters = vis.filters;
 
     for (factor in vis.filters) {
       for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
@@ -81,41 +119,63 @@ Scatter.prototype.updateVis = function() {
     return collegeFilter && factorFilter;
   });
 
+  // Add user to dataset
+  var userData = p171.user
+  userData["isUser"] = true;
+  vis.data.push(userData);
+
   // Create axes for graph
   vis.x
     .domain([
-      d3.min(vis.data, function(d){ return d[categoryX]; }), 
-      d3.max(vis.data, function(d){ return d[categoryX]; })
+      0, 
+      d3.max(p171.data.raw, function(d){ return d[categoryX]; })
     ])
 
   vis.y
     .domain([
-      d3.min(vis.data, function(d){ return d[categoryY]; }), 
-      d3.max(vis.data, function(d){ return d[categoryY]; })
+      0, 
+      d3.max(p171.data.raw, function(d){ return d[categoryY]; })
     ])
 
-  var xAxis = d3.svg.axis()
+  vis.xAxis = d3.svg.axis()
     .scale(vis.x)
     .orient("bottom");
 
-  var yAxis = d3.svg.axis()
+  vis.yAxis = d3.svg.axis()
     .scale(vis.y)
     .orient("left");
 
-  vis.xAxis
+  vis.xAxisGroup
     .transition().duration(300)
-    .call(xAxis);
+    .call(vis.xAxis);
 
-  vis.yAxis
+  vis.yAxisGroup
     .transition().duration(300)
-    .call(yAxis);
+    .call(vis.yAxis);
+
+  var color = d3.scale.category10();
+
+  vis.tip = d3.tip()
+    .attr("class", "d3-tip")
+    .offset([-10,0])
+    .html(function(d) {
+      var html = "";
+      if (d.isUser) html += "<b>You</b><br>"
+      p171.data.quantFactors.forEach(function(feature) {
+        html += feature + ": " + d[feature] + "<br>";
+      });
+      return html;
+    });
+
+  vis.container
+    .call(vis.tip);
   
   // Create data points in scatter plot
-  vis.points = vis.svg.selectAll(".points")
+  vis.points = vis.container.selectAll(".points")
     .data(vis.data);
   
   vis.points
-    .enter().append("circle")
+    .enter().append("circle");
 
   vis.points
     .transition().duration(750)
@@ -123,11 +183,66 @@ Scatter.prototype.updateVis = function() {
       class: "points",
       cx: function(d) { return vis.x(d[categoryX]); },
       cy: function(d) { return vis.y(d[categoryY]); },
-      r: function(d) { return d.acceptStatus == 1 ? 6 : 3; },
-      fill: function(d) { return d.acceptStatus == 1 ? "yellow" : "red"; }
+      r: function(d) { return d.isUser ? 6 : 3; },
+      fill: function(d) { 
+        if (d.isUser) return "yellow";
+        return d.acceptStatus == 1 ? "#98fb98" : "lightsteelblue";
+      }
+    })
+    .style({
+      opacity: function(d) { 
+        if (d.isUser) return 1;
+        return d.acceptStatus == 1 ? .8 : .3; }
     });
+    
+
+  vis.points
+    .on("mouseover", vis.tip.show)
+    .on("mouseout", vis.tip.hide)
+    .call(vis.drag);;
 
   vis.points.exit().remove();
+}
+
+function zoom() {
+  var vis = p171.scatter;
+
+  // Filter data based on user selections
+  var categoryX = vis.xCategory.property('value'),
+      categoryY = vis.yCategory.property('value'),
+      college = vis.collegeSelector.property('value');
+
+  var xMax = d3.max(p171.data.raw, function(d){ return d[categoryX]; });
+      yMax = d3.max(p171.data.raw, function(d){ return d[categoryY]; });
+
+  
+  vis.x
+    .domain(vis.x.domain().map(function(d) {
+      return d*xMax;
+    }))
+
+  vis.y
+    .domain(vis.y.domain().map(function(d) {
+      return d*yMax;
+    }))
+  
+  vis.container.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  vis.xAxisGroup.call(vis.xAxis);
+  vis.yAxisGroup.call(vis.yAxis);
+}
+
+function dragstarted(d) {
+  d3.event.sourceEvent.stopPropagation();
+  d3.select(this).classed("dragging", true);
+}
+
+function dragged(d) {
+
+  d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+}
+
+function dragended(d) {
+  d3.select(this).classed("dragging", false);
 }
 
 Scatter.prototype.createFilters = function() {
@@ -174,7 +289,7 @@ Scatter.prototype.createFilters = function() {
 
       formGroup.append("label")
         .attr({
-          class: "control-label col-sm-2",
+          class: "control-label col-sm-1",
           for: subFactor
         })
         .text(subFactor);
@@ -285,6 +400,11 @@ Scatter.prototype.createSelectors = function() {
       })
       .text(college);
   }
+
+  if ("collegeID" in p171.user) {
+    vis.collegeSelector.property('value', p171.user.collegeID);
+  }
+  
 
 }
 
