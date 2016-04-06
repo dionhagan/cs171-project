@@ -52,11 +52,37 @@ function predict(formData) {
         }
       }
 
-      // update script src url w/ new values
+      console.log("formData: ");
+      console.log(formData);
 
+      // built new request url
       var new_src = BASE_URL + 
+                    "admissionstest=" + admissionstest + "&" +
+                    "AP=" + formData.apnum + "&" +
+                    "averageAP=" + formData.apave + "&" +
+                    "SATsubject=" + formData.sat2ave + "&" + 
+                    "GPA=" + formData.gpa + "&" +
+                    "schooltype=" + formData.hs + "&" +
+                    "intendedgradyear=2017&" +
+                    "female=" + formData.gender + "&" +
+                    "MinorityRace=0&" +
+                    "international=0&" +
+                    "sports=0&" +
+                    "earlyAppl=0&" +
+                    "alumni=0&" +
+                    "outofstate=0&" +
+                    "acceptrate=0.151&" +
+                    "size=6621&" +
+                    "public=0&" +
+                    "finAidPct=0&" +
+                    "instatePct=0&" +
+                    "callback=getJSON";
 
-      $('#predictions').attr('src', new_src)
+      console.log("new_src: ");
+      console.log(new_src);
+
+      // update src
+      //$("#predictions").attr("src", new_src);
 
     });
   });
