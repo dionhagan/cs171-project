@@ -1,3 +1,4 @@
+/* scatter plot visualization */
 .points {
   stroke-width: 1.5px;
 }
@@ -44,3 +45,26 @@
 .control-label {
   font-size: 12px;
 }
+
+/* Feature Importance Visualization */
+.vis-title {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.overview-bar {
+  cursor: pointer;
+}
+
+.overview-bar:hover {
+
+}
+
+text.effect-values {
+  position:relative;
+  z-index: 100;
+}
+
+
+
+

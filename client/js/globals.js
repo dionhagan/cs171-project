@@ -28,6 +28,9 @@ for (var i=0; i<cookies.length; i++) {
   p171.user[convertFormVar[cname]] = !isNaN(value) ? +value : value;
 }
 
+// Create an object for website text
+p171.text = {};
+
 // Store data set globally
 p171.data = {}; 
 
@@ -35,14 +38,19 @@ queue()
     .defer(d3.csv, "data/collegelist.csv")
     .defer(d3.csv, "data/collegedata_unnormalized.csv")
     .defer(d3.csv, "data/collegedata_normalized.csv")
-    .await(storeData);
-
-function storeData(err, collegeList, appData, appDataNorm, callback) {
+    .defer(d3.json, "data/feature_effect.json")    
+    .defer(d3.json, "text/drilldowntext.json")
+    .await(storeData)
+    
+function storeData(err, collegeList, appData, appDataNorm, featureImportance, drillDownText) {
+  // Get text for drill down page 
+  p171.text.drillDown = drillDownText;
 
   // Store data from csv files
   p171.data.normalized = appDataNorm;
   p171.data.raw = appData;
   p171.data.colleges = {};
+  p171.data.featureImportance = featureImportance
 
   // Collect data for each college 
   for (var collegeIndex=0; collegeIndex<collegeList.length; collegeIndex++) {
@@ -69,7 +77,25 @@ function storeData(err, collegeList, appData, appDataNorm, callback) {
     "alumni": ["Has Legacy", "No Legacy"],
     "MinorityRace": ["Is Racial Minority","Isn't Racial Minority"]
   };
-  
+
+  p171.data.labels = {
+    "admissionstest": "ACT/SAT score",
+    "acceptrate": "College acceptance rate",
+    "GPA": "GPA",
+    "averageAP": "Average AP score",
+    "size": "College size",
+    "AP": "# AP exams taken",
+    "SATsubject": "# SAT subject tests taken",
+    "female": "Gender / Female",
+    "schooltype": "Private High School",
+    "MinorityRace": "Underrepresented Minority",
+    "earlyAppl": "Early Application",
+    "outofstate": "Out of State",
+    "public": "Public College",
+    "alumni": "Legacy",
+    "international": "International Student",
+    "sports": "Varsity Sports"
+    }
   p171.data.quantFactors = quantFactors;
   p171.data.nomFactors = nomFactors;
   p171.data.mainFactors = quantFactors.concat(Object.keys(nomFactors));
@@ -101,8 +127,9 @@ function storeData(err, collegeList, appData, appDataNorm, callback) {
 }
 
 function createVis() {
+  p171.featureImportanceVis = new FeatureImportanceVis("feature-importance-vis");
   //p171.hist = new Histogram("distribution");
-  p171.scatter = new Scatter("scatter-plot");
+  //p171.scatter = new Scatter("scatter-plot");
 }
 
 

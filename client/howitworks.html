@@ -60,167 +60,28 @@
         </ul>
       </nav>
     </div>
+  </div>
 
     <!-- main area -->
+  <div class="container">
     <div class="row">
-      <div class="col-4 col-offset-1">
-
-        <p class="lead">Across the country four million students will be submitting upwards of forty million applications (<a href="http://www.nytimes.com/2014/11/16/nyregion/applications-by-the-dozen-as-anxious-students-hedge-college-bets.html">source</a>) and then
-          fretting until late March to find the results. Our team at Harvard's Data Science Class has analyzed more than 13,000 applications to determine which factors matter most to the top twenty-five colleges in the USA. We have also built an <a href="http://www.chanceme.info/">online predictor</a>          that lets a student or parent enter current results, see the chances of getting into an elite college. Even more importantly, the student can then change the values to see if time is better spent improving grades or playing more varsity sports.
-        </p>
-
+      <div class="col-md-10 col-md-offset-1">
+        <div id="feature-importance-vis"></div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <h3 class="page-header"> Objectives </h3>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <p>We hope to provide some clarity, precision and reasonably accurate forecasting of a student's probability of being accepted into a given college. On the one hand, future applicants and their parents can browse through our data analyses to explore
-          how their university of interest compares to others. We want to show them how the schools perform in the sense of gender equality and minorities or how important it is to go to a private highschool. Next, they can use our predictive model, which
-          is available on a <a href="http://www.chanceme.info"> publicly
-              accessible website</a>.</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <h3 class="page-header">Data</h3>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <p>This project would not have been possible without the availability of data on university applications. All our models and visualizations were created using data from the
-          <a href="http://www.collegedata.com">CollegeData website</a>, a platform where many students have submitted their application results.</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <h3 class="page-header">Distribution of Applicants</h3>
-      </div>
-      <div class="col-4 col-offset-1" id="distribution">
-      </div>
-    </div>
-    <div class="row" id="scatter">
-      <div class="col-4 col-offset-1">
-        <h3 class="page-header">Correlation of Application Factors</h3>
-      </div>
-    </div>
-    <div class="row" id="scatter-plot">
-      <div class="col-4 col-offset-1" id="plot">
-      </div>
-      <div class="col-1" id="selectors">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <h3 class="page-header">Which factors are most important?</h3>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <p>Standardized tests, GPA and the school the student is applying to are by far the most important factors that determine admission success. This should come as no surprise. What is surprising is how little other factors matter. Sports can be
-          <a href="http://collegepuzzle.stanford.edu/?p=2088">a huge time sink</a> yet make no difference to a successful admission. Unless the student is a star recruited athlete, a fraction of the time spent on sports would be better spent improving
-          standardized tests, especially the SAT or ACT score.</p>
-      </div>
-      <!-- Use picturefill to resize -->
-      <div class="col-4 col-offset-1">
-        <picture>
-          <!--[if IE 9]><video style="display: none;"><![endif]-->
-          <source srcset="img/features-lg.png" media="(min-width:1158px)">
-          <source srcset="img/features-md.png" media="(min-width:540px)
-                                                  and (max-width: 1157px) ">
-          <!--[if IE 9]></video><![endif]-->
-          <img srcset="img/features-sm.png" alt="Features Relative Importance to College Admissions">
-        </picture>
-      </div>
-      <div class="col-4 col-offset-1">
-        <p>Having Legacy which many parents count on and many students wish for turns out not to be as important better AP exams or SAT subject tests.</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <h3 class="page-header">Diversity &amp; Underrepresented Minorities</h3>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <p>Being an underrepresented minority (Hispanic, African-American, Native American) provides an average boost to the candidate's SAT or ACT by 87 points. This can make a huge difference when the schools are so competitive. However, this advantage
-          varies significantly by school. Carnegie Mellon gives the greatest boost to minorities, with an average increase of 149 points. Harvard is notably the only of the top twenty-five that has statistically no premium given to underrepresented minorities.</p>
-      </div>
-      <div class="col-4 col-offset-1">
-        <img src="img/minoritySAT.png" class="img-responsive" alt="Minority SAT Advantage">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <h3 class="page-header">Are universities truly needs-blind?</h3>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <p>Most of these elite schools claim to be "needs blind." Their admission decision is not supposed to factor in the ability of the candidate to pay. Our analysis showed this indeed to be the case: whether or not the candidate needed financial assistance
-          had no affect on the acceptance decision. <strong>The acceptance rates, when all other
-          factors were accounted for, remained the same irrespective of
-          whether the student was able to pay full tuition or
-          not.</strong></p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <h3 class="page-header">College-by-college Differences</h3>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <p>Most of us have an intuitive sense about which factors of an application are most important for determining admissions. However, things get murky when we start to think about how each college might differentially weight the factors. Much of the
-          uncertainty surrounding applying to Ivy League schools arises from the seeming randomness of admissions-- why should a 4.0 student with high SAT scores get into Harvard, but not Princeton or Yale? We aimed to quantify some over this inter-college
-          variation. We asked whether being a legacy had different levels of importance in determining admissions across our 25 schools. We find that although legacy has a positive effect on admission at every school, it is especially important at the
-          Ivy League schools, as well as at Stanford and MIT.</p>
-      </div>
-    </div>
-    <div class="col-4 col-offset-1">
-      <img src="img/legacy.png" class="img-responsive" alt="Value of Legacy">
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <p>We were also curious how gender and race might affect one's chances of admission. We find the following:</p>
-      </div>
-    </div>
-    <div class="col-4 col-offset-1">
-      <img src="img/female.png" class="img-responsive" alt="Gender differences">
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <p>Our results confirm the conventional wisdom that technical schools like MIT and CalTech, which have a low proportion of matriculating females, are more likely to admit women.</p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <h3 class="page-header">Conclusion</h3>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-4 col-offset-1">
-        <p>We have provided some much-needed insight into the murky waters of the college admissions process. Our hope is that this information empowers students and their supporters to make informed decisions about priorities and factors to consider when
-          applying to college. Clearly, SAT scores and GPA are the most important factors of an application. Students should focus on boosting their academic profiles in lieu of joining more and more extracurricular activities. There are some limitations
-          to our approach given the structure of our dataset. For example, we are unable to take account of any personal statements or recommendation letters, which are obviously very important in the application procedure. However, to the best of our
-          knowledge, this analysis is the most extensive open-source tool available to high school students to date.</p>
-      </div>
-    </div>
-    <div id="wrapper_footer"></div>
   </div>
+
   <footer id="footer">
     <a href="http://www.cs171.org/">CS171</a> Team Braavos
   </footer>
 
   <!-- Use jQuery from CDN -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="//d3js.org/queue.v1.min.js"></script>
+  <script src="js/jquery.min.js"></script>
+  <script src="js/queue.v1.min.js"></script>
   <script src="js/d3.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.6.7/d3-tip.min.js"></script>
+  <script src="js/d3-tip.min.js"></script>
   <script src="js/globals.js"></script>
+  <script src="js/featureImportanceViz.js"></script>
   <script src="js/drillDownViz.js"></script>
 
 </body>

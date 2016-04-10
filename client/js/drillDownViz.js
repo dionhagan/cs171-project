@@ -1,3 +1,5 @@
+
+
 var Scatter = function(_parentElement) {
   this.parentElement = d3.select("#" + _parentElement);
   this.plotElement = this.parentElement.select("#plot");
@@ -16,7 +18,7 @@ var Scatter = function(_parentElement) {
 Scatter.prototype.initVis = function() {
   var vis = this;
 
-  vis.margin = p171.margin;
+  vis.margin = {top: 60, right: 20, bottom: 60, left: 60};
   vis.width = 800 - vis.margin.left - vis.margin.right,
   vis.height = 700 - vis.margin.top - vis.margin.bottom;
 
@@ -120,9 +122,12 @@ Scatter.prototype.updateVis = function() {
   });
 
   // Add user to dataset
-  var userData = p171.user
-  userData["isUser"] = true;
-  vis.data.push(userData);
+  if (p171.user.length > 1) {
+    var userData = p171.user
+    userData["isUser"] = true;
+    vis.data.push(userData);
+  }
+  
 
   // Create axes for graph
   vis.x
@@ -162,7 +167,7 @@ Scatter.prototype.updateVis = function() {
       var html = "";
       if (d.isUser) html += "<b>You</b><br>"
       p171.data.quantFactors.forEach(function(feature) {
-        html += feature + ": " + d[feature] + "<br>";
+        html += p171.data.labels[feature] + ": " + d[feature] + "<br>";
       });
       return html;
     });
@@ -274,7 +279,7 @@ Scatter.prototype.createFilters = function() {
 
     filters.append("div")
       .attr("class","filter-label")
-      .text(factor)
+      .text(p171.data.labels[factor])
     
     vis.filters[factor] = {};
     
@@ -348,7 +353,7 @@ Scatter.prototype.createSelectors = function() {
       .attr({
         value:category
       })
-      .text(category);
+      .text(p171.data.labels[category]);
   }
 
   vis.xCategory
@@ -373,7 +378,7 @@ Scatter.prototype.createSelectors = function() {
       .attr({
         value:category
       })
-      .text(category);
+      .text(p171.data.labels[category]);
   }
 
   vis.yCategory
