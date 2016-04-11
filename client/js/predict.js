@@ -56,7 +56,7 @@ function predict(formData) {
       //console.log("formData: ");
       //console.log(formData);
 
-      // built new request url
+      // build new request url
       var new_src = BASE_URL + 
                     "admissionstest=" + admissionstest + "&" +
                     "AP=" + formData.apnum + "&" +
