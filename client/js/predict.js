@@ -84,7 +84,7 @@ function predict(formData) {
       }
 
       // Make Webservice Requests
-      function listen() {
+      function makeRequest() {
         newurl = getNewURL();
         document.getElementById("result").innerHTML = "calling to webservice...<br>"+newurl;
         xhr.open("GET", newurl);
@@ -92,15 +92,15 @@ function predict(formData) {
       }
 
       // Add Event Listeners
-      sat.addEventListener("change", listen(), false);
-      act.addEventListener("change", listen(), false);
-      gpa.addEventListener("change", listen(), false);
-      apave.addEventListener("change", listen(), false);
-      apnum.addEventListener("change", listen(), false);
-      sat2ave.addEventListener("change", listen(), false);
-      hs.addEventListener("change", listen(), false);
-      gender.addEventListener("change", listen(), false);
-      //race.addEventListener("change", listen(), false);
+      sat.addEventListener("change", makeRequest(), false);
+      act.addEventListener("change", makeRequest(), false);
+      gpa.addEventListener("change", makeRequest(), false);
+      apave.addEventListener("change", makeRequest(), false);
+      apnum.addEventListener("change", makeRequest(), false);
+      sat2ave.addEventListener("change", makeRequest(), false);
+      hs.addEventListener("change", makeRequest(), false);
+      gender.addEventListener("change", makeRequest(), false);
+      //race.addEventListener("change", makeRequest(), false);
 
       // Fetch JSON
       xhr.onreadystatechange=function(){
