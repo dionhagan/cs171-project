@@ -74,7 +74,7 @@ document.getElementById("btn-predict").onclick = function() {
   }
 
   // call the prediction
-  p171.predictions = predict( new FormData(userInput) );
-  console.log(p171.predictions);
-  updatePredictionViz();
+  // p171.predictions = predict( new FormData(userInput) );
+  // console.log(p171.predictions);
+  // updatePredictionViz();
 }

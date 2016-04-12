@@ -1,6 +1,6 @@
 "use strict";
 
-function predict(formData) {
+function predict() {
 
   // TODO: call webservice or JavaScript Random Forest
 
@@ -29,17 +29,6 @@ function predict(formData) {
       // calculate standard admissions test score
       var admissionstest;
 
-      // Get form selections
-      var sat = document.getElementById('sat');
-      var act = document.getElementById('act');
-      var gpa = document.getElementById('gpa');
-      var apave = document.getElementById('apave');
-      var apnum = document.getElementById('apnum');
-      var sat2ave = document.getElementById('sat2ave');
-      var hs = document.getElementById('hs');
-      var gender = document.getElementById('gender');
-      var race = document.getElementById('race');
-
       var newurl;
       var xhr = new XMLHttpRequest();
 
@@ -67,9 +56,9 @@ function predict(formData) {
         }
 
         // Standardize GPA, Average AP, and SAT2
-        var gpaValue = (gpa.value - +means.GPA) / +stds.GPA;
-        var apaveValue = (apave.value - +means.averageAP) / +stds.averageAP;
-        var sat2aveValue = (sat2ave.value - +means.SATsubject) / +stds.SATsubject;
+        var gpaValue = (gpa.value - means.GPA) / stds.GPA;
+        var apaveValue = (apave.value - means.averageAP) / stds.averageAP;
+        var sat2aveValue = (sat2ave.value - means.SATsubject) / stds.SATsubject;
 
         // Construct New URL
         var result_url = url.replace("{TEST}", admissionstest)
@@ -91,16 +80,7 @@ function predict(formData) {
         xhr.send();
       }
 
-      // Add Event Listeners
-      sat.addEventListener("change", makeRequest(), false);
-      act.addEventListener("change", makeRequest(), false);
-      gpa.addEventListener("change", makeRequest(), false);
-      apave.addEventListener("change", makeRequest(), false);
-      apnum.addEventListener("change", makeRequest(), false);
-      sat2ave.addEventListener("change", makeRequest(), false);
-      hs.addEventListener("change", makeRequest(), false);
-      gender.addEventListener("change", makeRequest(), false);
-      //race.addEventListener("change", makeRequest(), false);
+      makeRequest();
 
       // Fetch JSON
       xhr.onreadystatechange=function(){
@@ -111,12 +91,36 @@ function predict(formData) {
             str += predictions[i].college + ": " + predictions[i].prob + "<br>\n";
           }
           document.getElementById("result").innerHTML = str;
-          //return predictions;
+          p171.predictions = predictions;
         } else if (this.readyState != 1) {
           document.getElementById("result").innerHTML =
-            "Ready state:"+this.readyState+" Status:"+this.status;
+            "Ready state: "+this.readyState+" Status: "+this.status;
         }
       }
     });
   });
+
+  console.log(p171.predictions)
 }
+
+  // Get form selections
+  var sat = document.getElementById('sat');
+  var act = document.getElementById('act');
+  var gpa = document.getElementById('gpa');
+  var apave = document.getElementById('apave');
+  var apnum = document.getElementById('apnum');
+  var sat2ave = document.getElementById('sat2ave');
+  var hs = document.getElementById('hs');
+  var gender = document.getElementById('gender');
+  var race = document.getElementById('race');
+
+  // Add Event Listeners
+  sat.addEventListener("change", predict(), false);
+  act.addEventListener("change", predict(), false);
+  gpa.addEventListener("change", predict(), false);
+  apave.addEventListener("change", predict(), false);
+  apnum.addEventListener("change", predict(), false);
+  sat2ave.addEventListener("change", predict(), false);
+  hs.addEventListener("change", predict(), false);
+  gender.addEventListener("change", predict(), false);
+  //race.addEventListener("change", makeRequest(), false);
