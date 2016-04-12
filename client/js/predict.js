@@ -1,6 +1,6 @@
 "use strict";
 
-function predict(formData) {
+function predict() {
   // TODO: call webservice or JavaScript Random Forest
 
   // XXX: mock prediction generator. Remove later.
