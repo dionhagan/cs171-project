@@ -52,6 +52,11 @@ InteractiveVis.prototype.initVis = function () {
 		.attr("class", "y-axis axis")
 		.call(vis.yAxis);
 
+	//tooltips
+	vis.tip = d3.tip().attr('class', 'd3-tip').html(function(d) {
+		console.log(d["college"]);
+		return (d["college"] + ": " + d["prob"]); });
+
 	vis.svg.append("text")
 		.text("Chance of Acceptance")
 		.attr("x", -vis.height/2)
@@ -59,6 +64,8 @@ InteractiveVis.prototype.initVis = function () {
 		.attr("dy", ".35em")
 		.attr("transform", "rotate(-90)")
 		.style("text-anchor", "middle");
+
+	vis.svg.call(vis.tip);
 
 	// declare graph components
 	vis.line = d3.svg.line()
@@ -69,11 +76,6 @@ InteractiveVis.prototype.initVis = function () {
    	.attr("fill", "none")
    	.attr("stroke", "black")
    	.attr("stroke-width", "1.5px");
-
-	//tooltips
-	vis.tip = d3.tip().attr('class', 'd3-tip').html(function(d) {
-		console.log(d["college"]);
-		return (d["college"] + ": " + d["prob"]); });
 
 
 	// call next function
@@ -114,12 +116,12 @@ InteractiveVis.prototype.updateVis = function () {
       	.attr("d", vis.line(vis.displayData));
 
     vis.circle = vis.svg.selectAll("circle")
-    	.data(preds)
-		.on('mouseover', vis.tip.show)
-		.on('mouseout', vis.tip.hide);
+    	.data(preds);
 
     vis.circle.enter().append("circle")
-    	.attr("class", "dot");
+    	.attr("class", "dot")
+		.on('mouseover', vis.tip.show)
+		.on('mouseout', vis.tip.hide);
 
     vis.circle
     	.transition().duration(800)
