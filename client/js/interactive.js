@@ -10,9 +10,9 @@ InteractiveVis.prototype.initVis = function () {
 	var vis = this;
 
 	// Static stuff
-	vis.margin = { top: 20, right: 10, bottom: 20, left: 10 };
+	vis.margin = { top: 50, right: 20, bottom: 20, left: 80 };
 
-	vis.width = 500 - vis.margin.left - vis.margin.right;
+	vis.width = 650 - vis.margin.left - vis.margin.right;
     vis.height = 250 - vis.margin.top - vis.margin.bottom;
 
     vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -31,19 +31,39 @@ InteractiveVis.prototype.initVis = function () {
 
 	// Axes
 	vis.xAxis = d3.svg.axis()
-		  .scale(vis.x)
-		  .orient("bottom");
+		.scale(vis.x)
+		.orient("bottom")
+		.ticks(25);
 
 	vis.yAxis = d3.svg.axis()
 	    .scale(vis.y)
-	    .orient("left");
+	    .orient("left")
+		.ticks(10)
+		.tickFormat(function (d) {
+			return d*100 + "%";
+		});
 
 	vis.svg.append("g")
 	    .attr("class", "x-axis axis")
-	    .attr("transform", "translate(0," + vis.height + ")");
+	    .attr("transform", "translate(0," + vis.height + ")")
+		.call(vis.xAxis)
+			.selectAll("text")
+			.style("text-anchor", "end")
+			.attr("dx", "-.8em")
+			.attr("dy", ".15em")
+			.attr("transform", "rotate(-65)");
 
 	vis.svg.append("g")
-			.attr("class", "y-axis axis");
+		.attr("class", "y-axis axis")
+		.call(vis.yAxis);
+
+	vis.svg.append("text")
+		.text("Chance of Acceptance")
+		.attr("x", -vis.height/2)
+		.attr("y", -60)
+		.attr("dy", ".35em")
+		.attr("transform", "rotate(-90)")
+		.style("text-anchor", "middle");
 
 	// declare graph components
 	vis.line = d3.svg.line()
@@ -54,6 +74,12 @@ InteractiveVis.prototype.initVis = function () {
    	.attr("fill", "none")
    	.attr("stroke", "black")
    	.attr("stroke-width", "1.5px");
+
+	//tooltips
+	vis.tip = d3.tip().attr('class', 'd3-tip').html(function(d) {
+		console.log(d["college"]);
+		return (d["college"] + ": " + d["prob"]); });
+
 
 	// call next function
 	vis.wrangleData();
@@ -86,7 +112,9 @@ InteractiveVis.prototype.updateVis = function () {
       	.attr("d", vis.line(vis.displayData));
 
     vis.circle = vis.svg.selectAll("circle")
-    	.data(preds);
+    	.data(preds)
+		.on('mouseover', vis.tip.show)
+		.on('mouseout', vis.tip.hide);
 
     vis.circle.enter().append("circle")
     	.attr("class", "dot");
@@ -96,7 +124,6 @@ InteractiveVis.prototype.updateVis = function () {
     	.attr("r", 7)
     	.attr("cx", function (d) { return vis.x(d.college) })
     	.attr("cy", function (d) { return vis.y(d.prob) })
-    	
 
     vis.circle.exit().remove();
 
