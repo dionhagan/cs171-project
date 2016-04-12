@@ -10,10 +10,10 @@ InteractiveVis.prototype.initVis = function () {
 	var vis = this;
 
 	// Static stuff
-	vis.margin = { top: 50, right: 20, bottom: 20, left: 80 };
+	vis.margin = { top: 50, right: 20, bottom: 110, left: 80 };
 
 	vis.width = 650 - vis.margin.left - vis.margin.right;
-    vis.height = 250 - vis.margin.top - vis.margin.bottom;
+    vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
     vis.svg = d3.select("#" + vis.parentElement).append("svg")
 	    .attr("width", vis.width + vis.margin.left + vis.margin.right)
@@ -43,17 +43,12 @@ InteractiveVis.prototype.initVis = function () {
 			return d*100 + "%";
 		});
 
-	vis.svg.append("g")
+	vis.xGroup = vis.svg.append("g")
 	    .attr("class", "x-axis axis")
 	    .attr("transform", "translate(0," + vis.height + ")")
-		.call(vis.xAxis)
-			.selectAll("text")
-			.style("text-anchor", "end")
-			.attr("dx", "-.8em")
-			.attr("dy", ".15em")
-			.attr("transform", "rotate(-65)");
+		
 
-	vis.svg.append("g")
+	vis.yGroup = vis.svg.append("g")
 		.attr("class", "y-axis axis")
 		.call(vis.yAxis);
 
@@ -101,6 +96,13 @@ InteractiveVis.prototype.updateVis = function () {
 
 	var colleges = d3.map(vis.displayData, function(d) { return d.college; })
 	vis.x.domain(colleges.keys());
+
+	vis.xGroup.call(vis.xAxis)
+			.selectAll("text")
+			.style("text-anchor", "end")
+			.attr("dx", "-.8em")
+			.attr("dy", ".15em")
+			.attr("transform", "rotate(-65)");
 
 	vis.line
 		.x(function(d) { return vis.x(d.college); })
