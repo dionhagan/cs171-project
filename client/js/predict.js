@@ -80,7 +80,27 @@ function predict() {
         xhr.send();
       }
 
-      makeRequest();
+      // Get form selections
+      var sat = document.getElementById('sat');
+      var act = document.getElementById('act');
+      var gpa = document.getElementById('gpa');
+      var apave = document.getElementById('apave');
+      var apnum = document.getElementById('apnum');
+      var sat2ave = document.getElementById('sat2ave');
+      var hs = document.getElementById('hs');
+      var gender = document.getElementById('gender');
+      var race = document.getElementById('race');
+
+      // Add Event Listeners
+      sat.addEventListener("change", makeRequest(), false);
+      act.addEventListener("change", makeRequest(), false);
+      gpa.addEventListener("change", makeRequest(), false);
+      apave.addEventListener("change", makeRequest(), false);
+      apnum.addEventListener("change", makeRequest(), false);
+      sat2ave.addEventListener("change", makeRequest(), false);
+      hs.addEventListener("change", makeRequest(), false);
+      gender.addEventListener("change", makeRequest(), false);
+      //race.addEventListener("change", makeRequest(), false);
 
       // Fetch JSON
       xhr.onreadystatechange=function(){
@@ -102,25 +122,3 @@ function predict() {
 
   console.log(p171.predictions)
 }
-
-  // Get form selections
-  var sat = document.getElementById('sat');
-  var act = document.getElementById('act');
-  var gpa = document.getElementById('gpa');
-  var apave = document.getElementById('apave');
-  var apnum = document.getElementById('apnum');
-  var sat2ave = document.getElementById('sat2ave');
-  var hs = document.getElementById('hs');
-  var gender = document.getElementById('gender');
-  var race = document.getElementById('race');
-
-  // Add Event Listeners
-  sat.addEventListener("change", predict(), false);
-  act.addEventListener("change", predict(), false);
-  gpa.addEventListener("change", predict(), false);
-  apave.addEventListener("change", predict(), false);
-  apnum.addEventListener("change", predict(), false);
-  sat2ave.addEventListener("change", predict(), false);
-  hs.addEventListener("change", predict(), false);
-  gender.addEventListener("change", predict(), false);
-  //race.addEventListener("change", makeRequest(), false);
