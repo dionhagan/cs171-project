@@ -27,7 +27,7 @@ chapter_list = [
     ]
 
 TMPDIR = os.environ['TMPDIR']
-PREFIX = 'ipython nbconvert --to html --output ' + TMPDIR
+PREFIX = 'jupyter nbconvert --to html --output ' + TMPDIR
 
 def striptags(file):
     """
@@ -58,12 +58,12 @@ def update_index(optionstr):
     f.seek(0)
     for i in d:
         if i.lstrip()[0:7] == '<option':
-        if (not inoption):
-        for j in optionstr:
-            f.write(j)
-        inoption = True
+            if (not inoption):
+                for j in optionstr:
+                    f.write(j)
+                inoption = True
         else:
-        inoption = False
+            inoption = False
             f.write(i)
     f.truncate()
     f.close()
@@ -71,7 +71,7 @@ def update_index(optionstr):
 def gitpush():
     # move the generated HTML from the TMPDIR to the current dir
     for i in chapter_list:
-    os.rename(TMPDIR+i[1]+'.html', './'+i[1]+'.html')
+        os.rename(TMPDIR+i[1]+'.html', './'+i[1]+'.html')
     subprocess.call('git add .',shell=True)
     subprocess.call('git commit -m "new page updates"',shell=True)
     subprocess.call('git push',shell=True)
@@ -85,11 +85,11 @@ def main():
 
     newoptions = []
     for i in chapter_list:
-    convert(i[1])
+        convert(i[1])
         str = '\t\t\t\t<option value="' + i[1] + '.html">'
         if i[0] != '0':
-        str = str + "Chapter "+i[0]+" - "
-    str = str + i[2] + "</option>" + '\n'
+            str = str + "Chapter "+i[0]+" - "
+        str = str + i[2] + "</option>" + '\n'
         newoptions.append(str)
     #subprocess.call('git checkout gh-pages',shell=True)
     #subprocess.call('git pull',shell=True)
