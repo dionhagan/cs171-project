@@ -47,7 +47,6 @@ DrillDownController.prototype.initVis = function() {
       .attr("transform", "translate(0,"+DD.width+")")
       .append("g");
     
-    console.log(factor.name);
     // Create bars and labels for the overview visualization
     DD.factors[factor.name].vis = DD.createBarsAndLabels(factor, barSVG);
 
@@ -165,23 +164,40 @@ DrillDownController.prototype.createMoreDetails = function(element) {
 
   var selectedFactor = d3.select(element);
 
-  var factorID = selectedFactor.property("id")
-  console.log('factor ' +factorID)
-  console.log(DD.factors)
-  var factor = DD.factors[factorID]
-  console.log(factorID)
+  var factorID = selectedFactor.property("id"),
+      factor = DD.factors[factorID];
 
-  var chartElement = factor.moreDetails.select(".chart");
+  var chartElement = factor.moreDetails.select(".chart"),
+      textElement = factor.moreDetails.select(".text");
 
   if (chartElement.html() == "") {
     // Create initial visualization
-    factor.vis.subPlot = new Histogram(chartElement);
+    factor.vis.subPlot = new Histogram(chartElement, factorID);
     
     // Add text to describe the data
-    factor.moreDetails.select(".text")
+    textElement
       .html(p171.text.drillDown.overall_factors[1])
 
-    // Create buttons to change the visualization 
+    var charts = {
+      histogram: Histogram, 
+      scatter: Scatter
+    };
+
+    // Create buttons to change the visualization
+    for (chartType in charts) {
+      textElement.append("div")
+        .attr({
+          class:"select-chart-type",
+          id:chartType
+        })
+        .text(chartType)
+        .on("click", function(d) {
+          var chartID = d3.select(this).property("id");
+          chartElement.html("");
+          factor.vis.subPlot = new charts[chartID](chartElement, factorID)
+        })
+    }
+    
 
   }
 

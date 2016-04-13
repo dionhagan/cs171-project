@@ -1,5 +1,6 @@
-var Histogram = function(_parentElement) {
+var Histogram = function(_parentElement, _factor) {
   this.parentElement = _parentElement;
+  this.category =  _factor
   this.addSelectors();
   this.updateData();
   this.initVis();
@@ -108,9 +109,13 @@ Histogram.prototype.updateData = function() {
   var vis = this;
 
   var college = vis.collegeSelector.property('value');
-  var category = vis.categorySelector.property('value');
+  // var category = vis.categorySelector.property('value');
 
-  vis.displayData = p171.data.colleges[college][category];
+  for (label in p171.data.labels) {
+    if (vis.category == p171.data.labels[label]) vis.category = label;
+  }
+
+  vis.displayData = p171.data.colleges[college][vis.category];
 }
 
 Histogram.prototype.addSelectors = function() {
@@ -138,6 +143,10 @@ Histogram.prototype.addSelectors = function() {
 
   vis.categorySelector
     .property('value','admissionstest');
+  */
+
+  vis.parentElement.append("div")
+    .text("Select a college: ")
 
   vis.collegeSelector = vis.parentElement.append("select")
     .attr({
@@ -146,7 +155,6 @@ Histogram.prototype.addSelectors = function() {
     .on('change', function(d) {
       vis.updateVis();
     });
-  */
 
   var colleges = Object.keys(p171.data.colleges);
 

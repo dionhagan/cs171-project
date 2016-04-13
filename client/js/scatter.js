@@ -1,8 +1,8 @@
 
 var Scatter = function(_parentElement) {
-  this.parentElement = d3.select("#" + _parentElement);
-  this.plotElement = this.parentElement.select("#plot");
-  this.selectorsElement = this.parentElement.select("#selectors")
+  this.parentElement = _parentElement;
+  this.plotElement = this.parentElement.append("div")
+  this.selectorsElement = this.parentElement.append("div")
     .style({
       position: "relative",
       float: "right"

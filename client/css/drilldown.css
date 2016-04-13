@@ -84,5 +84,15 @@ text.effect-values {
   width: 600px;
 }
 
+.select-chart-type {
+  position: realtive;
+  float: left;
+  margin: 5px;
+  background-color: lightsteelblue;
+  height: 30px;
+  width: 85px;
+  text-align: center;
+}
+
 
 
