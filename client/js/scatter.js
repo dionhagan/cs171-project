@@ -1,8 +1,13 @@
-
 var Scatter = function(_parentElement) {
   this.parentElement = _parentElement;
   this.plotElement = this.parentElement.append("div")
+    .attr({
+      class: "scatter-plot"
+    })
   this.selectorsElement = this.parentElement.append("div")
+    .attr({
+      class: "scatter-selectors"
+    })
     .style({
       position: "relative",
       float: "right"
@@ -17,9 +22,9 @@ var Scatter = function(_parentElement) {
 Scatter.prototype.initVis = function() {
   var vis = this;
 
-  vis.margin = {top: 60, right: 20, bottom: 60, left: 60};
+  vis.margin = {top: 10, right: 20, bottom: 60, left: 60};
   vis.width = 800 - vis.margin.left - vis.margin.right,
-  vis.height = 700 - vis.margin.top - vis.margin.bottom;
+  vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
   vis.svg = vis.plotElement.append("svg")
@@ -66,7 +71,9 @@ Scatter.prototype.initVis = function() {
     .x(vis.x)
     .y(vis.y)
     .scaleExtent([1,100])
-    .on("zoom", zoom);
+    .on("zoom", function(d) {
+      vis.zoom(d);
+    });
 
   vis.container
     .call(vis.zoomBehavior);
@@ -189,6 +196,7 @@ Scatter.prototype.updateVis = function() {
       cy: function(d) { return vis.y(d[categoryY]); },
       r: function(d) { return d.isUser ? 6 : 3; },
       fill: function(d) { 
+        console.log(d)
         if (d.isUser) return "yellow";
         return d.acceptStatus == 1 ? "#98fb98" : "lightsteelblue";
       }
@@ -208,8 +216,8 @@ Scatter.prototype.updateVis = function() {
   vis.points.exit().remove();
 }
 
-function zoom() {
-  var vis = p171.scatter;
+Scatter.prototype.zoom = function(d) {
+  var vis = this;
 
   // Filter data based on user selections
   var categoryX = vis.xCategory.property('value'),
@@ -383,6 +391,8 @@ Scatter.prototype.createSelectors = function() {
   vis.yCategory
     .property('value','admissionstest');
 
+  vis.selectorsElement.append("br");
+
   vis.selectorsElement.append("b")
     .text("College: ");
 
@@ -393,6 +403,8 @@ Scatter.prototype.createSelectors = function() {
     .on('change', function(d) {
       vis.updateVis();
     });
+
+  vis.selectorsElement.append("br");
 
   var colleges = Object.keys(p171.data.colleges)
 

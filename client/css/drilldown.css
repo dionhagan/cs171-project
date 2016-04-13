@@ -81,7 +81,6 @@ text.effect-values {
 .chart {
   position: relative;
   float: left;
-  width: 600px;
 }
 
 .select-chart-type {
@@ -92,6 +91,16 @@ text.effect-values {
   height: 30px;
   width: 85px;
   text-align: center;
+}
+
+.scatter-plot {
+  position: relative;
+  float: left;
+}
+
+.scatter-selectors {
+  position: relative;
+  float: left;
 }
 
 
