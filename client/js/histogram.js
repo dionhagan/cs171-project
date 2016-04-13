@@ -145,10 +145,10 @@ Histogram.prototype.addSelectors = function() {
     .property('value','admissionstest');
   */
 
-  vis.parentElement.append("div")
+  var selectorLabel = vis.parentElement.append("div")
     .text("Select a college: ")
 
-  vis.collegeSelector = vis.parentElement.append("select")
+  vis.collegeSelector = selectorLabel.append("select")
     .attr({
       id:"college-selector"
     })

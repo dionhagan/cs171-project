@@ -24,7 +24,7 @@ Scatter.prototype.initVis = function() {
 
   vis.margin = {top: 10, right: 20, bottom: 60, left: 60};
   vis.width = 800 - vis.margin.left - vis.margin.right,
-  vis.height = 600 - vis.margin.top - vis.margin.bottom;
+  vis.height = 500 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
   vis.svg = vis.plotElement.append("svg")
@@ -101,8 +101,6 @@ Scatter.prototype.updateVis = function() {
   var categoryX = vis.xCategory.property('value'),
       categoryY = vis.yCategory.property('value'),
       college = vis.collegeSelector.property('value');
-
-  console.log('Updating Visualization');
 
   vis.data = p171.data.raw.filter(function(d){
 

@@ -1,6 +1,6 @@
 var DrillDownController = function(_parentElement) {
   this.parentElement = d3.select('#'+_parentElement);
-  this.data = p171.data.featureImportance.sort(sortFeatureImportanceData);
+  this.data = p171.data.factorImportance.sort(sortFeatureImportanceData);
   this.factors = {};
   for (var i=0;i<this.data.length;i++) this.factors[this.data[i].name] = {};
   this.initVis();
@@ -172,7 +172,7 @@ DrillDownController.prototype.createMoreDetails = function(element) {
 
   if (chartElement.html() == "") {
     // Create initial visualization
-    factor.vis.subPlot = new Histogram(chartElement, factorID);
+    factor.vis.subPlot = new EffectGraph(chartElement, factorID);
     
     // Add text to describe the data
     textElement
@@ -203,12 +203,6 @@ DrillDownController.prototype.createMoreDetails = function(element) {
 
 }
 
-
-// Close more-details section 
-
-// Open more-details section
-
-// Remove chart from element
 
 
 

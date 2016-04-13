@@ -38,11 +38,12 @@ queue()
     .defer(d3.csv, "data/collegelist.csv")
     .defer(d3.csv, "data/collegedata_unnormalized.csv")
     .defer(d3.csv, "data/collegedata_normalized.csv")
-    .defer(d3.json, "data/feature_effect.json")    
+    .defer(d3.json, "data/feature_effect.json")
+    .defer(d3.json, "data/factors.json")    
     .defer(d3.json, "text/drilldowntext.json")
     .await(storeData)
     
-function storeData(err, collegeList, appData, appDataNorm, featureImportance, drillDownText) {
+function storeData(err, collegeList, appData, appDataNorm, factorImportance, factorEffect, drillDownText) {
   // Get text for drill down page 
   p171.text.drillDown = drillDownText;
 
@@ -50,7 +51,8 @@ function storeData(err, collegeList, appData, appDataNorm, featureImportance, dr
   p171.data.normalized = appDataNorm;
   p171.data.raw = appData;
   p171.data.colleges = {};
-  p171.data.featureImportance = featureImportance
+  p171.data.factorImportance = factorImportance;
+  p171.data.factorEffect = factorEffect;
 
   // Collect data for each college 
   for (var collegeIndex=0; collegeIndex<collegeList.length; collegeIndex++) {
