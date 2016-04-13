@@ -296,7 +296,13 @@ header h1 {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
-  background: darkslategrey;
+  background: blue;
   color: #fff;
   border-radius: 2px;
+}
+
+#interactive-tooltip {
+  color: white; 
+  font-weight: bold; 
+  background: darkslategrey
 }

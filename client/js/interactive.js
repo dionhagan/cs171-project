@@ -81,6 +81,14 @@ InteractiveVis.prototype.initVis = function () {
    	.attr("stroke", "black")
    	.attr("stroke-width", "1.5px");
 
+   	// attach event listeners to sliders
+   	vis.gpa_slider = d3.select("#gpa")
+   		.on("input", function () {
+   			vis.data = predict();
+   			console.log(vis.data);
+   			vis.wrangleData();
+   		});
+
 
 	// call next function
 	vis.wrangleData();
@@ -120,7 +128,7 @@ InteractiveVis.prototype.updateVis = function () {
       	.attr("d", vis.line(vis.displayData));
 
     vis.circle = vis.svg.selectAll("circle")
-    	.data(preds);
+    	.data(vis.displayData);
 
     vis.circle.enter().append("circle")
     	.attr("class", "dot")
