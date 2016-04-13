@@ -3,7 +3,7 @@ Publish.py - take a set of iPython notebooks, export them to HTML and publish th
 
 Usage: python publish.py [--push] [notebook]
        --push will push the converted notebooks to the gh-pages branch
-       notebook allows publishing of only a single notebook. By default, all notebooks listed 
+       notebook allows publishing of only a single notebook. By default, all notebooks listed
        below will be published.
 TODO: publish only a single file
 """
@@ -16,18 +16,18 @@ import subprocess
 # Contains: chapter number, notebook filename, chapter title
 # if the chapter is number 0, do not put a "Chapter n - " prefix
 chapter_list = [
-	['1','1overview','Overview'],
-	['2','2related','Related Work'],
-	['3','3questions','Questions Addressed'],
-	['4','4data','Data Sources'],
-	['5','5eda','Exploratory Data Analysis'],
-	['6','6evolution','Evolution'],
-	['7','7implementation','Implementation'],
-	['8','8evaluation','Evaluation']
-	]
+    ['1','1overview','Overview'],
+    ['2','2related','Related Work'],
+    ['3','3questions','Questions Addressed'],
+    ['4','4data','Data Sources'],
+    ['5','5eda','Exploratory Data Analysis'],
+    ['6','6evolution','Evolution'],
+    ['7','7implementation','Implementation'],
+    ['8','8evaluation','Evaluation']
+    ]
 
 TMPDIR = os.environ['TMPDIR']
-PREFIX = 'ipython nbconvert --to html --output ' + TMPDIR
+PREFIX = 'jupyter nbconvert --to html --output ' + TMPDIR
 
 def striptags(file):
     """
@@ -58,12 +58,12 @@ def update_index(optionstr):
     f.seek(0)
     for i in d:
         if i.lstrip()[0:7] == '<option':
-	    if (not inoption):
-		for j in optionstr:
-		    f.write(j)
-		inoption = True
+            if (not inoption):
+                for j in optionstr:
+                    f.write(j)
+                inoption = True
         else:
-	    inoption = False
+            inoption = False
             f.write(i)
     f.truncate()
     f.close()
@@ -71,7 +71,7 @@ def update_index(optionstr):
 def gitpush():
     # move the generated HTML from the TMPDIR to the current dir
     for i in chapter_list:
-	os.rename(TMPDIR+i[1]+'.html', './'+i[1]+'.html')
+        os.rename(TMPDIR+i[1]+'.html', './'+i[1]+'.html')
     subprocess.call('git add .',shell=True)
     subprocess.call('git commit -m "new page updates"',shell=True)
     subprocess.call('git push',shell=True)
@@ -85,14 +85,14 @@ def main():
 
     newoptions = []
     for i in chapter_list:
-	convert(i[1])
+        convert(i[1])
         str = '\t\t\t\t<option value="' + i[1] + '.html">'
         if i[0] != '0':
-	    str = str + "Chapter "+i[0]+" - "
-	str = str + i[2] + "</option>" + '\n'
+            str = str + "Chapter "+i[0]+" - "
+        str = str + i[2] + "</option>" + '\n'
         newoptions.append(str)
-    subprocess.call('git checkout gh-pages',shell=True)
-    subprocess.call('git pull',shell=True)
+    #subprocess.call('git checkout gh-pages',shell=True)
+    #subprocess.call('git pull',shell=True)
     update_index(newoptions)
     #print newoptions
     if (args.push): gitpush()

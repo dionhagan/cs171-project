@@ -1,0 +1,4 @@
+{
+ "names": [ "Brown", "CalTech", "CarnegieMellon", "Columbia", "Cornell", "Dartmouth", "Duke", "Emory", "Georgetown", "Harvard", "JohnsHopkins", "MIT", "Northwestern", "NotreDame", "Princeton", "Rice", "Stanford", "UCB", "UChicago", "UCLA", "UPenn", "USC", "Vanderbilt", "WashU", "Yale" ],
+"vals": [ -0.20727, 0.66408, 0.38599, -0.15091, 0.27926, -0.060412, -0.31563, 0.045301, -0.23971, 0.058074, 0.22159, 0.62602, 0.052363, 0.037948, 0.04007, 0.27884, -0.11576, 0.28908, 0.05785, 0.18185, 0.045128, 0.18985, -0.1293, -0.019541, -0.16291 ] 
+}
