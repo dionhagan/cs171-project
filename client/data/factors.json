@@ -1,0 +1,30 @@
+{
+ "canAfford": {
+ "names": [ "Brown", "CalTech", "CarnegieMellon", "Columbia", "Cornell", "Dartmouth", "Duke", "Emory", "Georgetown", "Harvard", "JohnsHopkins", "MIT", "Northwestern", "NotreDame", "Princeton", "Rice", "Stanford", "UCB", "UChicago", "UCLA", "UPenn", "USC", "Vanderbilt", "WashU", "Yale" ],
+"vals": [ -0.14399, -0.11282, 0.089664, -0.091818, -0.063892, -0.13926, -0.043051, 0.18112, -0.15938, -0.18569, -0.12797, -0.21314, -0.015823, 0.054144, -0.18506, -0.019981, -0.29193, 0.031605, -0.083461, 0.020488, -0.19938, 0.050847, -0.028588, -0.051184, -0.17079 ] 
+},
+"female": {
+ "names": [ "Brown", "CalTech", "CarnegieMellon", "Columbia", "Cornell", "Dartmouth", "Duke", "Emory", "Georgetown", "Harvard", "JohnsHopkins", "MIT", "Northwestern", "NotreDame", "Princeton", "Rice", "Stanford", "UCB", "UChicago", "UCLA", "UPenn", "USC", "Vanderbilt", "WashU", "Yale" ],
+"vals": [ -0.20727, 0.66408, 0.38599, -0.15091, 0.27926, -0.060412, -0.31563, 0.045301, -0.23971, 0.058074, 0.22159, 0.62602, 0.052363, 0.037948, 0.04007, 0.27884, -0.11576, 0.28908, 0.05785, 0.18185, 0.045128, 0.18985, -0.1293, -0.019541, -0.16291 ] 
+},
+"MinorityGender": {
+ "names": [ "Brown", "CalTech", "CarnegieMellon", "Columbia", "Cornell", "Dartmouth", "Duke", "Emory", "Georgetown", "Harvard", "JohnsHopkins", "MIT", "Northwestern", "NotreDame", "Princeton", "Rice", "Stanford", "UCB", "UChicago", "UCLA", "UPenn", "USC", "Vanderbilt", "WashU", "Yale" ],
+"vals": [ 0.60271, 0.83488, 0.68738, 0.61197, 0.0587, 0.52578,  0.951, 0.84979,  0.423, 0.65201, 0.90931, 0.80297, 0.70401, 0.59113, 0.89366, 0.54292, 0.97593, 0.59525, 0.90142, 0.92054, 0.77333, 0.86414, 0.85712, 0.21925, 0.97734 ] 
+},
+"MinorityRace": {
+ "names": [ "Brown", "CalTech", "CarnegieMellon", "Columbia", "Cornell", "Dartmouth", "Duke", "Emory", "Georgetown", "Harvard", "JohnsHopkins", "MIT", "Northwestern", "NotreDame", "Princeton", "Rice", "Stanford", "UCB", "UChicago", "UCLA", "UPenn", "USC", "Vanderbilt", "WashU", "Yale" ],
+"vals": [ 0.52117, 0.37849, 0.34513, 0.46703, 0.45561, 0.6226, 0.59378, 0.29384, 0.40847, 0.41974, 0.43322, 0.47331, 0.49349, 0.33533, 0.55155, 0.3653, 0.64598, 0.19033, 0.48189, 0.18167, 0.67051, 0.22313, 0.58307, 0.42516, 0.67441 ] 
+},
+"international": {
+ "names": [ "Brown", "CalTech", "CarnegieMellon", "Columbia", "Cornell", "Dartmouth", "Duke", "Emory", "Georgetown", "Harvard", "JohnsHopkins", "MIT", "Northwestern", "NotreDame", "Princeton", "Rice", "Stanford", "UCB", "UChicago", "UCLA", "UPenn", "USC", "Vanderbilt", "WashU", "Yale" ],
+"vals": [ 0.13629, 0.029775, -0.23559, 0.18079, -0.06643, 0.0046447, -0.019117, -0.32422, -0.11212, 0.19597, -0.082036, 0.10143, -0.10385, -0.22173, 0.16147, -0.12123, 0.20597, -0.31397, -0.14235, -0.090328, 0.060885, -0.1992, -0.0063762, -0.10874, 0.17181 ] 
+},
+"sports": {
+ "names": [ "Brown", "CalTech", "CarnegieMellon", "Columbia", "Cornell", "Dartmouth", "Duke", "Emory", "Georgetown", "Harvard", "JohnsHopkins", "MIT", "Northwestern", "NotreDame", "Princeton", "Rice", "Stanford", "UCB", "UChicago", "UCLA", "UPenn", "USC", "Vanderbilt", "WashU", "Yale" ],
+"vals": [ 0.88406, 0.47016, -0.29808, 0.74405, 0.28935, 0.63425, 0.31074, -0.68775, 0.28259, 0.90496, 0.29331, 0.85234, 0.15166, -0.19598, 0.7252, 0.10561, 1.0408, -0.14377, 0.20863, 0.02194, 0.66636, -0.36487, 0.28266, 0.30645, 0.95594 ] 
+},
+"earlyAppl": {
+ "names": [ "Brown", "CalTech", "CarnegieMellon", "Columbia", "Cornell", "Dartmouth", "Duke", "Emory", "Georgetown", "Harvard", "JohnsHopkins", "MIT", "Northwestern", "NotreDame", "Princeton", "Rice", "Stanford", "UCB", "UChicago", "UCLA", "UPenn", "USC", "Vanderbilt", "WashU", "Yale" ],
+"vals": [ 0.91857, 0.92078, 0.92661, 0.91923, 0.92238, 0.92028, 0.92235, 0.92894, 0.92158, 0.9186, 0.92282, 0.91758, 0.92336, 0.92452, 0.91975, 0.92353, 0.91697, 0.92581, 0.92186, 0.92476, 0.91964, 0.92726, 0.92259, 0.92254, 0.91726 ] 
+} 
+}
