@@ -296,8 +296,6 @@ header h1 {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
-  background: blue;
-  color: #fff;
   border-radius: 2px;
 }
 
@@ -305,4 +303,8 @@ header h1 {
   color: white; 
   font-weight: bold; 
   background: darkslategrey
+}
+
+.interactive-slider{
+  width: 400px;
 }

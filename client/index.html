@@ -34,6 +34,7 @@
 
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/chanceme.min.css">
+  <link rel="stylesheet" href="css/chanceme.css">
   <title>ChanceMe - College Admissions Predictions</title>
 </head>
 
@@ -83,35 +84,41 @@
             <label for="gpa"> GPA (unweighted):
               <span id="gpa-value"></span>
             </label>
-            <input type="range" id="gpa" min="0.0" max="4.0" step="0.01">
+            <input type="range" id="gpa" min="0.0" max="4.0" step="0.01" class="interactive-slider" oninput="showValue('current-gpa', this.value)">
+            <span id="current-gpa">2.0</span>
             <br>
-            <label for="sat">SAT Score:
+            <label for="sat">SAT Composite Score:
               <span id="sat-value"></span>
             </label>
-            <input type="range" id="sat" min="0" max="2400" step="10">
+            <input type="range" id="sat" min="0" max="2400" step="10" class="interactive-slider" oninput="showValue('current-sat', this.value)">
+            <span id="current-sat">1200</span>
             <br>
-            <label for="act">ACT Score:
+            <label for="act">ACT Composite Score:
               <span id="act-value"></span>
             </label>
-            <input type="range" id="act" min="0" max="36">
+            <input type="range" id="act" min="0" max="36" class="interactive-slider" oninput="showValue('current-act', this.value)">
+            <span id="current-act">18</span>
             <br>
             <label for="num_ap">Number of AP Exams Taken:
               <span id="num-ap-value"></span>
             </label>
-            <input type="range" id="num_ap" min="0" max="10">
+            <input type="range" id="num_ap" min="0" max="10" class="interactive-slider" oninput="showValue('current-num-ap', this.value)">
+            <span id="current-num-ap">5</span>
             <br>
             <label for="ave_ap">Average AP Exam Score:
               <span id="ave-ap-value"></span>
             </label>
-            <input type="range" id="ave_ap" min="0" max="5" step="0.1">
+            <input type="range" id="ave_ap" min="0" max="5" step="0.1" class="interactive-slider" oninput="showValue('current-ave-ap', this.value)">
+            <span id="current-ave-ap">2.5</span>
             <br>
             <label for="num_sat">Number of SAT Subject Tests Taken:
               <span id="num-sat-value"></span>
             </label>
-            <input type="range" id="num_sat" min="0" max="10">
+            <input type="range" id="num_sat" min="0" max="10" class="interactive-slider" oninput="showValue('current-num-sat', this.value)">
+            <span id="current-num-sat">5</span>
             <br> <br>
           </form>
-          </div>
+          </form>
         </div>
       </div>
     </div>

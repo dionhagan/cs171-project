@@ -18,6 +18,12 @@ function createVis() {
     lineChart = new InteractiveVis('chart-area', preds);
 }
 
+function showValue(elementID, newValue)
+{
+    document.getElementById(elementID).innerHTML=newValue;
+
+}
+
 
 //// add the image to be moved as percentage changes
 //svg.append("image")
