@@ -1,8 +1,29 @@
 "use strict";
-// Class to store user input
-function FormData(sat) {
-  /* initial user input with rational defaults */
-  this.sat = parseInt(sat) || 1200;
+// Class for form data
+function FormData(userInput) {
+  var defaultValues = {
+    sat: 1200,
+    act: 18,
+    gpa: 2.0,
+    apnum: 2,
+    apave: 4,
+    sat2ave: 700,
+    hs: 0,
+    gender: -1,
+    race: -2,
+    college: 'Harvard'
+  }
+
+  for (var inputName in userInput) {
+    var value = userInput[inputName];
+    var defaultValue = defaultValues[inputName];
+    if (inputName == 'college') {
+      this['college'] = value in p171.data.colleges ? value : defaultValue;
+    } else {
+      this[inputName] = !isNaN(value) ? +value : defaultValue;
+    }
+  }
+
   return this;
 }
 
@@ -44,12 +65,35 @@ window.addEventListener("resize", function(){
 
 document.getElementById("btn-predict").onclick = function() {
   // get form data
-  var formData = new FormData(
-    document.getElementById("sat").value
-  );
+  var userInput = {};
+  var form = $('div.fieldset ul li select')
+  
+  for (var i=0; i<form.length; i++) {
+    var input = form[i];
+    userInput[input.id] = input.value;
+    setCookie(input.id, input.value, 1);
+  }
 
   // call the prediction
-  p171.predictions = predict(formData);
+  p171.predictions = predict( new FormData(userInput) );
   console.log(p171.predictions);
   updatePredictionViz();
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return "";
 }

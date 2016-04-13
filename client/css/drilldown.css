@@ -1,0 +1,98 @@
+/* scatter plot visualization */
+.points {
+  stroke-width: 1.5px;
+}
+
+.axis {
+  fill: none;
+  stroke: black;
+  stroke-opacity: 10;
+  shape-rendering: crispEdges;
+  vector-effect: non-scaling-stroke;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+.vis-background {
+  fill: white;
+}
+
+#selectors {
+  text-aling: center;
+  top: 50px;
+  background-color: lightgreen;
+}
+
+.control-label {
+  font-size: 12px;
+}
+
+/* Feature Importance Visualization */
+.vis-title {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.overview-bar {
+  cursor: pointer;
+}
+
+.overview-bar:hover {
+
+}
+
+text.effect-values {
+  position:relative;
+  z-index: 100;
+}
+
+/* Drill Down Style*/
+.bar-svg {
+  height: 35px;
+}
+
+.text {
+  position: relative;
+  float: left;
+  width: 200px;
+  margin-left: 100px;
+  border-right: solid lightsteelblue 2px;
+}
+
+.chart {
+  position: relative;
+  float: left;
+  width: 600px;
+}
+
+.select-chart-type {
+  position: realtive;
+  float: left;
+  margin: 5px;
+  background-color: lightsteelblue;
+  height: 30px;
+  width: 85px;
+  text-align: center;
+}
+
+
+
