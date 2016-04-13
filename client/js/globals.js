@@ -127,9 +127,10 @@ function storeData(err, collegeList, appData, appDataNorm, featureImportance, dr
 }
 
 function createVis() {
-  p171.featureImportanceVis = new FeatureImportanceVis("feature-importance-vis");
+  //p171.featureImportanceVis = new FeatureImportanceVis("feature-importance-vis");
   //p171.hist = new Histogram("distribution");
   //p171.scatter = new Scatter("scatter-plot");
+  var DD = new DrillDownController("feature-importance-vis");
 }
 
 

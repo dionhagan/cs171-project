@@ -65,6 +65,24 @@ text.effect-values {
   z-index: 100;
 }
 
+/* Drill Down Style*/
+.bar-svg {
+  height: 35px;
+}
+
+.text {
+  position: relative;
+  float: left;
+  width: 200px;
+  margin-left: 100px;
+  border-right: solid lightsteelblue 2px;
+}
+
+.chart {
+  position: relative;
+  float: left;
+  width: 600px;
+}
 
 
 

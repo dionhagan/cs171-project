@@ -10,13 +10,13 @@ FeatureImportanceVis.prototype.initVis = function() {
 
   // Create dimensions for the visualization based on current window size
   vis.margin = {top: 60, right: 120, bottom: 60, left: 220};
-  vis.width = window.innerWidth - vis.margin.left - vis.margin.right,
-  vis.height = window.outerWidth - vis.margin.top - vis.margin.bottom;
+  vis.width = window.innerWidth - vis.margin.left - vis.margin.right;
+  vis.height = window.innerHeight - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
   vis.svg = vis.parentElement.append("svg")
-      .attr("width", vis.width + vis.margin.left + vis.margin.right)
-      .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+      .attr("width", window.innerWidth)
+      .attr("height", window.innerHeight)
     .append("g")
       .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
@@ -135,7 +135,7 @@ FeatureImportanceVis.prototype.createOverviewVis = function() {
         .attr({
           class:"selected-factor"
         })
-
+/*
       selectedFactor.select("g.bar-label")
         .transition().duration(1000)
         .attr({
@@ -170,6 +170,15 @@ FeatureImportanceVis.prototype.createOverviewVis = function() {
         .transition().duration(750)
         .attr({width:0, x:0})
         .remove();
+*/
+      // Adjust the height of the canvas
+      visObject.height += 500;
+      visObject.svg
+        .attr({
+          height: visObject.height,
+        });
+
+
     });
 
 }
