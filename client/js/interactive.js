@@ -53,9 +53,13 @@ InteractiveVis.prototype.initVis = function () {
 		.call(vis.yAxis);
 
 	//tooltips
+
 	vis.tip = d3.tip().attr('class', 'd3-tip').html(function(d) {
 		console.log(d["college"]);
-		return (d["college"] + ": " + d["prob"]); });
+		return ("<strong style='background: lightgrey'>" + d["college"] + ": </strong> " +
+		"<strong style='color:crimson; background: lightgrey'>" + d3.format("2.2%")(d["prob"]) + "</strong>")
+	});
+		//return (d["college"] + ": " + d3.format("2.2%")(d["prob"])); });
 
 	vis.svg.append("text")
 		.text("Chance of Acceptance")
