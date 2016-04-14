@@ -67,18 +67,59 @@
         </p>
       </div>
     </div>
-    <!-- User input panel -->
+
+    <!-- Visualization & Static input -->
     <div class="row">
-      <div class="col-offset-1 col-4-6">
-        <div class="panel">
-          <div class="panel-heading">
-            <h3 class="panel-title">Try it now</h3>
-          </div>
-          <div id="chart-area"></div>
-          <br> <br>
-          <div class="interaction-text">
+      <div class="col-md-6">
+        <!-- <div class="panel-heading">
+          <h3 class="panel-title">Try it now</h3>
+        </div> -->
+        <div id="chart-area"></div>
+      </div>
+      <div class="col-md-4">
+          <p>Demographics</p>
+
+          College:
+          <select id="college">
+            <option>Princeton</option>
+            <option>Harvard</option>
+            <option>Yale</option>
+            <option>Columbia</option>
+            <option>Stanford</option>
+          </select>
+          <br>
+          
+          Gender:
+          <select id="gender">
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+          <br>
+
+          Race:
+          <select id="gender">
+            <option>White</option>
+            <option>Black</option>
+            <option>Hispanic</option>
+            <option>Asian</option>
+            <option>Other</option>
+          </select>
+          <br>
+
+          
+
+      </div>
+    </div>
+
+    <br> <br>
+
+    <!-- Dynamic Slider input-->
+    <div class="row">
+      <div class="col-4-6">
+        <div class="interaction-text">
             <h3>Enter Your Expected GPA and Test Scores:  </h3>
-              <br>
+            <br>
             <form method="post" id="user_info">
               <label for="gpa"> GPA (unweighted):
                 <span id="gpa-value"></span>
@@ -119,8 +160,8 @@
               <input type="submit" value="Save Scenario">
               <br> <br>
             </form>
+          </div>
         </div>
-      </div>
     </div>
 
     <!-- Prediction Visualization -->

@@ -78,7 +78,7 @@ InteractiveVis.prototype.initVis = function () {
 	vis.chart = vis.svg.append("path")
    	.attr("class", "line")
    	.attr("fill", "none")
-   	.attr("stroke", "black")
+   	.attr("stroke", "steelblue")
    	.attr("stroke-width", "1.5px");
 
    	// attach event listeners to sliders
@@ -132,12 +132,14 @@ InteractiveVis.prototype.updateVis = function () {
 
     vis.circle.enter().append("circle")
     	.attr("class", "dot")
+    	.attr("r", 1)
 		.on('mouseover', vis.tip.show)
 		.on('mouseout', vis.tip.hide);
 
     vis.circle
     	.transition().duration(800)
-    	.attr("r", 7)
+    	.attr("r", 4)
+    	.attr("opacity", .8)
     	.attr("cx", function (d) { return vis.x(d.college) })
     	.attr("cy", function (d) { return vis.y(d.prob) })
 
