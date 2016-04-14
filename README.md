@@ -1,9 +1,7 @@
 # CS171 Team Project
 Final team project for CS171 Spring 2016
 
-Team Braavos
-
-### Team:
+## Team Braavos
 
 Dion Hagan
 
@@ -13,13 +11,13 @@ Malcolm Mason Rodriguez
 
 David Wihl
 
-# Where to Find Things:
+## Where to Find Things:
 
 [Trello Board for this project](https://trello.com/b/zguJ72GM)
 
 [Slack Channel](https://braavos171.slack.com/messages/general/)
 
-[Project Proposal](proposal.md) (submitted 3/21/16)
+[Project Proposal](deliverables/proposal.md) (submitted 3/21/16)
 
 [Current Public Site](http://www.chanceme.info/) (that we will rip and replace)
 
@@ -29,11 +27,19 @@ Way too long [business plan (incl. personas)](https://docs.google.com/document/d
 
 Prior [CS109 github site](https://github.com/wihl/cs109-groupproj-college) and [Project Description](http://project.chanceme.info)
 
-[Responsive Design Prototype](https://github.com/wihl/chanceme-site/tree/gh-pages)
-
 [Heroku Dashboard](https://dashboard.heroku.com/apps/boiling-forest-8250/resources) (where the current Python-based backend lives). Ask David for access - you'll need a Heroku account.
 
-# git Notes
+## Directory Structure
+
+* `client` all the client-side / D3 / Visualization code
+* `deliverables` team homework location
+* `experiments` new code to try, explorations, risky attempts
+* `sketches` sketches, ideas, typically hand-drawn
+* `processbook` the process book for the project
+* `webservice` the Python based webservice (from CS109)
+
+
+## git Notes
 
 Since we will be working concurrently on multiple parts of this
 project, `git` will be very useful tool to ensure that we can
@@ -41,7 +47,7 @@ work in parallel, even on the same code, without interference.
 
 Here are some notes to get you started.
 
-#### Copy this repository to your machine
+### Copy this repository to your machine
 
 `git clone git@github.com:wihl/cs171-project.git
 
