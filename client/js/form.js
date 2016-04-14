@@ -1,29 +1,8 @@
 "use strict";
-// Class for form data
-function FormData(userInput) {
-  var defaultValues = {
-    sat: 1200,
-    act: 18,
-    gpa: 2.0,
-    apnum: 2,
-    apave: 4,
-    sat2ave: 700,
-    hs: 0,
-    gender: -1,
-    race: -2,
-    college: 'Harvard'
-  }
-
-  for (var inputName in userInput) {
-    var value = userInput[inputName];
-    var defaultValue = defaultValues[inputName];
-    if (inputName == 'college') {
-      this['college'] = value in p171.colleges ? value : defaultValue;
-    } else {
-      this[inputName] = !isNaN(value) ? +value : defaultValue;
-    }
-  }
-
+// Class to store user input
+function FormData(sat) {
+  /* initial user input with rational defaults */
+  this.sat = parseInt(sat) || 1200;
   return this;
 }
 
@@ -65,16 +44,12 @@ window.addEventListener("resize", function(){
 
 document.getElementById("btn-predict").onclick = function() {
   // get form data
-  var userInput = {};
-  var form = $('div.fieldset ul li select')
-  
-  for (var i=0; i<form.length; i++) {
-    var input = form[i];
-    userInput[input.id] = input.value;
-  }
+  var formData = new FormData(
+    document.getElementById("sat").value
+  );
 
   // call the prediction
-  p171.predictions = predict( new FormData(userInput) );
+  p171.predictions = predict(formData);
   console.log(p171.predictions);
   updatePredictionViz();
 }
