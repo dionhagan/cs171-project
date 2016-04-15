@@ -84,7 +84,7 @@ InteractiveVis.prototype.initVis = function () {
    	// attach event listeners to sliders
    	vis.gpa_slider = d3.select("#gpa")
    		.on("input", function () {
-   			vis.data = predict();
+   			vis.data = predict2();
    			vis.wrangleData();
    		});
 
