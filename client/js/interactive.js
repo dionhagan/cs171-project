@@ -10,7 +10,7 @@ InteractiveVis.prototype.initVis = function () {
 	var vis = this;
 
 	// Static stuff
-	vis.margin = { top: 50, right: 20, bottom: 110, left: 80 };
+	vis.margin = { top: 50, right: 20, bottom: 120, left: 80 };
 
 	vis.width = 650 - vis.margin.left - vis.margin.right;
     vis.height = 400 - vis.margin.top - vis.margin.bottom;

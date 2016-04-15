@@ -77,10 +77,11 @@
         <div id="chart-area"></div>
       </div>
       <div class="col-md-4">
-          <h2>Demographics</h2>
+          <br> <br>
+          <h2>Demographics:</h2>
 
           College:
-          <select id="college">
+          <select id="college" class = "dropdown">
             <option value="Brown">Brown</option>
             <option value="CalTech">CalTech</option>
             <option value="CarnegieMellon">Carnegie Mellon</option>
@@ -110,7 +111,7 @@
           <br><br>
           
           Gender:
-          <select id="gender">
+          <select id="gender" class="dropdown">
             <option value="-1">Male</option>
             <option value="1">Female</option>
             <option value="0">Other</option>
@@ -118,7 +119,7 @@
           <br><br>
 
           Race:
-          <select id="race">
+          <select id="race" class="dropdown">
             <option>White</option>
             <option>Black</option>
             <option>Hispanic</option>
@@ -128,14 +129,11 @@
           <br><br>
 
           Type of High School:
-          <select id="hs">
+          <select id="hs" class="dropdown">
             <option>Public</option>
             <option>Private</option>
           </select>
           <br><br>
-
-          <input type="submit">
-
           
 
       </div>
@@ -147,8 +145,7 @@
     <div class="row">
       <div class="col-4-6">
         <div class="interaction-text">
-            <h3>Enter Your Expected GPA and Test Scores:  </h3>
-            <br>
+            <h2>Expected GPA and Test Scores: </h2>
             <form method="post" id="user_info">
               <label for="gpa"> GPA (unweighted):
                 <span id="gpa-value"></span>
