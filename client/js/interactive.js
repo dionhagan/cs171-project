@@ -85,10 +85,63 @@ InteractiveVis.prototype.initVis = function () {
    	vis.gpa_slider = d3.select("#gpa")
    		.on("input", function () {
    			vis.data = predict();
-   			console.log(vis.data);
    			vis.wrangleData();
    		});
 
+   	vis.sat_slider = d3.select("#sat")
+   		.on("input", function () {
+   			vis.data = predict();
+   			vis.wrangleData();
+   		});
+
+	vis.act_slider = d3.select("#act")
+   		.on("input", function () {
+   			vis.data = predict();
+   			vis.wrangleData();
+   		});
+
+   	vis.num_ap_slider = d3.select("#num_ap")
+   		.on("input", function () {
+   			vis.data = predict();
+   			vis.wrangleData();
+   		});   	
+
+   	vis.ave_ap_slider = d3.select("#ave_ap")
+   		.on("input", function () {
+   			vis.data = predict();
+   			vis.wrangleData();
+   		});
+
+   	vis.num_sat_slider = d3.select("#num_sat")
+   		.on("input", function () {
+   			vis.data = predict();
+   			vis.wrangleData();
+   		});
+
+   	// attach event listeners to dropdowns
+   	vis.college_menu = d3.select("#college")
+   		.on("change", function () {
+   			vis.data = predict();
+   			vis.wrangleData();
+   		});
+
+   	vis.gender_menu = d3.select("#gender")
+   		.on("change", function () {
+   			vis.data = predict();
+   			vis.wrangleData();
+   		});
+
+   	vis.race_menu = d3.select("#race")
+   		.on("change", function () {
+   			vis.data = predict();
+   			vis.wrangleData();
+   		});
+
+   	vis.hs_menu = d3.select("#hs")
+   		.on("change", function () {
+   			vis.data = predict();
+   			vis.wrangleData();
+   		});
 
 	// call next function
 	vis.wrangleData();
