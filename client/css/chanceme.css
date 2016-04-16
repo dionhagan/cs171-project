@@ -16,7 +16,8 @@ html {
 body {
   height: 100%;
   font-size: 100%;
-  font-family: "palatino linotype", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
+  /*font-family: "palatino linotype", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
 }
 
 h1 {
@@ -290,6 +291,12 @@ header h1 {
 
 .interaction-text{
   margin-left: 50px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.schools-text{
+  margin-left: 80px;
+  font-family: 'Roboto', sans-serif;
 }
 
 .d3-tip {
@@ -306,5 +313,61 @@ header h1 {
 }
 
 .interactive-slider{
-  width: 400px;
+  width: 350px;
+  margin-top: 5px;
+}
+
+.interactive-slider{
+  width: 310px;
+}
+
+#gpa{
+  margin-left: 131px;
+}
+
+#sat{
+  margin-left: 103px;
+}
+
+#act{
+  margin-left: 104px;
+}
+
+#num_ap{
+  margin-left: 60px;
+}
+
+#ave_ap{
+  margin-left: 90px;
+}
+
+#num_sat{
+  margin-left: 5px;
+}
+
+.dropdown select {
+  background: transparent;
+  width: 100px;
+  padding: 5px;
+  font-size: 16px;
+  line-height: 1;
+  border: 0;
+  border-radius: 0;
+  height: 34px;
+  -webkit-appearance: none;
+}
+
+.dropdown {
+  width: 150px;
+  height: 30px;
+  margin-left: 5px;
+  overflow: hidden;
+  background: url(new_arrow.png) no-repeat right #ddd;
+  border: 1px solid #ccc;
+}
+
+.button{
+  background-color: lightgrey;
+  border-width: 2px;
+  border-color: darkslategrey;
 }

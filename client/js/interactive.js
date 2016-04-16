@@ -10,7 +10,7 @@ InteractiveVis.prototype.initVis = function (callback) {
 	var vis = this;
 
 	// Static stuff
-	vis.margin = { top: 50, right: 20, bottom: 110, left: 80 };
+	vis.margin = { top: 50, right: 20, bottom: 120, left: 80 };
 
 	vis.width = 650 - vis.margin.left - vis.margin.right;
     vis.height = 400 - vis.margin.top - vis.margin.bottom;
@@ -153,6 +153,8 @@ InteractiveVis.prototype.initVis = function (callback) {
    			vis.wrangleData();
    		});
 
+
+
 	// call next function
 	vis.wrangleData();
 }
@@ -165,14 +167,50 @@ InteractiveVis.prototype.wrangleData = function () {
 
 	vis.displayData = vis.data;
 
+	// Get list of all selected schools
+	d3.select("#school-select")
+		.on("change", function(){
+			console.log($('input[name="colleges"]:checked').serialize());
+			vis.allSchools = [];
+			$('input:checkbox[name="colleges"]:checked').each(function()
+			{
+				vis.allSchools.push($(this).val());
+			});
+			console.log(vis.allSchools);
+			vis.updateVis()
+		})
+
 	vis.updateVis();
 }
 
 InteractiveVis.prototype.updateVis = function () {
 	var vis = this;
 
-	var colleges = d3.map(vis.displayData, function(d) { return d.college; })
-	vis.x.domain(colleges.keys());
+	var colleges = d3.map(vis.newData, function(d) { return d.college; })
+
+	console.log(vis.allSchools);
+	console.log(vis.newData);
+
+	vis.newData = [];
+
+	if(vis.allSchools == undefined)
+	{
+		xdomain = colleges.keys();
+
+	}
+	else
+	{
+		xdomain = vis.allSchools;
+		for(var i=0; i<vis.allSchools.length; i++){
+			for (var j=0; j < vis.displayData.length; j++){
+				if (vis.displayData[j].college == vis.allSchools[i]){
+					vis.newData.push(vis.displayData[j]);
+				}
+			}
+		}
+	}
+
+	vis.x.domain(xdomain);
 
 	vis.xGroup.call(vis.xAxis)
 			.selectAll("text")
@@ -188,10 +226,10 @@ InteractiveVis.prototype.updateVis = function () {
 	vis.chart
 		.transition()
     	.duration(800)
-      	.attr("d", vis.line(vis.displayData));
+      	.attr("d", vis.line(vis.newData));
 
     vis.circle = vis.svg.selectAll("circle")
-    	.data(vis.displayData);
+    	.data(vis.newData);
 
     vis.circle.enter().append("circle")
     	.attr("class", "dot")

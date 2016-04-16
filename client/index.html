@@ -68,6 +68,50 @@
       </div>
     </div>
 
+    <!-- Select Schools -->
+    <div class="row">
+      <h2 class="schools-text">Which schools would you like to consider? </h2>
+        <div id="school-select">
+          <div class="col-md-2">
+          <input type="checkbox" name="colleges" value="Brown" class="custom"> Brown <br>
+          <input type="checkbox" name="colleges" value="CalTech"> Cal Tech <br>
+          <input type="checkbox" name="colleges" value="CarnegieMellon"> Carnegie Mellon <br>
+          <input type="checkbox" name="colleges" value="Columbia"> Colombia <br>
+          <input type="checkbox" name="colleges" value="Cornell"> Cornell <br>
+        </div>
+        <div class="col-md-2">
+          <input type="checkbox" name="colleges" value="Dartmouth"> Dartmouth <br>
+          <input type="checkbox" name="colleges" value="Duke"> Duke <br>
+          <input type="checkbox" name="colleges" value="Emory"> Emory <br>
+          <input type="checkbox" name="colleges" value="Georgetown"> Georgetown <br>
+          <input type="checkbox" name="colleges" value="Harvard"> Harvard <br>
+        </div>
+        <div class="col-md-2">
+          <input type="checkbox" name="colleges" value="JohnsHopkins"> Johns Hopkins <br>
+          <input type="checkbox" name="colleges" value="MIT"> MIT <br>
+          <input type="checkbox" name="colleges" value="Northwestern"> Northwestern <br>
+          <input type="checkbox" name="colleges" value="NotreDame"> Notre Dame <br>
+          <input type="checkbox" name="colleges" value="Princeton"> Princeton <br>
+        </div>
+        <div class="col-md-2">
+          <input type="checkbox" name="colleges" value="Rice"> Rice <br>
+          <input type="checkbox" name="colleges" value="Stanford"> Stanford <br>
+          <input type="checkbox" name="colleges" value="UCB"> UCB <br>
+          <input type="checkbox" name="colleges" value="UChicago"> UChicago <br>
+          <input type="checkbox" name="colleges" value="UCLA"> UCLA <br>
+        </div>
+        <div class="col-md-2">
+          <input type="checkbox" name="colleges" value="UPenn"> UPenn <br>
+          <input type="checkbox" name="colleges" value="USC"> USC <br>
+          <input type="checkbox" name="colleges" value="Vanderbilt"> Vanderbilt <br>
+          <input type="checkbox" name="colleges" value="WashU"> WashU <br>
+          <input type="checkbox" name="colleges" value="Yale"> Yale <br>
+        </div>
+        </div>
+      <br>
+    </div>
+
+
     <!-- Visualization & Static input -->
     <div class="row">
       <div class="col-md-6">
@@ -77,40 +121,11 @@
         <div id="chart-area"></div>
       </div>
       <div class="col-md-4">
-          <h2>Demographics</h2>
-
-          College:
-          <select id="college">
-            <option value="Brown">Brown</option>
-            <option value="CalTech">CalTech</option>
-            <option value="CarnegieMellon">Carnegie Mellon</option>
-            <option value="Columbia">Columbia</option>
-            <option value="Cornell">Cornell</option>
-            <option value="Dartmouth">Dartmouth</option>
-            <option value="Duke">Duke</option>
-            <option value="Emory">Emory</option>
-            <option value="Georgetown">Georgetown</option>
-            <option value="Harvard">Harvard</option>
-            <option value="JohnsHopkins">Johns Hopkins</option>
-            <option value="MIT">MIT</option>
-            <option value="Northwestern">Northwestern</option>
-            <option value="NotreDame">NotreDame</option>
-            <option value="Princeton">Princeton</option>
-            <option value="Rice">Rice</option>
-            <option value="Stanford">Stanford</option>
-            <option value="UCB">UCB</option>
-            <option value="UChicago">UChicago</option>
-            <option value="UCLA">UCLA</option>
-            <option value="UPenn">UPenn</option>
-            <option value="USC">USC</option>
-            <option value="Vanderbilt">Vanderbilt</option>
-            <option value="WashU">WashU</option>
-            <option value="Yale">Yale</option>
-          </select>
-          <br><br>
+          <br> <br>
+          <h2>Demographics:</h2>
           
           Gender:
-          <select id="gender">
+          <select id="gender" class="dropdown">
             <option value="-1">Male</option>
             <option value="1">Female</option>
             <option value="0">Other</option>
@@ -118,7 +133,7 @@
           <br><br>
 
           Race:
-          <select id="race">
+          <select id="race" class="dropdown">
             <option value="1">African American/Black</option>
             <option value="2">Hispanic/Latino</option>
             <option value="0">Asian</option>
@@ -138,7 +153,6 @@
             <option value="3">Homeschool</option>
           </select>
           <br><br>
-
           
 
       </div>
@@ -150,8 +164,7 @@
     <div class="row">
       <div class="col-4-6">
         <div class="interaction-text">
-            <h3>Enter Your Expected GPA and Test Scores:  </h3>
-            <br>
+            <h2>Expected GPA and Test Scores: </h2>
             <form method="post" id="user_info">
               <label for="gpa"> GPA (unweighted):
                 <span id="gpa-value"></span>
@@ -189,7 +202,7 @@
               <input type="range" id="num_sat" min="0" max="10" class="interactive-slider" oninput="showValue('current-num-sat', this.value)">
               <span id="current-num-sat">5</span>
               <br> <br>
-              <input type="submit" value="Save Scenario">
+              <input type="submit" value="Save Scenario" class="button">
               <br> <br>
             </form>
           </div>
