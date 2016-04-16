@@ -75,7 +75,7 @@ function predict2() {
       var act = d3.select('#act');
       var gpa = d3.select('#gpa');
       var apave = d3.select('#ave_ap');
-      var apnum = d3.select('#apnum');
+      var apnum = d3.select('#num_ap');
       var sat2ave = d3.select('#num_sat');
       var hs = d3.select('#hs');
       var gender = d3.select('#gender');
@@ -104,66 +104,60 @@ function predict2() {
           }
         }
 
+        console.log(gpa.property("value"));
+
         // Standardize GPA, Average AP, and SAT2
         var gpaValue = (gpa.property("value") - means.GPA) / stds.GPA;
         var apaveValue = (apave.property("value") - means.averageAP) / stds.averageAP;
         var sat2aveValue = (sat2ave.property("value") - means.SATsubject) / stds.SATsubject;
 
+        console.log(gpaValue);
+        console.log(apnum.property("value"));
+
         // Construct New URL
         var result_url = url.replace("{TEST}", admissionstest)
                             .replace("{GPA}", gpaValue)
-                            .replace("{AP}", apnum.value)
+                            .replace("{AP}", apnum.property("value"))
                             .replace("{APAVE}", apaveValue)
                             .replace("{SAT2}", sat2aveValue)
-                            .replace("{HS}", hs.value)
-                            .replace("{GENDER}", gender.value);
+                            .replace("{HS}", hs.property("value"))
+                            .replace("{GENDER}", gender.property("value"));
                             //.replace("{RACE}", race.value);
         return result_url;
       }
 
       // Make Webservice Requests
-      function makeRequest() {
-        newurl = getNewURL();
-        document.getElementById("result").innerHTML = "calling to webservice...<br>"+newurl;
-        xhr.open("GET", newurl);
-        xhr.send();
-      }
+      newurl = getNewURL();
+      console.log(newurl);
+      document.getElementById("result").innerHTML = "calling to webservice...<br>"+newurl;
+      xhr.open("GET", newurl);
+      xhr.send();
 
-      // Add Event Listeners to sliders
-
-      // sat.on("change", makeRequest());
-      // act.on("change", makeRequest());
-      // gpa.on("change", makeRequest());
-      // apave.on("change", makeRequest());
-      // apnum.on("change", makeRequest());
-      // sat2ave.on("change", makeRequest());
-
-
-
-      // sat.addEventListener("change", makeRequest(), false);
-      // act.addEventListener("change", makeRequest(), false);
-      // gpa.addEventListener("change", makeRequest(), false);
-      // apave.addEventListener("change", makeRequest(), false);
-      // apnum.addEventListener("change", makeRequest(), false);
-      // sat2ave.addEventListener("change", makeRequest(), false);
-      // hs.addEventListener("change", makeRequest(), false);
-      // gender.addEventListener("change", makeRequest(), false);
+      var predictions = {};
 
       // Fetch JSON
       xhr.onreadystatechange=function(){
         if (this.readyState==4 && this.status==200){
-          var predictions = JSON.parse(this.response).preds;
+          predictions = JSON.parse(this.response).preds;
           var str = "";
           for (var i = 0; i < predictions.length; i++) {
             str += predictions[i].college + ": " + predictions[i].prob + "<br>\n";
           }
           document.getElementById("result").innerHTML = str;
-          return predictions;
+          //callback(predictions);
         } else if (this.readyState != 1) {
           document.getElementById("result").innerHTML =
             "Ready state: "+this.readyState+" Status: "+this.status;
+          //callback(null);
         }
       }
+      return "end";
     });
   });
+}
+
+function callback(json) {
+  p171.predictions = json;
+  console.log(p171.predictions);
+  return json;
 }

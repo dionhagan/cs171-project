@@ -6,7 +6,7 @@ InteractiveVis = function (_parentElement, _data) {
 	this.initVis();
 }
 
-InteractiveVis.prototype.initVis = function () {
+InteractiveVis.prototype.initVis = function (callback) {
 	var vis = this;
 
 	// Static stuff
@@ -81,11 +81,21 @@ InteractiveVis.prototype.initVis = function () {
    	.attr("stroke", "steelblue")
    	.attr("stroke-width", "1.5px");
 
+   	function update () {
+   		console.log(p171.predictions);
+		vis.data = p171.predictions;
+		vis.wrangleData();
+   	}
+
    	// attach event listeners to sliders
    	vis.gpa_slider = d3.select("#gpa")
-   		.on("input", function () {
-   			vis.data = predict2();
-   			vis.wrangleData();
+   		.on("change", function () {
+   			queue()
+				.defer(predict2)
+				.await(function(error, json){
+					if (error) throw error;
+					console.log(json);
+				});
    		});
 
    	vis.sat_slider = d3.select("#sat")
