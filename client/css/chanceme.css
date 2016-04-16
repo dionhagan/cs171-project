@@ -294,6 +294,11 @@ header h1 {
   font-family: 'Roboto', sans-serif;
 }
 
+.schools-text{
+  margin-left: 80px;
+  font-family: 'Roboto', sans-serif;
+}
+
 .d3-tip {
   line-height: 1;
   font-weight: bold;
@@ -317,23 +322,27 @@ header h1 {
 }
 
 #gpa{
-  margin-left: 120px;
+  margin-left: 131px;
 }
 
 #sat{
-  margin-left: 93px;
+  margin-left: 103px;
 }
 
 #act{
-  margin-left: 93px;
+  margin-left: 104px;
 }
 
 #num_ap{
-  margin-left: 50px;
+  margin-left: 60px;
 }
 
 #ave_ap{
-  margin-left: 80px;
+  margin-left: 90px;
+}
+
+#num_sat{
+  margin-left: 5px;
 }
 
 .dropdown select {
@@ -355,4 +364,10 @@ header h1 {
   overflow: hidden;
   background: url(new_arrow.png) no-repeat right #ddd;
   border: 1px solid #ccc;
+}
+
+.button{
+  background-color: lightgrey;
+  border-width: 2px;
+  border-color: darkslategrey;
 }
