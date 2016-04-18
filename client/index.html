@@ -52,7 +52,6 @@
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="howitworks.html">How It Works</a></li>
-          <li><a href="testpage.html">Test Page</a></li>
         </ul>
       </nav>
     </div>
@@ -71,63 +70,63 @@
       <h2 class="schools-text">Which schools would you like to consider? </h2>
       <div id="school-select">
         <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="Brown" class="custom"> Brown
+          <input type="checkbox" name="colleges" value="Brown" checked class="custom"> Brown
           <br>
-          <input type="checkbox" name="colleges" value="CalTech"> Cal Tech
+          <input type="checkbox" name="colleges" value="CalTech" checked> Cal Tech
           <br>
-          <input type="checkbox" name="colleges" value="CarnegieMellon"> Carnegie Mellon
+          <input type="checkbox" name="colleges" value="CarnegieMellon" checked> Carnegie Mellon
           <br>
-          <input type="checkbox" name="colleges" value="Columbia"> Colombia
+          <input type="checkbox" name="colleges" value="Columbia" checked> Colombia
           <br>
-          <input type="checkbox" name="colleges" value="Cornell"> Cornell
-          <br>
-        </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="Dartmouth"> Dartmouth
-          <br>
-          <input type="checkbox" name="colleges" value="Duke"> Duke
-          <br>
-          <input type="checkbox" name="colleges" value="Emory"> Emory
-          <br>
-          <input type="checkbox" name="colleges" value="Georgetown"> Georgetown
-          <br>
-          <input type="checkbox" name="colleges" value="Harvard"> Harvard
+          <input type="checkbox" name="colleges" value="Cornell" checked> Cornell
           <br>
         </div>
         <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="JohnsHopkins"> Johns Hopkins
+          <input type="checkbox" name="colleges" value="Dartmouth" checked> Dartmouth
           <br>
-          <input type="checkbox" name="colleges" value="MIT"> MIT
+          <input type="checkbox" name="colleges" value="Duke" checked> Duke
           <br>
-          <input type="checkbox" name="colleges" value="Northwestern"> Northwestern
+          <input type="checkbox" name="colleges" value="Emory" checked> Emory
           <br>
-          <input type="checkbox" name="colleges" value="NotreDame"> Notre Dame
+          <input type="checkbox" name="colleges" value="Georgetown" checked> Georgetown
           <br>
-          <input type="checkbox" name="colleges" value="Princeton"> Princeton
-          <br>
-        </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="Rice"> Rice
-          <br>
-          <input type="checkbox" name="colleges" value="Stanford"> Stanford
-          <br>
-          <input type="checkbox" name="colleges" value="UCB"> UCB
-          <br>
-          <input type="checkbox" name="colleges" value="UChicago"> UChicago
-          <br>
-          <input type="checkbox" name="colleges" value="UCLA"> UCLA
+          <input type="checkbox" name="colleges" value="Harvard" checked> Harvard
           <br>
         </div>
         <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="UPenn"> UPenn
+          <input type="checkbox" name="colleges" value="JohnsHopkins" checked> Johns Hopkins
           <br>
-          <input type="checkbox" name="colleges" value="USC"> USC
+          <input type="checkbox" name="colleges" value="MIT" checked> MIT
           <br>
-          <input type="checkbox" name="colleges" value="Vanderbilt"> Vanderbilt
+          <input type="checkbox" name="colleges" value="Northwestern" checked> Northwestern
           <br>
-          <input type="checkbox" name="colleges" value="WashU"> WashU
+          <input type="checkbox" name="colleges" value="NotreDame" checked> Notre Dame
           <br>
-          <input type="checkbox" name="colleges" value="Yale"> Yale
+          <input type="checkbox" name="colleges" value="Princeton" checked> Princeton
+          <br>
+        </div>
+        <div class="col-md-2">
+          <input type="checkbox" name="colleges" value="Rice" checked> Rice
+          <br>
+          <input type="checkbox" name="colleges" value="Stanford" checked> Stanford
+          <br>
+          <input type="checkbox" name="colleges" value="UCB" checked> UCB
+          <br>
+          <input type="checkbox" name="colleges" value="UChicago" checked> UChicago
+          <br>
+          <input type="checkbox" name="colleges" value="UCLA" checked> UCLA
+          <br>
+        </div>
+        <div class="col-md-2">
+          <input type="checkbox" name="colleges" value="UPenn" checked> UPenn
+          <br>
+          <input type="checkbox" name="colleges" value="USC" checked> USC
+          <br>
+          <input type="checkbox" name="colleges" value="Vanderbilt" checked> Vanderbilt
+          <br>
+          <input type="checkbox" name="colleges" value="WashU" checked> WashU
+          <br>
+          <input type="checkbox" name="colleges" value="Yale" checked> Yale
           <br>
         </div>
       </div>
@@ -138,15 +137,12 @@
     <!-- Visualization & Static input -->
     <div class="row">
       <div class="col-md-6">
-        <!-- <div class="panel-heading">
-          <h3 class="panel-title">Try it now</h3>
-        </div> -->
         <div id="chart-area"></div>
       </div>
       <div class="col-md-4">
         <br>
         <br>
-        <h2>Demographics:</h2> Gender:
+        <h2>Tell us about you:</h2> Gender:
         <select id="gender" class="dropdown">
           <option value="-1">Male</option>
           <option value="1">Female</option>
@@ -174,8 +170,6 @@
         </select>
         <br>
         <br>
-
-
       </div>
     </div>
 
@@ -184,7 +178,7 @@
 
     <!-- Dynamic Slider input-->
     <div class="row">
-      <div class="col-4-6">
+      <div class="col-6">
         <div class="interaction-text">
           <h2>Expected GPA and Test Scores: </h2>
           <form method="post" id="user_info">
@@ -250,15 +244,15 @@
   </footer>
 
   <!-- Use jQuery from CDN -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="js/jquery.min.js"></script>
   <script src="js/queue.v1.min.js"></script>
   <script src="js/d3.min.js"></script>
   <script src="js/d3-tip.min.js"></script>
   <script src="js/globals.js"></script>
   <script src="js/predict.js"></script>
   <script src="js/predictViz.js"></script>
+  <script src="js/drillDownViz.js"></script>
   <script src="js/interactive.js"></script>
-  <script src="js/interactiveViz.js"></script>
 </body>
 
 </html>
