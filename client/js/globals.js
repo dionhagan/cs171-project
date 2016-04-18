@@ -1,4 +1,5 @@
 // globals
+"use strict";
 
 var p171 = {}; // global namespace
 
@@ -32,18 +33,24 @@ for (var i=0; i<cookies.length; i++) {
 p171.text = {};
 
 // Store data set globally
-p171.data = {}; 
+p171.data = {};
+
+// Normalization values
+p171.normalize = {};
 
 queue()
     .defer(d3.csv, "data/collegelist.csv")
     .defer(d3.csv, "data/collegedata_unnormalized.csv")
     .defer(d3.csv, "data/collegedata_normalized.csv")
-    .defer(d3.json, "data/feature_effect.json")    
+    .defer(d3.json, "data/feature_effect.json")
     .defer(d3.json, "text/drilldowntext.json")
+    .defer(d3.csv,"data/normalize_means.csv")
+    .defer(d3.csv,"data/normalize_stds.csv")
     .await(storeData)
-    
-function storeData(err, collegeList, appData, appDataNorm, featureImportance, drillDownText) {
-  // Get text for drill down page 
+
+function storeData(err, collegeList, appData, appDataNorm, featureImportance,
+                    drillDownText,normalizeMeans, normalizeStds) {
+  // Get text for drill down page
   p171.text.drillDown = drillDownText;
 
   // Store data from csv files
@@ -52,7 +59,7 @@ function storeData(err, collegeList, appData, appDataNorm, featureImportance, dr
   p171.data.colleges = {};
   p171.data.featureImportance = featureImportance
 
-  // Collect data for each college 
+  // Collect data for each college
   for (var collegeIndex=0; collegeIndex<collegeList.length; collegeIndex++) {
     var collegeInfo = collegeList[collegeIndex];
     p171.data.colleges[collegeInfo.name] = collegeInfo;
@@ -123,6 +130,9 @@ function storeData(err, collegeList, appData, appDataNorm, featureImportance, dr
     }
   }
 
+  p171.normalize.means = normalizeMeans[0];
+  p171.normalize.stds  = normalizeStds[0];
+
   createVis();
 }
 
@@ -130,7 +140,11 @@ function createVis() {
   //p171.featureImportanceVis = new FeatureImportanceVis("feature-importance-vis");
   //p171.hist = new Histogram("distribution");
   //p171.scatter = new Scatter("scatter-plot");
-  var DD = new DrillDownController("feature-importance-vis");
+  // Determine which visualization to display based on the page
+  if (window.location.pathname.indexOf("howitworks") >= 0) {
+    var DD = new DrillDownController("feature-importance-vis");
+  } else {
+    predictRandom();
+    p171.lineChart = new InteractiveVis('chart-area');
+  }
 }
-
-
