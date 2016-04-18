@@ -195,7 +195,8 @@ div#notebook {
 <li><a href="#firstsketch">First Set of Sketches</a></li>
 <li><a href="#page1layout">Prediction Page Layout</a></li>
 <li><a href="#secondsketch">Second Set of Sketches</a></li>
-<li><a href="#redesign">Redesign Based on Heuristic Testing</a></li>
+<li><a href="#Redesign">Redesign Based on Heuristic Testing</a></li>
+<li><a href="#predictionPrototype">Prediction Prototype V1</a></li>
 </ul>
 
 </div>
@@ -259,6 +260,25 @@ div#notebook {
 </ul>
 <p><img src="redesign1.png" alt="Redesigned Drilldown"></p>
 <p>The user would click on a specific factor to show the weighting of that factor for each of the 25 elite colleges.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="predictionPrototype"></a></p>
+<h2 id="Prediction-Prototype-V1">Prediction Prototype V1<a class="anchor-link" href="#Prediction-Prototype-V1">&#182;</a></h2><p>April 18, 2016</p>
+<p>Well, this was an exciting week for Team Braavos. After some hard work, the V1 of the Prediction Prototype was implemented. However, we had merge problems in github that wiped out some other work. We lost about a day recovering, but ultimately were able to prevail.</p>
+<p><img src="predictionPrototypeV1.png" alt="Prediction prototype V1"></p>
+<p>This version connects to the legacy Heroku/Flask based web service. However, the response time is too slow to be usable and does not achieve our design goal of an interactive / game-like experience. So we will spend time in the coming two weeks doing one of:</p>
+<ul>
+<li>Replacing the Python-based web service by a local JavaScript implementation of Random Forests</li>
+<li>Figure out what the server-side bottleneck is so we can reduce latency.</li>
+</ul>
+<p>We did advance on the Drilldown Visualization, but due to the aforementioned github issues, we were not able to integrate the latest changes prior to the V1 prototype deadline.</p>
 
 </div>
 </div>
