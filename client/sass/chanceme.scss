@@ -15,7 +15,7 @@ html {
 body {
   height: 100%;
   font-size: 100%;
-  font-family: "palatino linotype","Helvetica Neue",Helvetica,$safeFonts;
+  font-family: "Roboto","Helvetica Neue",Helvetica,$safeFonts;
 }
 
 
@@ -277,4 +277,90 @@ header h1 {
       margin-top: 1em;
     }
   }
+}
+
+/* chart */
+
+.interaction-text{
+  margin-left: 50px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.schools-text{
+  margin-left: 80px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  border-radius: 2px;
+}
+
+#interactive-tooltip {
+  color: white;
+  font-weight: bold;
+  background: darkslategrey
+}
+
+.interactive-slider{
+  width: 350px;
+  margin-top: 5px;
+}
+
+.interactive-slider{
+  width: 310px;
+}
+
+#gpa{
+  margin-left: 131px;
+}
+
+#sat{
+  margin-left: 103px;
+}
+
+#act{
+  margin-left: 104px;
+}
+
+#num_ap{
+  margin-left: 60px;
+}
+
+#ave_ap{
+  margin-left: 90px;
+}
+
+#num_sat{
+  margin-left: 5px;
+}
+
+.dropdown select {
+  background: transparent;
+  width: 100px;
+  padding: 5px;
+  font-size: 16px;
+  line-height: 1;
+  border: 0;
+  border-radius: 0;
+  height: 34px;
+  -webkit-appearance: none;
+}
+
+.dropdown {
+  width: 150px;
+  height: 30px;
+  margin-left: 5px;
+  overflow: hidden;
+  // TODO: missing new_arrow.png file
+  background: url(../img/new_arrow.png) no-repeat right #ddd;
+  border: 1px solid #ccc;
+}
+
+.button{
+  background-color: lightgrey;
+  border-width: 2px;
+  border-color: darkslategrey;
 }
