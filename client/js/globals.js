@@ -35,15 +35,21 @@ p171.text = {};
 // Store data set globally
 p171.data = {};
 
+// Normalization values
+p171.normalize = {};
+
 queue()
     .defer(d3.csv, "data/collegelist.csv")
     .defer(d3.csv, "data/collegedata_unnormalized.csv")
     .defer(d3.csv, "data/collegedata_normalized.csv")
     .defer(d3.json, "data/feature_effect.json")
     .defer(d3.json, "text/drilldowntext.json")
+    .defer(d3.csv,"data/normalize_means.csv")
+    .defer(d3.csv,"data/normalize_stds.csv")
     .await(storeData)
 
-function storeData(err, collegeList, appData, appDataNorm, featureImportance, drillDownText) {
+function storeData(err, collegeList, appData, appDataNorm, featureImportance,
+                    drillDownText,normalizeMeans, normalizeStds) {
   // Get text for drill down page
   p171.text.drillDown = drillDownText;
 
@@ -124,6 +130,9 @@ function storeData(err, collegeList, appData, appDataNorm, featureImportance, dr
     }
   }
 
+  p171.normalize.means = normalizeMeans[0];
+  p171.normalize.stds  = normalizeStds[0];
+
   createVis();
 }
 
@@ -135,8 +144,7 @@ function createVis() {
   if (window.location.pathname.indexOf("howitworks") >= 0) {
     var DD = new DrillDownController("feature-importance-vis");
   } else {
-    var preds = predict();
-    console.log(preds);
-    p171.lineChart = new InteractiveVis('chart-area', preds);
+    predictRandom();
+    p171.lineChart = new InteractiveVis('chart-area');
   }
 }

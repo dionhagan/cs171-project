@@ -360,7 +360,6 @@ header h1 {
   height: 30px;
   margin-left: 5px;
   overflow: hidden;
-  background: url(../img/new_arrow.png) no-repeat right #ddd;
   border: 1px solid #ccc;
 }
 
@@ -368,4 +367,9 @@ header h1 {
   background-color: lightgrey;
   border-width: 2px;
   border-color: darkslategrey;
+}
+
+.warningNote {
+  background-color: red;
+  font-size: 2.5em;
 }
