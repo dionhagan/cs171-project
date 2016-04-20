@@ -28,13 +28,13 @@ DrillDownController.prototype.initVis = function() {
   var DD = this;
 
   // Create dimensions for the visualization based on current window size
-  DD.margin = {top: 60, right: 315, bottom: 60, left: 220};
+  DD.margin = {top: 60, right: 20, bottom: 60, left: 20};
   DD.width = window.innerWidth - DD.margin.left - DD.margin.right;
-  DD.height = 40 - DD.margin.top - DD.margin.bottom;
+  DD.height = window.innerHeight - DD.margin.top - DD.margin.bottom;
 
   // Create the X and Y scale
   DD.xScale = d3.scale.linear()
-    .range([0, DD.width]).nice()
+    .range([0, DD.width - 400]).nice()
     .domain([
       d3.min(DD.data, function(f) { return f.effect; }),
       d3.max(DD.data, function(f) { return f.effect; })
@@ -60,7 +60,7 @@ DrillDownController.prototype.initVis = function() {
         class: "bar-svg"
       })
       .attr("width", DD.width + DD.margin.right - 5)
-      .attr("height", DD.Height)
+      .attr("height", DD.height)
       .attr("transform", "translate(0,"+DD.width+")")
       .append("g");
     
@@ -75,6 +75,7 @@ DrillDownController.prototype.initVis = function() {
 
     moreDetails.append("div").attr({class: "col-md-3 text"})
     moreDetails.append("div").attr({class: "col-md-7 chart"})
+    moreDetails.append("div").attr({class: "col-md-2 filters"})
 
     DD.factors[factor.name].moreDetails = moreDetails;
   }
@@ -86,7 +87,7 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
   var DD = this;
 
   // Define characteristics of each bar
-  var barHeight = 35,
+  var barHeight = DD.height / DD.data.length
       barYPos = function(d, i){ return (barHeight*i)+(i*2); },
       barClass = "factor-bar";
 
@@ -103,7 +104,7 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
       
   var bars = barGroup.append("rect")
       .attr({
-        x: 300,
+        x: 200,
         y: 0,
         height: barHeight,
         width: function(feature){ return 0 ;},
@@ -127,7 +128,7 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
   labels
     .append("rect")
       .attr({
-        x: 100,
+        x: 0,
         y: 0,
         height: barHeight,
         width: 200,
@@ -139,7 +140,7 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
     .append("text")
       .attr({
         fill:'white',
-        x: 100,
+        x: 0,
         y: 20
       })
       .text(function(d){ return d.name; });
@@ -152,8 +153,8 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
   barGroup.select(".effect-values")
     .transition().duration(1500)
     .attr("x", function(feature) { 
-      var pos = 300+DD.xScale(feature.effect);
-      return pos > 350 ? pos - 55: 300;
+      var pos = 200+DD.xScale(feature.effect);
+      return pos > 250 ? pos - 55: 200;
     });
 
   // Create interaction behaviors for vis elements
@@ -177,9 +178,6 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
     valueLable: valueLabel
   };
 };
-
-// Add interaction behavior for bars and labels
-// Create bars for graph
 
 
 // Create more-details section for a given factor
@@ -238,8 +236,7 @@ DrillDownController.prototype.createFilters = function() {
     .attr({
       id: "filters",
       class: "form-horizontal",
-      role: "form",
-      "margin-left": 200
+      role: "form"
     })
   // Create object in vis to store filter options
   DD.collegeFilters = {};
