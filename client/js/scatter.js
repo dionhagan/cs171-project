@@ -1,4 +1,4 @@
-var Scatter = function(_parentElement) {
+var Scatter = function(_parentElement, _category) {
   this.parentElement = _parentElement;
   this.plotElement = this.parentElement.append("div")
     .attr({
@@ -12,10 +12,15 @@ var Scatter = function(_parentElement) {
       position: "relative",
       float: "right"
     });
+  for (labels in p171.data.labels) {
+    if (p171.data.labels[label] == _category) this.category0 = label;
+  }
   this.data = p171.data.raw;
   this.createSelectors();
   this.createFilters();
   this.initVis();  
+  console.log(this.category0)
+  console.log(this.category1)
   
 }
 
@@ -23,7 +28,7 @@ Scatter.prototype.initVis = function() {
   var vis = this;
 
   vis.margin = {top: 10, right: 20, bottom: 60, left: 60};
-  vis.width = 800 - vis.margin.left - vis.margin.right,
+  vis.width = 600 - vis.margin.left - vis.margin.right,
   vis.height = 500 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
@@ -97,14 +102,9 @@ Scatter.prototype.initVis = function() {
 Scatter.prototype.updateVis = function() {
   var vis = this;
 
-  // Filter data based on user selections
-  var categoryX = vis.xCategory.property('value'),
-      categoryY = vis.yCategory.property('value'),
-      college = vis.collegeSelector.property('value');
-
   vis.data = p171.data.raw.filter(function(d){
 
-    var collegeFilter = college == 'All' ? true : d.collegeID == college,
+    var collegeFilter = p171.DD.collegeFilters[d.collegeID],
         factorFilter = true,
         filters = vis.filters;
 
@@ -137,13 +137,13 @@ Scatter.prototype.updateVis = function() {
   vis.x
     .domain([
       0, 
-      d3.max(p171.data.raw, function(d){ return d[categoryX]; })
+      d3.max(p171.data.raw, function(d){ return d[vis.category0]; })
     ])
 
   vis.y
     .domain([
       0, 
-      d3.max(p171.data.raw, function(d){ return d[categoryY]; })
+      d3.max(p171.data.raw, function(d){ return d[vis.category1]; })
     ])
 
   vis.xAxis = d3.svg.axis()
@@ -190,11 +190,10 @@ Scatter.prototype.updateVis = function() {
     .transition().duration(750)
     .attr({
       class: "points",
-      cx: function(d) { return vis.x(d[categoryX]); },
-      cy: function(d) { return vis.y(d[categoryY]); },
+      cx: function(d) { return vis.x(d[vis.category0]); },
+      cy: function(d) { return vis.y(d[vis.category1]); },
       r: function(d) { return d.isUser ? 6 : 3; },
       fill: function(d) { 
-        console.log(d)
         if (d.isUser) return "yellow";
         return d.acceptStatus == 1 ? "#98fb98" : "lightsteelblue";
       }
@@ -217,13 +216,8 @@ Scatter.prototype.updateVis = function() {
 Scatter.prototype.zoom = function(d) {
   var vis = this;
 
-  // Filter data based on user selections
-  var categoryX = vis.xCategory.property('value'),
-      categoryY = vis.yCategory.property('value'),
-      college = vis.collegeSelector.property('value');
-
-  var xMax = d3.max(p171.data.raw, function(d){ return d[categoryX]; });
-      yMax = d3.max(p171.data.raw, function(d){ return d[categoryY]; });
+  var xMax = d3.max(p171.data.raw, function(d){ return d[vis.category0]; });
+      yMax = d3.max(p171.data.raw, function(d){ return d[vis.category1]; });
 
   
   vis.x
@@ -342,31 +336,6 @@ Scatter.prototype.createSelectors = function() {
   var options = p171.data.quantFactors;
 
   vis.selectorsElement.append("b")
-    .text("X Axis: ");
-
-  vis.xCategory = vis.selectorsElement.append("select")
-    .attr({
-      id:'category-selector',
-    })
-    .on('change', function(){
-      vis.updateVis();
-    })
-
-  for (var optionIndex=0; optionIndex<options.length; optionIndex++) {
-    var category = options[optionIndex];
-    var option = vis.xCategory.append("option")
-      .attr({
-        value:category
-      })
-      .text(p171.data.labels[category]);
-  }
-
-  vis.xCategory
-    .property('value','GPA');
-
-  vis.selectorsElement.append("br");
-
-  vis.selectorsElement.append("b")
     .text("Y Axis: ")
 
   vis.yCategory = vis.selectorsElement.append("select")
@@ -391,33 +360,7 @@ Scatter.prototype.createSelectors = function() {
 
   vis.selectorsElement.append("br");
 
-  vis.selectorsElement.append("b")
-    .text("College: ");
-
-  vis.collegeSelector = vis.selectorsElement.append("select")
-    .attr({
-      id:"college-selector"
-    })
-    .on('change', function(d) {
-      vis.updateVis();
-    });
-
-  vis.selectorsElement.append("br");
-
-  var colleges = Object.keys(p171.data.colleges)
-
-  for (var collegeIndex=0; collegeIndex<colleges.length; collegeIndex++) {
-    var college = colleges[collegeIndex];
-    var option = vis.collegeSelector.append("option")
-      .attr({
-        value:college
-      })
-      .text(college);
-  }
-
-  if ("collegeID" in p171.user) {
-    vis.collegeSelector.property('value', p171.user.collegeID);
-  }
+  vis.category1 = vis.yCategory.property('value')
   
 
 }

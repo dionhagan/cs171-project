@@ -1,8 +1,25 @@
+// Add drilldown text to elements
+function addDrillDownText() {
+  for (section in p171.text.drillDown) {
+    var title = p171.text.drillDown[section][0];
+    var content = p171.text.drillDown[section][1];
+    var sectionElement = d3.select('#'+section)
+
+    sectionElement.append("h2")
+      .text(title)
+
+    sectionElement.append("div")
+      .html(content)
+  }
+}
+  
+
 var DrillDownController = function(_parentElement) {
   this.parentElement = d3.select('#'+_parentElement);
   this.data = p171.data.factorImportance.sort(sortFeatureImportanceData);
   this.factors = {};
   for (var i=0;i<this.data.length;i++) this.factors[this.data[i].name] = {};
+  this.createFilters();
   this.initVis();
 };
 
@@ -142,6 +159,13 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
   // Create interaction behaviors for vis elements
   barGroup
     .on("click", function(d) {
+      for (factor in DD.factors) {
+        var moreDetailsSection = DD.factors[factor].moreDetails
+        moreDetailsSection.select(".text")
+          .text("")
+        moreDetailsSection.select(".chart")
+          .html("")
+      }
       DD.createMoreDetails(this);
     });
 
@@ -170,43 +194,148 @@ DrillDownController.prototype.createMoreDetails = function(element) {
   var chartElement = factor.moreDetails.select(".chart"),
       textElement = factor.moreDetails.select(".text");
 
+  var charts = {}
+  for (label in p171.data.labels) { 
+    if (p171.data.labels[label] == factorID) {
+      charts = drillDownCharts[label];
+    }
+  }
+
   if (chartElement.html() == "") {
     // Create initial visualization
-    factor.vis.subPlot = new EffectGraph(chartElement, factorID);
+    factor.vis.subPlot = new charts[Object.keys(charts)[0]](chartElement, factorID);
     
     // Add text to describe the data
     textElement
       .html(p171.text.drillDown.overall_factors[1])
 
-    var charts = {
-      histogram: Histogram, 
-      scatter: Scatter
-    };
-
-    // Create buttons to change the visualization
-    for (chartType in charts) {
-      textElement.append("div")
-        .attr({
-          class:"select-chart-type",
-          id:chartType
-        })
-        .text(chartType)
-        .on("click", function(d) {
-          var chartID = d3.select(this).property("id");
-          chartElement.html("");
-          factor.vis.subPlot = new charts[chartID](chartElement, factorID)
-        })
+    if (Object.keys(charts).length > 1) {
+      // Create buttons to change the visualization
+      for (chartType in charts) {
+        textElement.append("div")
+          .attr({
+            class:"select-chart-type",
+            id:chartType
+          })
+          .text(chartType)
+          .on("click", function(d) {
+            var chartID = d3.select(this).property("id");
+            chartElement.html("");
+            factor.vis.subPlot = new charts[chartID](chartElement, factorID)
+          })
+      }
     }
-    
-
   }
+}
+
+DrillDownController.prototype.createFilters = function() {
+  var DD = this; 
+
+  var collegeElement = d3.select('#college_breakdown');
+    
+  // Create form element to hold checkboxes
+  var filters = collegeElement.append("form")
+    .attr({
+      id: "filters",
+      class: "form-horizontal",
+      role: "form",
+      "margin-left": 200
+    })
+  // Create object in vis to store filter options
+  DD.collegeFilters = {};
+
+  for (college in p171.data.colleges) {
+
+    DD.collegeFilters[college] = true;
+    
+    // Append form group
+    var formGroup = filters.append("div")
+      .style({
+        position: "relative",
+        float: "left",
+        width: 120,
+        height: 50,
+        "background-color": "lightgreen"
+
+      })
+      .attr("class","form-group");
+
+    formGroup.append("label")
+      .attr({
+        class: "control-label col-sm-1",
+        for: college
+      })
+      .text(college)
+      .style({
+        float: "left"
+      });
+
+    formGroup.append("div")
+        .append("input")
+          .attr({
+            class:"form-control",
+            id: college,
+            value: college,
+            type: "checkbox",
+            checked: ""
+          })
+          .on("change", function() {
+            var checkBox = this;
+            var college = checkBox.value;
+            DD.collegeFilters[college] = checkBox.checked
+            //DD.updateVisualizations();
+          });
+    
+  }
+}
+
+DrillDownController.prototype.updateVisualizations = function() {
+  var DD = this; 
 
 }
 
 
-
-
-
-
-
-
+var drillDownCharts = {
+    "admissionstest": {
+      Distribution: Histogram,
+      Scatter: Scatter
+    },
+    "acceptrate": {},
+    "GPA": {
+      Distribution: Histogram,
+      Scatter: Scatter
+    },
+    "averageAP": {
+      Distribution: Histogram,
+      Scatter: Scatter
+    },
+    "size": {},
+    "AP": {
+      Distribution: Histogram
+    },
+    "SATsubject": {
+      Distribution: Histogram
+    },
+    "female": {
+      Effect: EffectGraph
+    },
+    "schooltype":  {
+      Distirbution: Histogram
+    },
+    "MinorityRace": {
+      Effect: EffectGraph
+    },
+    "earlyAppl": {
+      Effect: EffectGraph
+    },
+    "outofstate": {
+    },
+    "public": {},
+    "alumni": {},
+    "international": {
+      Effect: EffectGraph
+    },
+    "sports": {
+      Effect: EffectGraph
+    }
+}

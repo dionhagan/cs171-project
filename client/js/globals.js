@@ -46,7 +46,7 @@ queue()
 function storeData(err, collegeList, appData, appDataNorm, factorImportance, factorEffect, drillDownText) {
   // Get text for drill down page 
   p171.text.drillDown = drillDownText;
-
+  addDrillDownText();
   // Store data from csv files
   p171.data.normalized = appDataNorm;
   p171.data.raw = appData;
@@ -98,6 +98,7 @@ function storeData(err, collegeList, appData, appDataNorm, factorImportance, fac
     "international": "International Student",
     "sports": "Varsity Sports"
     }
+
   p171.data.quantFactors = quantFactors;
   p171.data.nomFactors = nomFactors;
   p171.data.mainFactors = quantFactors.concat(Object.keys(nomFactors));
@@ -132,7 +133,7 @@ function createVis() {
   //p171.featureImportanceVis = new FeatureImportanceVis("feature-importance-vis");
   //p171.hist = new Histogram("distribution");
   //p171.scatter = new Scatter("scatter-plot");
-  var DD = new DrillDownController("feature-importance-vis");
+  p171.DD = new DrillDownController("feature-importance-vis");
 }
 
 

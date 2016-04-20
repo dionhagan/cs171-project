@@ -18,6 +18,7 @@ Histogram.prototype.initVis = function () {
   vis.svg = vis.parentElement.append("svg")
       .attr("width", vis.width + vis.margin.left + vis.margin.right)
       .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+      .attr("class","histogram")
     .append("g")
       .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
@@ -31,7 +32,7 @@ Histogram.prototype.initVis = function () {
 
   vis.xAxis = vis.svg.append("g")
     .attr({
-      class: "x-axis",
+      class: "x-axis axis",
       transform: "translate(0,"+vis.height+")"
     })
 
@@ -90,9 +91,9 @@ Histogram.prototype.updateVis = function() {
     .transition().duration(750)
     .attr({
       class:"labels",
-      y: function(d) { return vis.y(d.y)+20; },
+      y: function(d) { return vis.y(d.y); },
       x: function(d,i){ return (i*barWidth) + (0.4*barWidth); },
-      fill: "white"
+      fill: "lightgreen"
     })
     .text(function(d){
       return d.y;
@@ -116,6 +117,10 @@ Histogram.prototype.updateData = function() {
   }
 
   vis.displayData = p171.data.colleges[college][vis.category];
+
+  vis.displayData.filter(function(d) {
+    return d > 0;
+  })
 }
 
 Histogram.prototype.addSelectors = function() {

@@ -66,6 +66,9 @@ text.effect-values {
 }
 
 /* Drill Down Style*/
+h2 {
+  text-align: center;
+}
 .bar-svg {
   height: 35px;
 }
@@ -103,5 +106,26 @@ text.effect-values {
   float: left;
 }
 
+.college-label {
+  opacity: 0;
+}
 
+.selected-college {
+  opacity: .3;
+}
+
+.tick {
+  position: relative;
+  z-index: 100;
+}
+
+.remove-tab {
+  opacity: 0;
+}
+
+svg.histogram g rect {
+  fill: white;
+  stroke: lightgreen;
+  stroke-width: 2px;
+}
 
