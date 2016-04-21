@@ -144,3 +144,112 @@ the merge into master.
 
 `git` has many powerful features like pull requests and code reviews,
 but I don't think we need them for this project.
+
+## Using GitHub Pages
+
+The [gh-pages](https://help.github.com/articles/creating-project-pages-manually/) branch is where the public facing information
+lives. Per the github docs, this branch is an orphan. You
+might as well consider it being two repositories in one.
+
+Since it is effectively two repositories, I keep two
+copies of the repository on my local hard drive:
+
+Primary copy:
+```
+cd <wherever you put projects>
+git clone git@github.com:wihl/cs171-project.git
+```
+This creates a `cs171-project` directory in your current location.
+
+Then I make secondary copy in a parallel directory **not under cs171-project**.
+
+So while still in the current directory, not in the cs171-project directory:
+```
+mkdir projectwebsite
+cd projectwebsite
+git clone git@github.com:wihl/cs171-project.git
+cd cs171-project
+git checkout gh-pages
+```
+
+So now I have
+```
+./cs171-project
+./projectwebsite/cs171-project # gh-pages branch
+```
+
+
+### Contents of `gh-pages`
+
+There are two subdirectories: `./client` and `./processbook`
+
+We also use a CNAME to have a well defined public facing URL (vis.chanceme.info) instead of the default `wihl.github.io/cs171-project`.
+
+When the user navigates to [vis.chanceme.info](http://vis.chanceme.info), a small `index.html` file redirects them to the client code.
+
+If the user explicitly navigates to [vis.chanceme.info/processbook](http://vis.chanceme.info/processbook), they skip over the small `index.html` and land on the process book.
+
+### How to Release a New Public Version
+
+Given the file structure above, releasing a new public version
+of the client consists of copying the client code from the master
+repository into the repository having the gh-pages branch.
+
+```
+cd <wherever you put projects>
+cd cs171-project
+cp -r client ../projectwebsite/cs171-project/
+cd ../projectwebsite/cs171-project
+```
+
+Now the files are staged. Check them on your local machine with a webserver, such as:
+
+```
+python -m SimpleHTTPServer 8888 &
+open http://localhost:8888
+```
+
+If you are happy with results, publish it to the public:
+
+```
+git add .
+git commit -m "awesome new features"
+git push
+```
+
+About a minute after the push is done, it will be live.
+
+### Updating the Process Book(s)
+
+The process books are stored in iPython/Jupyter notebooks.
+
+```
+cd <wherever you put projects>/cs171-project/processbook
+jupyter notebook
+```
+
+and then open the notebook you want to modify.
+
+When you are done, and are ready to publish a new version of the
+process book, there is a convenient script in the processbook directory called `publish.py`
+
+This script converts the Jupyter notebooks to HTML, stitches them together, copies the results to the project website and updates the processbook
+index page.
+
+Once it has done it's thing, check it and then publish it publicly.
+
+```
+python publish.py
+cd ../../projectwebsite/cs171-project
+python -m SimpleHTTPServer 8888 &
+open http://localhost:8888/processbook
+```
+
+If it all looks good, then publish it to the public:
+```
+git add .
+git commit -m "updates to processbook"
+git push
+```
+
+And then check it: [vis.chanceme.info/processbook](http:/vis.chanceme.info/processbook)

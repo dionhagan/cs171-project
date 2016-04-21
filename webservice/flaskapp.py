@@ -12,6 +12,7 @@ from sklearn.preprocessing import Imputer
 from sklearn.ensemble import RandomForestClassifier
 import numpy as np
 import logging
+import pickle
 
 import TIdatabase as ti
 
@@ -29,7 +30,7 @@ predictor_cols = ws_cols + college_cols
 
 cols_to_drop = ['classrank', 'canAfford', 'firstinfamily', 'artist', 'workexp', 'visited', 'acceptProb',
                 'addInfo','intendedgradyear']
-NUM_ESTIMATORS = 1000
+NUM_ESTIMATORS = 150
 
 colleges = ti.College()
 
@@ -103,7 +104,10 @@ def genPredictionList(vals):
     global clf
     global colleges
     X = pd.Series(dict((name, float(val)) for name, val in vals if name != 'callback'))
-    if clf is None: load_classifier()
+    if clf is None:
+        logging.info('loading classifier')
+        with open('chanceme.pkl','rb') as f:
+            clf = pickle.load(f)
     preds = []
     for i, row in colleges.df.iterrows():
         X[college_cols] = row[college_cols]
@@ -144,6 +148,13 @@ def predict():
     preds = genPredictionList(request.args.iteritems())
     return jsonify(preds = preds)
 
+@app.route("/pickleclf", methods=['GET', 'OPTIONS'])
+@crossdomain(origin='*')
+def pickleclf():
+    clf = load_classifier()
+    with open('chanceme.pkl','wb') as f:
+        pickle.dump(clf, f)
+    return "Pickle file created."
 
 if __name__ == '__main__':
     app.run(debug=True)

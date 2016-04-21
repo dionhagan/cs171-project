@@ -257,7 +257,7 @@ function dragended(d) {
   d3.select(this).classed("dragging", false);
 }
 
-Scatter.prototype.createElements = createElement;
+Scatter.prototype.createElements = createElements;
 
 Scatter.prototype.showFilters = showFilters;
 

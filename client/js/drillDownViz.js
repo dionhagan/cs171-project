@@ -59,7 +59,7 @@ DrillDownController.prototype.initVis = function() {
 
   // Create the X and Y scale
   DD.xScale = d3.scale.linear()
-    .range([0, DD.width - 400]).nice()
+    .range([0, DD.width - 600]).nice()
     .domain([
       d3.min(DD.data, function(f) { return f.effect; }),
       d3.max(DD.data, function(f) { return f.effect; })
