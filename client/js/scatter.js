@@ -153,7 +153,7 @@ Scatter.prototype.updateVis = function() {
       cy: function(d) { return vis.y(d[categoryY]); },
       r: function(d) { return d.isUser ? 6 : 3; },
       fill: function(d) { 
-        if (d.isUser) return "yellow";
+        if (d.isUser) return "brown";
         return d.acceptStatus == 1 ? "#98fb98" : "lightsteelblue";
       }
     })
@@ -212,7 +212,7 @@ Scatter.prototype.wrangleData = function() {
   if (Object.keys(p171.user).length > 1) {
     var userData = p171.user
     userData["isUser"] = true;
-    vis.data.push(userData);
+    vis.displayData.push(userData);
   }
   
 }

@@ -49,7 +49,7 @@ queue()
     .defer(d3.csv,"data/normalize_stds.csv")
     .await(storeData)
 
-function storeData(err, collegeList, appData, appDataNorm, featureImportance, factorEffect, drillDownText,normalizeMeans, normalizeStds) {
+function storeData(err, collegeList, appData, appDataNorm, factorImportance, factorEffect, drillDownText,normalizeMeans, normalizeStds) {
   // Get text for drill down page
   p171.text.drillDown = drillDownText;
   addDrillDownText();

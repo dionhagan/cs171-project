@@ -148,6 +148,20 @@ function predict() {
   var gender = d3.select('#gender');
   var race = d3.select('#race');
 
+  // Save user input in cookie
+  p171.user = {
+    sat: sat.property("value"),
+    act: act.property("value"),
+    gpa: gpa.property("value"),
+    apave: apave.property("value"),
+    apnum: apnum.property("value"),
+    sat2ave: sat2ave.property("value"),
+    hs: hs.property("value"),
+    race: race.property("value")
+  }
+
+  saveUserData(p171.user);
+
   // Standardize values and construct new URL
   function getNewURL() {
 

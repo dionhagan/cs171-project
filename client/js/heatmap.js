@@ -1,4 +1,4 @@
-(function(){
+var createHeatMap = function(){
   //UI configuration
   var itemSize = 18,
     cellSize = itemSize-1,
@@ -153,4 +153,4 @@
   
   //extend frame height in `http://bl.ocks.org/`
   d3.select(self.frameElement).style("height", "600px");  
-})();
+};
