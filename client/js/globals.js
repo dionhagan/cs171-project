@@ -148,6 +148,7 @@ function createVis() {
   // Determine which visualization to display based on the page
   if (window.location.pathname.indexOf("howitworks") >= 0) {
     p171.DD = new DrillDownController("feature-importance-vis");
+    p171.DD.heatmap = new Heatmap("college_breakdown");
   } else {
     predictRandom();
     p171.lineChart = new InteractiveVis('chart-area');

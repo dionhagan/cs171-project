@@ -1,4 +1,81 @@
-var createHeatMap = function(){
+
+// Create heatmap object
+var Heatmap = function(_parentElement) {
+  this.parentElement = d3.select('#'+_parentElement);
+  this.initData(p171.data.factorEffect);
+  this.initVis();
+}
+
+// Initialize heatmap ==================================
+Heatmap.prototype.initVis = function(first_argument) {
+  var vis = this; 
+  
+  vis.createElements();
+  vis.createDimensions();
+  vis.addMainSVG(); 
+  vis.addAxes(d3.scale.ordinal, d3.scale.ordinal);
+  vis.updateVis();
+};
+
+Heatmap.prototype.createElements = createElements;
+
+Heatmap.prototype.createDimensions = function() {
+  var vis = this;
+
+  vis.margin = {top:20,right:20,bottom:20,left:25};
+  vis.width = 800 - vis.margin.left - vis.margin.right,
+  vis.height = 600 - vis.margin.top - vis.margin.bottom;
+};
+
+Heatmap.prototype.addMainSVG = addMainSVG;
+
+Heatmap.prototype.addAxes = addAxes;
+
+Heatmap.prototype.showFilters = showFilters;
+
+// Update heatmap ==================================
+Heatmap.prototype.updateVis = function() {
+  var vis = this; 
+
+  vis.wrangleData();
+
+  var xDomain = [0,],
+      yDomain = [0,1];
+
+  vis.updateAxes(xDomain, yDomain);
+
+  console.log(vis.displayData)
+}
+
+Heatmap.prototype.updateAxes = updateAxes;
+
+Heatmap.prototype.initData = function(data) {
+  var vis = this;
+
+  vis.data = [];
+
+  for (factor in data) {
+    var colleges = data[factor].names;
+    var factorEffects = data[factor].vals;
+
+    for (var i=0;i<colleges.length;i++) {
+      var sample = {
+        collegeID: colleges[i],
+        factor: factor,
+        effect: factorEffects[i]
+      }
+      sample[factor] = factorEffects[i]
+      vis.data.push(sample);
+    }
+  }
+
+}
+// Wrangle data
+Heatmap.prototype.wrangleData = applyFilter;
+
+
+
+// 
   //UI configuration
   var itemSize = 18,
     cellSize = itemSize-1,
@@ -38,7 +115,7 @@ var createHeatMap = function(){
 
   initCalibration();
 
-  var svg = d3.select('#college_breakdown').append("svg");
+  var svg = d3.select('[role=heatmap]')
   var heatmap = svg
     .attr('width',width)
     .attr('height',height)
@@ -153,4 +230,4 @@ var createHeatMap = function(){
   
   //extend frame height in `http://bl.ocks.org/`
   d3.select(self.frameElement).style("height", "600px");  
-};
+

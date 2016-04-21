@@ -1,5 +1,4 @@
 var Scatter = function(_parentElement, _category) {
-  console.log(_category)
   this.parentElement = _parentElement;
   this.data = p171.data.raw;
   for (label in p171.data.labels) {
@@ -100,6 +99,13 @@ Scatter.prototype.updateVis = function() {
 
   vis.wrangleData();
 
+  // Add user to dataset
+  if (Object.keys(p171.user).length > 1) {
+    var userData = p171.user
+    userData["isUser"] = true;
+    vis.displayData.push(userData);
+  }
+
   // Filter data based on user selections
   var categoryX = vis.xCategory.property('value'),
       categoryY = vis.yCategory.property('value');
@@ -172,50 +178,7 @@ Scatter.prototype.updateVis = function() {
   vis.points.exit().remove();
 }
 
-Scatter.prototype.wrangleData = function() {
-  var vis = this; 
-
-  /* Filter data based on user selections
-  var categoryX = vis.xCategory.property('value'),
-      categoryY = vis.yCategory.property('value'),
-      college = vis.collegeSelector.property('value'); */
-  
-  vis.displayData = vis.data.filter(function(d){
-
-    var collegeFilter = p171.DD.filters[d.collegeID],
-        factorFilter = true;
-
-    // Filter out application types
-    for (factor in p171.DD.filters) {
-      if (typeof p171.DD.filters[factor] == "object") {
-
-        for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
-
-          var subFactor = p171.data.nomFactors[factor][subFactorIndex];
-          var isChecked = p171.DD.filters[factor][subFactor];
-
-          if (!isChecked) {
-            if (subFactorIndex==0 && d[factor]==1) {
-              factorFilter = false
-            } else if (subFactorIndex==1 && d[factor]==-1) {
-              factorFilter = false;
-            }
-          }
-        }
-      } 
-    }
-
-    return collegeFilter && factorFilter;
-  });
-
-  // Add user to dataset
-  if (Object.keys(p171.user).length > 1) {
-    var userData = p171.user
-    userData["isUser"] = true;
-    vis.displayData.push(userData);
-  }
-  
-}
+Scatter.prototype.wrangleData = applyFilter;
 
 Scatter.prototype.zoom = function(d) {
   var vis = this;
@@ -360,6 +323,96 @@ Scatter.prototype.createSelectors = function() {
   }
   
 
+}
+
+function applyFilter() {
+  var vis = this; 
+
+  vis.displayData = vis.data.filter(function(d){
+
+    var collegeFilter = p171.DD.filters[d.collegeID],
+        factorFilter = true;
+
+    // Filter out application types
+    for (factor in p171.DD.filters) {
+      if (typeof p171.DD.filters[factor] == "object") {
+
+        for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
+
+          var subFactor = p171.data.nomFactors[factor][subFactorIndex];
+          var isChecked = p171.DD.filters[factor][subFactor];
+
+          if (!isChecked) {
+            if (subFactorIndex==0 && d[factor]==1) {
+              factorFilter = false
+            } else if (subFactorIndex==1 && d[factor]==-1) {
+              factorFilter = false;
+            }
+          }
+        }
+      } 
+    }
+
+    return collegeFilter && factorFilter;
+  });
+}
+
+function addMainSVG() {
+  var vis = this;
+  // SVG drawing area
+  vis.svg = vis.plotElement.append("svg")
+      .attr("width", vis.width + vis.margin.left + vis.margin.right)
+      .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
+
+}
+
+function addAxes(xScale, yScale) {
+  var vis = this;
+
+  vis.x = xScale()
+    .range([0, vis.width]);
+
+  vis.y = yScale()
+    .range([vis.height, 0]);
+
+  vis.xAxisGroup = vis.svg.append("g")
+      .attr({
+        class: "x-axis axis",
+        transform: "translate(0,"+vis.height+")"
+      });
+
+
+  vis.yAxisGroup = vis.svg.append("g")
+      .attr({ class: "y-axis axis" })
+
+}
+
+function updateAxes(xDomain, yDomain) {
+  var vis = this;
+
+  vis.x
+    .domain(xDomain)
+
+  vis.y
+    .domain(yDomain)
+
+  vis.xAxis = d3.svg.axis()
+    .scale(vis.x)
+    .orient("bottom");
+
+  vis.yAxis = d3.svg.axis()
+    .scale(vis.y)
+    .orient("left");
+
+  vis.xAxisGroup
+    .transition().duration(300)
+    .call(vis.xAxis);
+
+  vis.yAxisGroup
+    .transition().duration(300)
+    .call(vis.yAxis);
 }
 
 function createElements() {
