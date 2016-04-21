@@ -3,9 +3,7 @@ var EffectGraph = function(_parentElement, _factorLabel) {
   this.factorLabel = _factorLabel
   this.data = p171.data.factorEffect;
   this.colleges = {};
-  this.showAllColleges = false;
-  var collegeNames = Object.keys(p171.data.colleges);
-  for (var i=0;i<collegeNames.length;i++) this.colleges[collegeNames[i]] = true;  
+  this.createElements();
   this.initVis();
 }
 
@@ -49,38 +47,6 @@ EffectGraph.prototype.initVis = function() {
   vis.yAxisGroup = vis.svg.append("g")
     .attr({ class: "y-axis axis" })
 
-
-  // Create button to add colleges
-  vis.addCollegeButton = vis.svg.append("g")
-    .attr({
-      class: "add-college-button",
-      transform: "translate(50,0)"
-    });
-
-  vis.addCollegeButton.append("rect")
-    .attr({
-      height: 25,
-      width: 150,
-      fill: "lightsteelblue"
-    });
-
-  vis.addCollegeButton.append("text")
-    .attr({
-      x: 25,
-      y: 20
-    })
-    .text("Add Colleges")
-
-  vis.addCollegeButton
-    .on('click', function(d) {
-      vis.showAllColleges = vis.showAllColleges ? false : true;
-      var currElement = d3.select(this)
-        .style("opacity", function(d) {
-          return vis.showAllColleges ? 0.6: 1;
-        })
-      vis.updateVis();
-    })
-
   // Create the vis
   vis.updateVis();
   
@@ -115,14 +81,7 @@ EffectGraph.prototype.wrangleData = function() {
 
   // Filter the display data
   vis.displayData = vis.displayData.filter(function(college) {
-    if (college.name in vis.colleges) {
-      if (vis.showAllColleges) {
-        return true;
-      } else {
-        return vis.colleges[college.name]
-      }
-    }
-    return false;
+    return p171.DD.filters[college.name];
   })
 
   // Sort the display data 
@@ -321,3 +280,6 @@ EffectGraph.prototype.updateVis = function() {
   vis.barGroups.exit().remove(); 
 
 };
+
+EffectGraph.prototype.createElements = createElements;
+EffectGraph.prototype.showFilters = showFilters;

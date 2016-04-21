@@ -16,7 +16,7 @@ Histogram.prototype.initVis = function () {
   vis.margin = { top: 40, right: 60, bottom: 60, left: 5 };
 
   vis.width = 800 - vis.margin.left - vis.margin.right,
-  vis.height = 400 - vis.margin.top - vis.margin.bottom;
+  vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
   vis.svg = vis.plotElement.append("svg")
@@ -140,7 +140,7 @@ Histogram.prototype.wrangleData = function() {
       } 
     }
 
-    return collegeFilter && factorFilter;
+    return collegeFilter && factorFilter && d.acceptStatus == 1;
   });
 
 

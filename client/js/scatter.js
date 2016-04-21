@@ -257,38 +257,7 @@ function dragended(d) {
   d3.select(this).classed("dragging", false);
 }
 
-Scatter.prototype.createElements = function() {
-  var vis = this;
-
-  // Create plot element
-  vis.plotElement = this.parentElement.append("div")
-    .attr({ class: "subplot"});
-
-  // Create filter tabs
-  vis.filtersElement = this.parentElement.append("div")
-    .attr({class:"filters"})
-
-  var filterChoices = vis.filtersElement.append("div")
-    .attr({class:"filter-choices"});
-
-  filterChoices.append("div")
-    .attr({class:"college-filters"})
-    .on("click", function() {
-      vis.showFilters("college")
-    })
-    .text("Colleges");
-
-  filterChoices.append("div") 
-    .attr({class:"app-filters"})
-    .on("click", function() {
-      vis.showFilters("application")
-    })
-    .text("Application");
-
-  vis.filtersElement.append("div")
-    .attr({class:"filters-main"});
-
-}
+Scatter.prototype.createElements = createElement;
 
 Scatter.prototype.showFilters = showFilters;
 
@@ -390,6 +359,39 @@ Scatter.prototype.createSelectors = function() {
     vis.collegeSelector.property('value', p171.user.collegeID);
   }
   
+
+}
+
+function createElements() {
+  var vis = this;
+
+  // Create plot element
+  vis.plotElement = this.parentElement.append("div")
+    .attr({ class: "subplot"});
+
+  // Create filter tabs
+  vis.filtersElement = this.parentElement.append("div")
+    .attr({class:"filters"})
+
+  var filterChoices = vis.filtersElement.append("div")
+    .attr({class:"filter-choices"});
+
+  filterChoices.append("div")
+    .attr({class:"college-filters"})
+    .on("click", function() {
+      vis.showFilters("college")
+    })
+    .text("Colleges");
+
+  filterChoices.append("div") 
+    .attr({class:"app-filters"})
+    .on("click", function() {
+      vis.showFilters("application")
+    })
+    .text("Application");
+
+  vis.filtersElement.append("div")
+    .attr({class:"filters-main"});
 
 }
 
