@@ -19,8 +19,33 @@ var DrillDownController = function(_parentElement) {
   this.data = p171.data.factorImportance.sort(sortFeatureImportanceData);
   this.factors = {};
   for (var i=0;i<this.data.length;i++) this.factors[this.data[i].name] = {};
-  this.createFilters();
+  this.initFilters();
   this.initVis();
+};
+
+DrillDownController.prototype.initFilters = function() {
+  var DD = this;
+
+  DD.filters = {}; 
+
+  for (collegeName in p171.data.colleges) {
+    if (collegeName !== "Harvard") DD.filters[collegeName] = false;
+  } 
+
+  // Get factors that need to be filtered
+  var factorsToFilter = Object.keys(p171.data.nomFactors);
+
+  // Create a form group for each application factor 
+  for (var factorIndex=0; factorIndex<factorsToFilter.length; factorIndex++) {
+    var factor = factorsToFilter[factorIndex];
+
+    DD.filters[factor] = {}
+    
+    for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
+        var subFactor = p171.data.nomFactors[factor][subFactorIndex];
+        DD.filters[factor][subFactor] = true;
+    }
+  }
 };
 
 // Create initial vizualization
@@ -73,9 +98,9 @@ DrillDownController.prototype.initVis = function() {
         class: "more-details row"
       })
 
-    moreDetails.append("div").attr({class: "col-md-3 text"})
-    moreDetails.append("div").attr({class: "col-md-7 chart"})
-    moreDetails.append("div").attr({class: "col-md-2 filters"})
+    moreDetails.append("div").attr({class: "text"})
+    moreDetails.append("div").attr({class: "chart"})
+    moreDetails.append("div").attr({class: "filters"})
 
     DD.factors[factor.name].moreDetails = moreDetails;
   }
@@ -226,69 +251,15 @@ DrillDownController.prototype.createMoreDetails = function(element) {
   }
 }
 
-DrillDownController.prototype.createFilters = function() {
+
+
+DrillDownController.prototype.updateSubPlots = function() {
   var DD = this; 
 
-  var collegeElement = d3.select('#college_breakdown');
-    
-  // Create form element to hold checkboxes
-  var filters = collegeElement.append("form")
-    .attr({
-      id: "filters",
-      class: "form-horizontal",
-      role: "form"
-    })
-  // Create object in vis to store filter options
-  DD.collegeFilters = {};
-
-  for (college in p171.data.colleges) {
-
-    DD.collegeFilters[college] = true;
-    
-    // Append form group
-    var formGroup = filters.append("div")
-      .style({
-        position: "relative",
-        float: "left",
-        width: 120,
-        height: 50,
-        "background-color": "lightgreen"
-
-      })
-      .attr("class","form-group");
-
-    formGroup.append("label")
-      .attr({
-        class: "control-label col-sm-1",
-        for: college
-      })
-      .text(college)
-      .style({
-        float: "left"
-      });
-
-    formGroup.append("div")
-        .append("input")
-          .attr({
-            class:"form-control",
-            id: college,
-            value: college,
-            type: "checkbox",
-            checked: ""
-          })
-          .on("change", function() {
-            var checkBox = this;
-            var college = checkBox.value;
-            DD.collegeFilters[college] = checkBox.checked
-            //DD.updateVisualizations();
-          });
-    
+  for (factorID in DD.factors) {
+    var factorVis = DD.factors[factorID].vis;
+    if ("subPlot" in factorVis) factorVis.subPlot.updateVis();
   }
-}
-
-DrillDownController.prototype.updateVisualizations = function() {
-  var DD = this; 
-
 }
 
 
@@ -336,3 +307,5 @@ var drillDownCharts = {
       Effect: EffectGraph
     }
 }
+
+

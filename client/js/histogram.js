@@ -1,8 +1,12 @@
-var Histogram = function(_parentElement, _factor) {
+var Histogram = function(_parentElement, _category) {
   this.parentElement = _parentElement;
-  this.category =  _factor
+  this.data = p171.data.raw;
+  for (label in p171.data.labels) {
+      if (p171.data.labels[label] == _category) this.category = label
+    }
+  this.createElements();
   this.addSelectors();
-  this.updateData();
+  this.wrangleData();
   this.initVis();
 }
 
@@ -15,7 +19,7 @@ Histogram.prototype.initVis = function () {
   vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
-  vis.svg = vis.parentElement.append("svg")
+  vis.svg = vis.plotElement.append("svg")
       .attr("width", vis.width + vis.margin.left + vis.margin.right)
       .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
       .attr("class","histogram")
@@ -42,7 +46,9 @@ Histogram.prototype.initVis = function () {
 Histogram.prototype.updateVis = function() {
   var vis = this;
   
-  vis.updateData();
+  vis.wrangleData();
+
+  console.log(vis.displayData)
 
   var min = Math.min(...vis.displayData);
   var max = Math.max(...vis.displayData);
@@ -106,21 +112,43 @@ Histogram.prototype.updateVis = function() {
     .call(xAxis);
 }
 
-Histogram.prototype.updateData = function() {
+Histogram.prototype.wrangleData = function() {
   var vis = this;
 
-  var college = vis.collegeSelector.property('value');
-  // var category = vis.categorySelector.property('value');
+  var filteredData = vis.data.filter(function(d){
 
-  for (label in p171.data.labels) {
-    if (vis.category == p171.data.labels[label]) vis.category = label;
-  }
+    var collegeFilter = p171.DD.filters[d.collegeID],
+        factorFilter = true;
 
-  vis.displayData = p171.data.colleges[college][vis.category];
+    // Filter out application types
+    for (factor in p171.DD.filters) {
+      if (typeof p171.DD.filters[factor] == "object") {
 
-  vis.displayData.filter(function(d) {
-    return d > 0;
-  })
+        for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
+
+          var subFactor = p171.data.nomFactors[factor][subFactorIndex];
+          var isChecked = p171.DD.filters[factor][subFactor];
+
+          if (!isChecked) {
+            if (subFactorIndex==0 && d[factor]==1) {
+              factorFilter = false
+            } else if (subFactorIndex==1 && d[factor]==-1) {
+              factorFilter = false;
+            }
+          }
+        }
+      } 
+    }
+
+    return collegeFilter && factorFilter;
+  });
+
+
+  
+  vis.displayData = filteredData.map(function(d) {
+    return d[vis.category];
+  });
+
 }
 
 Histogram.prototype.addSelectors = function() {
@@ -128,29 +156,8 @@ Histogram.prototype.addSelectors = function() {
 
   var options = p171.data.mainFactors;
 
-  /*
-  vis.categorySelector = vis.parentElement.append("select")
-    .attr({
-      id:'category-selector',
-    })
-    .on('change', function(){
-      vis.updateVis();
-    });
 
-  for (var optionIndex=0; optionIndex<options.length; optionIndex++) {
-    var category = options[optionIndex];
-    var option = vis.categorySelector.append("option")
-      .attr({
-        value:category
-      })
-      .text(category);
-  }
-
-  vis.categorySelector
-    .property('value','admissionstest');
-  */
-
-  var selectorLabel = vis.parentElement.append("div")
+  var selectorLabel = vis.filtersElement.insert("div", ".filter-choices")
     .text("Select a college: ")
 
   vis.collegeSelector = selectorLabel.append("select")
@@ -175,3 +182,38 @@ Histogram.prototype.addSelectors = function() {
   vis.collegeSelector
     .property('value','All');
 }
+
+Histogram.prototype.createElements = function() {
+  var vis = this;
+
+  // Create plot element
+  vis.plotElement = this.parentElement.append("div")
+    .attr({ class: "subplot"});
+
+  // Create filter tabs
+  vis.filtersElement = this.parentElement.append("div")
+    .attr({class:"filters"})
+
+  var filterChoices = vis.filtersElement.append("div")
+    .attr({class:"filter-choices"});
+
+  filterChoices.append("div")
+    .attr({class:"college-filters"})
+    .on("click", function() {
+      vis.showFilters("college")
+    })
+    .text("Colleges");
+
+  filterChoices.append("div") 
+    .attr({class:"app-filters"})
+    .on("click", function() {
+      vis.showFilters("application")
+    })
+    .text("Application");
+
+  vis.filtersElement.append("div")
+    .attr({class:"filters-main"});
+
+}
+
+Histogram.prototype.showFilters = showFilters;

@@ -84,6 +84,7 @@ function storeData(err, collegeList, appData, appDataNorm, factorImportance, fac
     "admissionstest": "ACT/SAT score",
     "acceptrate": "College acceptance rate",
     "GPA": "GPA",
+    "GPA_w": "Weighted GPA",
     "averageAP": "Average AP score",
     "size": "College size",
     "AP": "# AP exams taken",
@@ -134,6 +135,7 @@ function createVis() {
   //p171.hist = new Histogram("distribution");
   //p171.scatter = new Scatter("scatter-plot");
   p171.DD = new DrillDownController("feature-importance-vis");
+
 }
 
 
