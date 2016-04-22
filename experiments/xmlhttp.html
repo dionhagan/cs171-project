@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+</style>
+
+<body>
+  <h3>Invoking a simple web service</h3>
+  <label for="sat">Select SAT score</label>
+  <select id="sat">
+    <option value="-0.99">800</option>
+    <option value="0.0">1600</option>
+    <option value="0.99">2400</option>
+  </select>
+  <br><br>
+  <div id="result"></div>
+
+
+
+<script>
+var url = "http://ws.chanceme.info/predict?admissionstest={SAT}&AP=7&averageAP=1.06733864&SATsubject=0.324271565&GPA=-0.187109979&schooltype=0&intendedgradyear=2017&female=1&MinorityRace=0&international=0&sports=0&earlyAppl=0&alumni=0&outofstate=0&acceptrate=0.151&size=6621&public=0&finAidPct=0&instatePct=0";
+  // "http://localhost:5000/predict?admissionstest={SAT}&AP=7&averageAP=1.06733864&SATsubject=0.324271565&GPA=-0.187109979&schooltype=0&intendedgradyear=2017&female=1&MinorityRace=0&international=0&sports=0&earlyAppl=0&alumni=0&outofstate=0&acceptrate=0.151&size=6621&public=0&finAidPct=0&instatePct=0";
+
+var sat = document.getElementById('sat');
+
+var xhr = new XMLHttpRequest();
+
+sat.addEventListener("change", function(){
+  newurl = url.replace("{SAT}", sat.value);
+  document.getElementById("result").innerHTML = "calling to webservice...<br>"+newurl;
+  xhr.open("GET", newurl);
+  xhr.send();
+}, false);
+
+
+xhr.onreadystatechange=function(){
+  if (this.readyState==4 && this.status==200){
+    var predictions = JSON.parse(this.response).preds;
+    var str = "";
+    for (var i = 0; i < predictions.length; i++) {
+      str += predictions[i].college + ":" + predictions[i].prob + "<br>\n";
+    }
+    document.getElementById("result").innerHTML = str;
+  } else if (this.readyState != 1) {
+    document.getElementById("result").innerHTML =
+      "Ready state:"+this.readyState+" Status:"+this.status;
+  }
+}
+
+
+</script>
