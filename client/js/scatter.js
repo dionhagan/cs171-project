@@ -371,10 +371,10 @@ function addMainSVG() {
 function addAxes(xScale, yScale) {
   var vis = this;
 
-  vis.x = xScale()
+  vis.xScale = xScale()
     .range([0, vis.width]);
 
-  vis.y = yScale()
+  vis.yScale = yScale()
     .range([vis.height, 0]);
 
   vis.xAxisGroup = vis.svg.append("g")
@@ -392,18 +392,20 @@ function addAxes(xScale, yScale) {
 function updateAxes(xDomain, yDomain) {
   var vis = this;
 
-  vis.x
+  vis.xScale
     .domain(xDomain)
 
-  vis.y
+  vis.yScale
     .domain(yDomain)
 
   vis.xAxis = d3.svg.axis()
-    .scale(vis.x)
+    .scale(vis.xScale)
+    .tickSize(0)
     .orient("bottom");
 
   vis.yAxis = d3.svg.axis()
-    .scale(vis.y)
+    .scale(vis.yScale)
+    .tickSize(0)
     .orient("left");
 
   vis.xAxisGroup

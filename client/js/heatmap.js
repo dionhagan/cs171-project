@@ -14,6 +14,9 @@ Heatmap.prototype.initVis = function(first_argument) {
   vis.createDimensions();
   vis.addMainSVG(); 
   vis.addAxes(d3.scale.ordinal, d3.scale.ordinal);
+  vis.xScale.rangeRoundBands([0, vis.width]);
+  vis.yScale.rangeRoundBands([vis.height, 0]);
+  vis.createCells();
   vis.updateVis();
 };
 
@@ -22,7 +25,7 @@ Heatmap.prototype.createElements = createElements;
 Heatmap.prototype.createDimensions = function() {
   var vis = this;
 
-  vis.margin = {top:20,right:20,bottom:20,left:25};
+  vis.margin = {top:20,right:20,bottom:60,left:60};
   vis.width = 800 - vis.margin.left - vis.margin.right,
   vis.height = 600 - vis.margin.top - vis.margin.bottom;
 };
@@ -30,6 +33,15 @@ Heatmap.prototype.createDimensions = function() {
 Heatmap.prototype.addMainSVG = addMainSVG;
 
 Heatmap.prototype.addAxes = addAxes;
+
+Heatmap.prototype.createCells = function() {
+  var vis = this;
+
+  vis.cells = vis.svg.selectAll(".heat-cell")
+    .on("click", function(d) {
+      console.log(d);
+    })
+}
 
 Heatmap.prototype.showFilters = showFilters;
 
@@ -39,24 +51,60 @@ Heatmap.prototype.updateVis = function() {
 
   vis.wrangleData();
 
-  var xDomain = [0,],
-      yDomain = [0,1];
+  var yDomain = vis.factorNames.filter(function(factor) {
+    return p171.DD.filters[factor];
+  })
+
+  var xDomain = vis.collegeNames.filter(function(college) {
+    return p171.DD.filters[college];
+  });
 
   vis.updateAxes(xDomain, yDomain);
 
-  console.log(vis.displayData)
+  vis.updateCells();
+
 }
 
 Heatmap.prototype.updateAxes = updateAxes;
+
+Heatmap.prototype.updateCells = function(d) {
+  var vis = this;
+
+  vis.cells = vis.svg.selectAll(".heat-cell")
+    .data(vis.displayData)
+
+  vis.cells
+    .enter().append("rect")
+      .attr({class: "heat-cell"});
+  
+  vis.cells 
+    .attr({
+      x: function(d) { return vis.xScale(d.collegeID); },
+      y: function(d) { return vis.yScale(d.factor); },
+      width: vis.xScale.rangeBand() - 5,
+      height: vis.yScale.rangeBand() - 5,
+      fill: function(d) {
+        if (d.effect > 0) return 'blue';
+        else return 'yellow';
+      }
+    })
+
+  vis.cells.exit().remove();
+}
 
 Heatmap.prototype.initData = function(data) {
   var vis = this;
 
   vis.data = [];
+  vis.factorNames = [];
+  vis.collegeNames = []
 
   for (factor in data) {
     var colleges = data[factor].names;
     var factorEffects = data[factor].vals;
+    vis.factorNames.push(factor);
+    
+    if (vis.collegeNames.length == 0) vis.collegeNames = colleges;
 
     for (var i=0;i<colleges.length;i++) {
       var sample = {
@@ -68,124 +116,9 @@ Heatmap.prototype.initData = function(data) {
       vis.data.push(sample);
     }
   }
-
 }
 // Wrangle data
 Heatmap.prototype.wrangleData = applyFilter;
-
-
-
-// 
-  //UI configuration
-  var itemSize = 18,
-    cellSize = itemSize-1,
-    width = 800,
-    height = 800,
-    margin = {top:20,right:20,bottom:20,left:25};
-
-  //formats
-  var hourFormat = d3.time.format('%H'),
-    dayFormat = d3.time.format('%j'),
-    timeFormat = d3.time.format('%Y-%m-%dT%X'),
-    monthDayFormat = d3.time.format('%m.%d');
-
-  //data vars for rendering
-  var dateExtent = null,
-    data = null,
-    dayOffset = 0,
-    colorCalibration = ['#f6faaa','#FEE08B','#FDAE61','#F46D43','#D53E4F','#9E0142'],
-    dailyValueExtent = {};
-
-  //axises and scales
-  var axisWidth = 0 ,
-    axisHeight = itemSize*24,
-    xAxisScale = d3.time.scale(),
-    xAxis = d3.svg.axis()
-      .orient('top')
-      .ticks(d3.time.days,3)
-      .tickFormat(monthDayFormat),
-    yAxisScale = d3.scale.linear()
-      .range([0,axisHeight])
-      .domain([0,24]),
-    yAxis = d3.svg.axis()
-      .orient('left')
-      .ticks(5)
-      .tickFormat(d3.format('02d'))
-      .scale(yAxisScale);
-
-  initCalibration();
-
-  var svg = d3.select('[role=heatmap]')
-  var heatmap = svg
-    .attr('width',width)
-    .attr('height',height)
-  .append('g')
-    .attr('width',width-margin.left-margin.right)
-    .attr('height',height-margin.top-margin.bottom)
-    .attr('transform','translate('+margin.left+','+margin.top+')');
-  var rect = null;
-
-  d3.json('data/pm25.json',function(err,data){
-    data = data.data;
-
-    console.log(data)
-    data.forEach(function(valueObj){
-      valueObj['date'] = timeFormat.parse(valueObj['timestamp']);
-      var day = valueObj['day'] = monthDayFormat(valueObj['date']);
-
-      var dayData = dailyValueExtent[day] = (dailyValueExtent[day] || [1000,-1]);
-      var pmValue = valueObj['value']['PM2.5'];
-      dayData[0] = d3.min([dayData[0],pmValue]);
-      dayData[1] = d3.max([dayData[1],pmValue]);
-    });
-
-    dateExtent = d3.extent(data,function(d){
-      return d.date;
-    });
-
-    axisWidth = itemSize*(dayFormat(dateExtent[1])-dayFormat(dateExtent[0])+1);
-
-    //render axises
-    xAxis.scale(xAxisScale.range([0,axisWidth]).domain([dateExtent[0],dateExtent[1]]));  
-    svg.append('g')
-      .attr('transform','translate('+margin.left+','+margin.top+')')
-      .attr('class','x axis')
-      .call(xAxis)
-    .append('text')
-      .text('date')
-      .attr('transform','translate('+axisWidth+',-10)');
-
-    svg.append('g')
-      .attr('transform','translate('+margin.left+','+margin.top+')')
-      .attr('class','y axis')
-      .call(yAxis)
-    .append('text')
-      .text('time')
-      .attr('transform','translate(-10,'+axisHeight+') rotate(-90)');
-
-    //render heatmap rects
-    dayOffset = dayFormat(dateExtent[0]);
-    rect = heatmap.selectAll('rect')
-      .data(data)
-    .enter().append('rect')
-      .attr('width',cellSize)
-      .attr('height',cellSize)
-      .attr('x',function(d){
-        return itemSize*(dayFormat(d.date)-dayOffset);
-      })
-      .attr('y',function(d){            
-        return hourFormat(d.date)*itemSize;
-      })
-      .attr('fill','#ffffff');
-
-    rect.filter(function(d){ return d.value['PM2.5']>0;})
-      .append('title')
-      .text(function(d){
-        return monthDayFormat(d.date)+' '+d.value['PM2.5'];
-      });
-
-    renderColor();
-  });
 
   function initCalibration(){
     d3.select('[role="calibration"] [role="example"]').select('svg')
@@ -227,7 +160,5 @@ Heatmap.prototype.wrangleData = applyFilter;
         return d3.interpolate(a,colorCalibration[colorIndex(d.value['PM2.5'])]);
       });
   }
-  
-  //extend frame height in `http://bl.ocks.org/`
-  d3.select(self.frameElement).style("height", "600px");  
+
 

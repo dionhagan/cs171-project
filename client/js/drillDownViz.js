@@ -28,8 +28,12 @@ DrillDownController.prototype.initFilters = function() {
 
   DD.filters = {}; 
 
+  var initColleges = ["Harvard", "Princeton","Yale"];
+
   for (collegeName in p171.data.colleges) {
-    if (collegeName !== "Harvard") DD.filters[collegeName] = false;
+    console.log(initColleges.indexOf(collegeName))
+    if (initColleges.indexOf(collegeName) > -1) DD.filters[collegeName] = true;
+    else DD.filters[collegeName] = false;
   } 
 
   // Get factors that need to be filtered
@@ -191,6 +195,7 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
           .text("")
         moreDetailsSection.select(".chart")
           .html("")
+        delete DD.factors[factor].vis.subPlot;
       }
       DD.createMoreDetails(this);
     });
