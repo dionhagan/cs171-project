@@ -11,7 +11,7 @@ InteractiveVis.prototype.initVis = function (callback) {
   // Static stuff
   vis.margin = { top: 50, right: 20, bottom: 120, left: 80 };
 
-  vis.width = 650 - vis.margin.left - vis.margin.right;
+  vis.width = 1000 - vis.margin.left - vis.margin.right;
     vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
     vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -222,6 +222,7 @@ InteractiveVis.prototype.updateVis = function () {
     vis.circle.enter().append("circle")
       .attr("class", "dot")
       .attr("fill", "crimson")
+      .attr("transform", "translate(20,5)")
       .attr("r", 1)
     .on('mouseover', vis.tip.show)
     .on('mouseout', vis.tip.hide);
