@@ -145,51 +145,20 @@
       <div class="col-md-6">
         <div id="chart-area"></div>
       </div>
-      <div class="col-md-4">
-        <br>
-        <br>
-        <h2>Tell us about you:</h2> Gender:
-        <select id="gender" class="dropdown">
-          <option value="-1">Male</option>
-          <option value="1">Female</option>
-          <option value="0">Other</option>
-        </select>
-        <br>
-        <br> Race:
-        <select id="race" class="dropdown">
-          <option value="1">African American/Black</option>
-          <option value="2">Hispanic/Latino</option>
-          <option value="0">Asian</option>
-          <option value="-1">Middle Eastern</option>
-          <option value="3">Pacific Islander</option>
-          <option value="4">Native American</option>
-          <option value="-2" selected>White</option>
-          <option value="5">Other</option>
-        </select>
-        <br>
-        <br> Type of High School:
-        <select id="hs">
-          <option value="0" selected>Public</option>
-          <option value="1">Private</option>
-          <option value="2">Parochial</option>
-          <option value="3">Homeschool</option>
-        </select>
-        <br>
-        <br>
-      </div>
-    </div>
-    <div class="row">
+
+    <!-- <div class="row">
       <div class="col-md-6">
         <div id="three-area"></div>
       </div>
-    </div>
+    </div> -->
 
     <br>
     <br>
 
     <!-- Dynamic Slider input-->
+
     <div class="row">
-      <div class="col-6">
+      <div class="col-4">
         <div class="interaction-text">
           <h2>Expected GPA and Test Scores: </h2>
           <form method="post" id="user_info">
@@ -230,12 +199,40 @@
             <span id="current-num-sat">5</span>
             <br>
             <br>
-            <input type="submit" value="Save Scenario" class="button">
-            <br>
-            <br>
           </form>
         </div>
       </div>
+      <div class="col-md-4">
+        <h2>Tell us about you:</h2> Gender:
+        <select id="gender" class="dropdown">
+          <option value="-1">Male</option>
+          <option value="1">Female</option>
+          <option value="0">Other</option>
+        </select>
+        <br>
+        <br> Race:
+        <select id="race" class="dropdown">
+          <option value="1">African American/Black</option>
+          <option value="2">Hispanic/Latino</option>
+          <option value="0">Asian</option>
+          <option value="-1">Middle Eastern</option>
+          <option value="3">Pacific Islander</option>
+          <option value="4">Native American</option>
+          <option value="-2" selected>White</option>
+          <option value="5">Other</option>
+        </select>
+        <br>
+        <br> Type of High School:
+        <select id="hs" class="dropdown">
+          <option value="0" selected>Public</option>
+          <option value="1">Private</option>
+          <option value="2">Parochial</option>
+          <option value="3">Homeschool</option>
+        </select>
+        <br>
+        <br>
+      </div>
+    </div>
     </div>
   </div>
 

@@ -77,7 +77,7 @@ InteractiveVis.prototype.initVis = function (callback) {
   vis.chart = vis.svg.append("path")
      .attr("class", "line")
      .attr("fill", "none")
-     .attr("stroke", "steelblue")
+     .attr("stroke", "white")
      .attr("stroke-width", "1.5px");
 
 
@@ -221,6 +221,7 @@ InteractiveVis.prototype.updateVis = function () {
 
     vis.circle.enter().append("circle")
       .attr("class", "dot")
+      .attr("fill", "crimson")
       .attr("r", 1)
     .on('mouseover', vis.tip.show)
     .on('mouseout', vis.tip.hide);
