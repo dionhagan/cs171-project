@@ -32,7 +32,9 @@
 
 <body>
   <div id="info">
+    <!--
     <a href="http://threejs.org" target="_blank">three.js</a> - webgl physically based shading testbed
+  -->
   </div>
 
   <script src="three.min.js"></script>
@@ -49,55 +51,80 @@
     function predictRandom(formData) {
       // start with random values (for now)
       var predictions = [{
-        "college": "Princeton", "color" : 0xff8f00
+        "college": "Princeton",
+        "color": 0xff8f00
       }, {
-        "college": "Harvard", "color" : 0xA41034
+        "college": "Harvard",
+        "color": 0xA41034
       }, {
-        "college": "Yale", "color" : 0x0f4d92
+        "college": "Yale",
+        "color": 0x0f4d92
       }, {
-        "college": "Columbia", "color" : 0x9bddff
+        "college": "Columbia",
+        "color": 0x9bddff
       }, {
-        "college": "Stanford", "color" : 0x981E32
+        "college": "Stanford",
+        "color": 0x981E32
       }, {
-        "college": "UChicago", "color" : 0x80000
+        "college": "UChicago",
+        "color": 0x80000
       }, {
-        "college": "MIT", "color" : 0xA31F34
+        "college": "MIT",
+        "color": 0xA31F34
       }, {
-        "college": "Duke", "color" : 0x001A57
+        "college": "Duke",
+        "color": 0x001A57
       }, {
-        "college": "UPenn", "color" : 0x011f5b
+        "college": "UPenn",
+        "color": 0x011f5b
       }, {
-        "college": "CalTech", "color" : 0xFF6E1E
+        "college": "CalTech",
+        "color": 0xFF6E1E
       }, {
-        "college": "JohnsHopkins", "color" : 0x002d72
+        "college": "JohnsHopkins",
+        "color": 0x002d72
       }, {
-        "college": "Dartmouth", "color" : 0x00693e
+        "college": "Dartmouth",
+        "color": 0x00693e
       }, {
-        "college": "Northwestern", "color" : 0x520063
+        "college": "Northwestern",
+        "color": 0x520063
       }, {
-        "college": "Brown", "color" : 0xCC0000
+        "college": "Brown",
+        "color": 0xCC0000
       }, {
-        "college": "Cornell", "color" : 0xB31B1B
+        "college": "Cornell",
+        "color": 0xB31B1B
       }, {
-        "college": "Vanderbilt", "color" : 0x997F3D
+        "college": "Vanderbilt",
+        "color": 0x997F3D
       }, {
-        "college": "WashU", "color" : 0xa51417
+        "college": "WashU",
+        "color": 0xa51417
       }, {
-        "college": "Rice", "color" : 0x002469
+        "college": "Rice",
+        "color": 0x002469
       }, {
-        "college": "NotreDame", "color" : 0x002B5B
+        "college": "NotreDame",
+        "color": 0x002B5B
       }, {
-        "college": "UCB", "color" : 0x003262
+        "college": "UCB",
+        "color": 0x003262
       }, {
-        "college": "Emory", "color" : 0x1b3d75
+        "college": "Emory",
+        "color": 0x1b3d75
       }, {
-        "college": "Georgetown", "color" : 0x011e41
+        "college": "Georgetown",
+        "color": 0x011e41
       }, {
-        "college": "CarnegieMellon", "color" : 0x900000
+        "college": "CarnegieMellon",
+        "color": 0x900000
       }, {
-        "college": "UCLA", "color" : 0x3284BF
+        "college": "UCLA",
+        "color": 0x3284BF
       }, {
-        "college": "USC", "color" : 0x990000
+        "college": "USC",
+        "color": 0x990000
       }];
 
       for (var i = 0; i < predictions.length; i++) {
@@ -207,7 +234,7 @@
       function addObjectColor(geometry, color, x, y, z, ry) {
 
         var material = new THREE.MeshPhongMaterial({
-          color: 0xffffff
+          color: color
         });
 
         return addObject(geometry, material, x, y, z, ry);
@@ -256,19 +283,43 @@
         */
       }
 
+      function drawLegend() {
+        // Ref: http://stackoverflow.com/questions/28008608/why-cant-i-draw-a-complete-circle-with-arc-in-three-js
+        var extrudeSettings = {
+          bevelEnabled: false,
+          steps: 1,
+          amount: 2
+        };
+
+        var shape = new THREE.Shape();
+        var circleRadius = 250;
+
+        // THIS LINE SOLVES THE ISSUE
+        shape.moveTo( -circleRadius,0);
+
+        shape.absarc(0, 0, circleRadius, 0, 1.5 * Math.PI, false);
+        shape.lineTo(0, 0);
+        shape.closePath();
+
+        var geometry = shape.extrude(extrudeSettings);
+
+        scene.add(new THREE.Mesh(geometry, new THREE.MeshNormalMaterial()));
+        return;
+      }
+
       var bigCube = new THREE.BoxGeometry(50, 500, 50);
       var midCube = new THREE.BoxGeometry(50, 200, 50);
-      var smallCube = new THREE.BoxGeometry(100, 100, 100);
+      var smallCube = new THREE.BoxGeometry(1, 500, 10);
 
       var predictions = predictRandom();
 
-    //  addCubes(predictions, smallCube);
+      //  addCubes(predictions, smallCube);
 
       var loader = new THREE.FontLoader();
       loader.load('fonts/helvetiker_bold.typeface.js', function(response) {
         // Text
         var options = {
-          size: 30,
+          size: 20,
           height: 10,
           weight: 'normal',
           style: 'normal',
@@ -281,33 +332,53 @@
         };
         var zoneCount = [0, 0, 0, 0, 0];
         var zone;
-        var x, z, alt;
-
+        var x, y, z, r, alt, angle;
+        var cube;
 
 
         options.font = response;
 
+        drawLegend();
+
         for (var i = 0; i < predictions.length; i++) {
           zone = Math.floor(predictions[i].prob * 100 / 20);
-          x = zone * (-250);
+          x = (4 - zone) * (-250);
+          y = 50 + (4 - zone) * 50;
           z = zoneCount[zone] * 250;
+          // switch sides from left to right of center
           alt = (zoneCount[zone] % 2 == 0) ? 1 : -1;
           z *= alt;
+
+          angle = alt * zoneCount[zone] * Math.PI / 16;
+          r = (5 - zone) * 250;
+          console.log("angle:" + angle * 57.3 + ",r=", r);
+
+          z = Math.sin(angle) * r;
+          x = -Math.sqrt(Math.pow(r, 2) - Math.pow(z, 2));
+          console.log(predictions[i].college + "," + predictions[i].prob + ",zone=" + zone + ",x=" + x + ",y=" + y + ",z=" + z);
           zoneCount[zone]++;
 
           var textGeometry = new THREE.TextGeometry(predictions[i].college, options);
           var textMaterial = new THREE.MeshBasicMaterial({
-            color: predictions[i].color
-,vertexColors:THREE.FaceColors, wireframe: false,opacity: 0.8,transparent: true, side: THREE.DoubleSide, visible: true
+            color: predictions[i].color,
+            vertexColors: THREE.FaceColors,
+            wireframe: false,
+            opacity: 0.8,
+            transparent: true,
+            side: THREE.DoubleSide,
+            visible: true
           });
 
           var mesh = new THREE.Mesh(textGeometry, textMaterial);
           mesh.rotation.y = 1.5;
-          mesh.position.set(x, 50, z);
+          mesh.position.set(x, y, z);
 
           mesh.castShadow = true;
           mesh.receiveShadow = true;
           scene.add(mesh);
+          cube = new THREE.BoxGeometry(1, y + (4 - zone) * 50, 10);
+
+          addObjectColor(cube, 0x000000, x, 0, z, 0);
         }
       });
 
