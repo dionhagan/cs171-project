@@ -233,6 +233,7 @@ Innovation3d.prototype.updateVis = function() {
       drawLegend();
 
       for (var i = 0; i < p171.predictions.length; i++) {
+        if (vis.selectedSchools.indexOf(p171.predictions[i].college) < 0) continue;
         zone = Math.floor(p171.predictions[i].prob * 100 / 20);
         x = (4 - zone) * (-250);
         y = 50 + (4 - zone) * 50;

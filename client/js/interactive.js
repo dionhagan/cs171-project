@@ -163,6 +163,7 @@ InteractiveVis.prototype.wrangleData = function () {
     .on("change", function(){
       vis.updateAllSchools();
       vis.updateVis()
+      p171.innovation3d.wrangleData();
     })
 
   // first time through
