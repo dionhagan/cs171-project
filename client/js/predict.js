@@ -1,5 +1,7 @@
 "use strict";
 
+// TODO: make these set of functions into a class
+
 function predictRandom(formData) {
   // start with random values (for now)
   var predictions = [
@@ -84,7 +86,93 @@ function predictRandom(formData) {
     predictions[i].prob = Math.random();
   }
   p171.predictions = predictions;
+  setCollegeColors();
 }
+
+function setCollegeColors() {
+  for (var i = 0; i < p171.predictions.length; i++) {
+    switch (p171.predictions[i].college) {
+      case "Princeton":
+        p171.predictions[i].color = 0xff8f00;
+        break;
+      case "Harvard":
+        p171.predictions[i].color = 0xA41034;
+        break;
+      case "Yale":
+        p171.predictions[i].color = 0x0f4d92;
+        break;
+      case "Columbia":
+        p171.predictions[i].color = 0x9bddff;
+        break;
+      case "Stanford":
+        p171.predictions[i].color = 0x981E32;
+        break;
+      case "UChicago":
+        p171.predictions[i].color = 0x80000;
+        break;
+      case "MIT":
+        p171.predictions[i].color = 0xA31F34;
+        break;
+      case "Duke":
+        p171.predictions[i].color = 0x001A57;
+        break;
+      case "UPenn":
+        p171.predictions[i].color = 0x011f5b;
+        break;
+      case "CalTech":
+        p171.predictions[i].color = 0xFF6E1E;
+        break;
+      case "JohnsHopkins":
+        p171.predictions[i].color = 0x002d72;
+        break;
+      case "Dartmouth":
+        p171.predictions[i].color = 0x00693e;
+        break;
+      case "Northwestern":
+        p171.predictions[i].color = 0x520063;
+        break;
+      case "Brown":
+        p171.predictions[i].color = 0xCC0000;
+        break;
+      case "Cornell":
+        p171.predictions[i].color = 0xB31B1B;
+        break;
+      case "Vanderbilt":
+        p171.predictions[i].color = 0x997F3D;
+        break;
+      case "WashU":
+        p171.predictions[i].color = 0xa51417;
+        break;
+      case "Rice":
+        p171.predictions[i].color = 0x002469;
+        break;
+      case "NotreDame":
+        p171.predictions[i].color = 0x002B5B;
+        break;
+      case "UCB":
+        p171.predictions[i].color = 0x003262;
+        break;
+      case "Emory":
+        p171.predictions[i].color = 0x1b3d75;
+        break;
+      case "Georgetown":
+        p171.predictions[i].color = 0x011e41;
+        break;
+      case "CarnegieMellon":
+        p171.predictions[i].color = 0x900000;
+        break;
+      case "UCLA":
+        p171.predictions[i].color = 0x3284BF;
+        break;
+      case "USC":
+        p171.predictions[i].color = 0x990000;
+        break;
+      default:
+        p171.predictions[i].color = 0x000000;
+    }
+  }
+}
+
 
 function predict() {
 
@@ -218,6 +306,7 @@ function predict() {
       p171.predictions = JSON.parse(this.response).preds;
       console.log("web service returned");
       p171.lineChart.wrangleData();
+      p171.innovation3d.wrangleData();
     }
   }
 }
