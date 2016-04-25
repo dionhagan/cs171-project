@@ -35,7 +35,7 @@ function checkCookie() {
 function saveUserData(user) {
     var result = [];
     for (factor in user) {
-        result.push(user[factor]); 
+        result.push(factor+":"+user[factor]); 
     }
     localStorage.setItem("user", result)
     console.log(result)

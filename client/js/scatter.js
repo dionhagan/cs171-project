@@ -14,7 +14,7 @@ Scatter.prototype.initVis = function() {
   var vis = this;
 
   vis.margin = {top: 10, right: 20, bottom: 60, left: 60};
-  vis.width = window.innerWidth - 350 - vis.margin.left - vis.margin.right,
+  vis.width = window.innerWidth - 270 - vis.margin.left - vis.margin.right,
   vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
@@ -98,8 +98,6 @@ Scatter.prototype.updateVis = function() {
   var vis = this;
 
   vis.wrangleData();
-  
-  vis.isDemographicData = d3.extent(vis.displayData, function(d) { return d }) == [-1,1]
 
   // Add user to dataset
   if (Object.keys(p171.user).length > 1) {

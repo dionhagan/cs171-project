@@ -148,7 +148,7 @@ function predict() {
   var gender = d3.select('#gender');
   var race = d3.select('#race');
 
-  // Save user input in cookie
+  // Save user input into localStorage
   p171.user = {
     sat: sat.property("value"),
     act: act.property("value"),

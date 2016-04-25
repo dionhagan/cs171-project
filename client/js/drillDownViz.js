@@ -28,7 +28,7 @@ DrillDownController.prototype.initFilters = function() {
 
   DD.filters = {}; 
 
-  var initColleges = ["Harvard", "Princeton","Yale"];
+  var initColleges = "colleges" in localStorage ? localStorage.colleges.split(",") : ["Harvard", "Princton","Yale"];
 
   for (collegeName in p171.data.colleges) {
     console.log(initColleges.indexOf(collegeName))

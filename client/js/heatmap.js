@@ -35,9 +35,9 @@ Heatmap.prototype.createElements = createElements;
 Heatmap.prototype.createDimensions = function() {
   var vis = this;
 
-  vis.margin = {top:20,right:5,bottom:100,left:60};
+  vis.margin = {top:20,right:0,bottom:100,left:180};
   vis.width = p171.DD.wrapperWidth - 200 - vis.margin.left - vis.margin.right,
-  vis.height = 600 - vis.margin.top - vis.margin.bottom;
+  vis.height = 800 - vis.margin.top - vis.margin.bottom;
 };
 
 Heatmap.prototype.addMainSVG = addMainSVG;
@@ -115,6 +115,9 @@ Heatmap.prototype.updateVis = function() {
 
   var yDomain = vis.factorNames.filter(function(factor) {
     return p171.DD.filters[factor];
+  })  
+  .map(function(factorName) {
+    return p171.data.labels[factorName];
   })
 
   var xDomain = vis.collegeNames.filter(function(college) {
@@ -142,7 +145,7 @@ Heatmap.prototype.updateCells = function(d) {
   vis.cells 
     .attr({
       x: function(d) { return vis.xScale(d.collegeID); },
-      y: function(d) { return vis.yScale(d.factor); },
+      y: function(d) { return vis.yScale(p171.data.labels[d.factor]); },
       width: vis.xScale.rangeBand() - 5,
       height: vis.yScale.rangeBand() - 5,
       fill: function(d) { 

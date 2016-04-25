@@ -22,11 +22,13 @@ var convertFormVar = {
   college: "collegeID"
 }
 
-var cookies = document.cookie.split("; ")
-for (var i=0; i<cookies.length; i++) {
-  var cname = cookies[i].split("=")[0];
-  var value = cookies[i].split("=")[1];
-  p171.user[convertFormVar[cname]] = !isNaN(value) ? +value : value;
+if ("user" in localStorage) {
+  var userInput = localStorage.user.split(",")
+  for (var i=0; i<userInput.length; i++) {
+    var factor = userInput[i].split(":")[0];
+    var value = userInput[i].split(":")[1];
+    p171.user[convertFormVar[factor]] = !isNaN(value) ? +value : value;
+  }
 }
 
 // Create an object for website text
@@ -150,7 +152,7 @@ function createVis() {
     p171.DD = new DrillDownController("feature-importance-vis");
     p171.DD.heatmap = new Heatmap("college_breakdown");
     p171.DD.scatter = new Scatter("comparison");
-    
+
   } else {
     predictRandom();
     p171.lineChart = new InteractiveVis('chart-area');
