@@ -304,6 +304,7 @@ function predict() {
   xhr.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       p171.predictions = JSON.parse(this.response).preds;
+      setCollegeColors();
       console.log("web service returned");
       p171.lineChart.wrangleData();
       p171.innovation3d.wrangleData();
