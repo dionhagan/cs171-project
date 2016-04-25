@@ -57,13 +57,15 @@ DrillDownController.prototype.initVis = function() {
   var DD = this;
 
   // Create dimensions for the visualization based on current window size
+  DD.wrapperWidth = +d3.select('#overall_factors').style('width').replace('px','');
+  DD.subPlotWidth = DD.wrapperWidth -400;
   DD.margin = {top: 60, right: 20, bottom: 60, left: 20};
-  DD.width = window.innerWidth - DD.margin.left - DD.margin.right;
+  DD.width = DD.wrapperWidth - DD.margin.left - DD.margin.right;
   DD.height = window.innerHeight - DD.margin.top - DD.margin.bottom;
 
   // Create the X and Y scale
   DD.xScale = d3.scale.linear()
-    .range([0, DD.width - 400]).nice()
+    .range([0, DD.width - 200]).nice()
     .domain([
       d3.min(DD.data, function(f) { return f.effect; }),
       d3.max(DD.data, function(f) { return f.effect; })
@@ -104,7 +106,6 @@ DrillDownController.prototype.initVis = function() {
 
     moreDetails.append("div").attr({class: "text"})
     moreDetails.append("div").attr({class: "chart"})
-    moreDetails.append("div").attr({class: "filters"})
 
     DD.factors[factor.name].moreDetails = moreDetails;
   }

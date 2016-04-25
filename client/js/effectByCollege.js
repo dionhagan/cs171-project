@@ -13,8 +13,8 @@ EffectGraph.prototype.initVis = function() {
   vis.wrangleData();
 
   vis.margin = {top: 10, right: 20, bottom: 125, left: 60};
-  vis.outerHeight = 600;
-  vis.outerWidth = 800;
+  vis.outerWidth = p171.DD.subPlotWidth;
+  vis.outerHeight = 800;
   vis.width = vis.outerWidth - vis.margin.left - vis.margin.right,
   vis.height = vis.outerHeight - vis.margin.top - vis.margin.bottom;
 

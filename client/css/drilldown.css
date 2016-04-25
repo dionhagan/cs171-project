@@ -123,24 +123,42 @@ svg.histogram g rect {
   stroke-width: 2px;
 }
 
-
 .filters {
   position: relative;
   float: right;
 }
 
+.open-filters {
+  height:100px;
+  width: 15px;
+  background-color: lightsteelblue;
+}
+
 .college-filters {
   height: 20px;
-  width: 120px;
+  width: 70px;
   background-color: grey;
   float:left;
 }
 
 .app-filters {
   height: 20px;
-  width: 120px;
+  width: 70px;
   background-color: lightgrey;
   float: left;
+}
+
+.close-filters {
+  background-color: red;
+  float:right;
+  height: 20px;
+  width: 30px;
+  text-align: center;
+  opacity: 0.4;
+}
+
+.filters-main {
+  background-color: lightsteelblue;
 }
 
 

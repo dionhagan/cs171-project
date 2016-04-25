@@ -5,7 +5,6 @@ var Histogram = function(_parentElement, _category) {
       if (p171.data.labels[label] == _category) this.category = label
     }
   this.createElements();
-  this.addSelectors();
   this.wrangleData();
   this.initVis();
 }
@@ -13,9 +12,8 @@ var Histogram = function(_parentElement, _category) {
 Histogram.prototype.initVis = function () {
   var vis = this;
 
-  vis.margin = { top: 40, right: 60, bottom: 60, left: 5 };
-
-  vis.width = 800 - vis.margin.left - vis.margin.right,
+  vis.margin = { top: 40, right: 60, bottom: 60, left:20};
+  vis.width = p171.DD.subPlotWidth - vis.margin.left - vis.margin.right,
   vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
@@ -48,8 +46,6 @@ Histogram.prototype.updateVis = function() {
   
   vis.wrangleData();
 
-  console.log(vis.displayData)
-
   var min = Math.min(...vis.displayData);
   var max = Math.max(...vis.displayData);
 
@@ -59,6 +55,8 @@ Histogram.prototype.updateVis = function() {
   vis.histogramData = d3.layout.histogram()
     .bins(vis.x.ticks(vis.bins))
     (vis.displayData);
+
+  console.log(vis.displayData.length)
 
   vis.y
     .domain([0, d3.max(vis.histogramData, function(d){ return d.y; })]);
@@ -83,6 +81,19 @@ Histogram.prototype.updateVis = function() {
         x: function(d,i){ return i*barWidth; },
         width: barWidth,
         height: function(d) { return vis.height - vis.y(d.y); },
+      })
+      .style("fill", function(d, i) {
+        if (i+1 < vis.histogramData.length) {
+          var nextBin = vis.histogramData[i+1];
+          if ((p171.user[vis.category] > d.x) && (p171.user[vis.category] <= nextBin.x)) {
+            return "lightgreen";
+          }
+        } else if (p171.user[vis.category] > d.x) {
+          return "lightgreen"
+        } else {
+          return "white";
+        }
+        
       });
 
   vis.bar.exit().remove();  
@@ -97,12 +108,13 @@ Histogram.prototype.updateVis = function() {
     .transition().duration(750)
     .attr({
       class:"labels",
-      y: function(d) { return vis.y(d.y); },
-      x: function(d,i){ return (i*barWidth) + (0.4*barWidth); },
+      y: function(d) { return vis.y(d.y)-10; },
+      x: function(d,i){ return (i*barWidth) + (0.2*barWidth); },
       fill: "lightgreen"
     })
     .text(function(d){
-      return d.y;
+      var pct = ((d.y / vis.displayData.length)*100).toFixed(1)
+      return pct+"%";
     })
 
   vis.labels.exit().remove();
@@ -148,72 +160,11 @@ Histogram.prototype.wrangleData = function() {
   vis.displayData = filteredData.map(function(d) {
     return d[vis.category];
   });
+  console.log(filteredData)
+  console.log(vis.displayData)
 
 }
 
-Histogram.prototype.addSelectors = function() {
-  var vis = this;
-
-  var options = p171.data.mainFactors;
-
-
-  var selectorLabel = vis.filtersElement.insert("div", ".filter-choices")
-    .text("Select a college: ")
-
-  vis.collegeSelector = selectorLabel.append("select")
-    .attr({
-      id:"college-selector"
-    })
-    .on('change', function(d) {
-      vis.updateVis();
-    });
-
-  var colleges = Object.keys(p171.data.colleges);
-
-  for (var collegeIndex=0; collegeIndex<colleges.length; collegeIndex++) {
-    var college = colleges[collegeIndex];
-    var option = vis.collegeSelector.append("option")
-      .attr({
-        value:college
-      })
-      .text(college);
-  }
-
-  vis.collegeSelector
-    .property('value','All');
-}
-
-Histogram.prototype.createElements = function() {
-  var vis = this;
-
-  // Create plot element
-  vis.plotElement = this.parentElement.append("div")
-    .attr({ class: "subplot"});
-
-  // Create filter tabs
-  vis.filtersElement = this.parentElement.append("div")
-    .attr({class:"filters"})
-
-  var filterChoices = vis.filtersElement.append("div")
-    .attr({class:"filter-choices"});
-
-  filterChoices.append("div")
-    .attr({class:"college-filters"})
-    .on("click", function() {
-      vis.showFilters("college")
-    })
-    .text("Colleges");
-
-  filterChoices.append("div") 
-    .attr({class:"app-filters"})
-    .on("click", function() {
-      vis.showFilters("application")
-    })
-    .text("Application");
-
-  vis.filtersElement.append("div")
-    .attr({class:"filters-main"});
-
-}
+Histogram.prototype.createElements =createElements;
 
 Histogram.prototype.showFilters = showFilters;

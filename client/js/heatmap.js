@@ -14,9 +14,19 @@ Heatmap.prototype.initVis = function(first_argument) {
   vis.createDimensions();
   vis.addMainSVG(); 
   vis.addAxes(d3.scale.ordinal, d3.scale.ordinal);
+  vis.colors = colorbrewer.RdBu[11]
+  vis.colorScale = d3.scale.quantize()
+    .domain([
+      d3.min(vis.data, function(d) { return d.effect; }), 
+      vis.colors.length - 1,
+      d3.max(vis.data, function(d) { return d.effect; }),
+    ])
+    .range(vis.colors)
+
   vis.xScale.rangeRoundBands([0, vis.width]);
   vis.yScale.rangeRoundBands([vis.height, 0]);
   vis.createCells();
+  vis.createLegend()
   vis.updateVis();
 };
 
@@ -25,8 +35,8 @@ Heatmap.prototype.createElements = createElements;
 Heatmap.prototype.createDimensions = function() {
   var vis = this;
 
-  vis.margin = {top:20,right:20,bottom:60,left:60};
-  vis.width = 800 - vis.margin.left - vis.margin.right,
+  vis.margin = {top:20,right:5,bottom:100,left:60};
+  vis.width = p171.DD.wrapperWidth - 200 - vis.margin.left - vis.margin.right,
   vis.height = 600 - vis.margin.top - vis.margin.bottom;
 };
 
@@ -43,6 +53,58 @@ Heatmap.prototype.createCells = function() {
     })
 }
 
+Heatmap.prototype.createLegend = function() {
+  var vis = this;
+
+  var width = 50;
+
+  var legendData = vis.colorScale.range()
+  console.log(legendData)
+
+  vis.legendElement = vis.svg.append("g")
+    .attr({
+      id:"heat-map-legend",
+      x: vis.width - vis.margin.right
+    })
+
+  vis.legendElement.append("text")
+    .attr({
+      y: vis.height + 35
+    })
+    .text("Legend")
+
+  vis.legend = vis.legendElement.selectAll(".legend")
+    .data(legendData);
+
+  vis.legend.enter().append("g")
+
+  vis.legend.append("rect")
+    .attr({
+      x: function(d, i) { return width* i },
+      y: vis.height + 40,
+    })
+    .style({
+      width: width+"px",
+      height: "30px",
+      fill: function(d, i) { return vis.colors[i]; }
+    })
+
+  vis.legend.append("text")
+    .attr({
+      x: function(d, i) { return width * i },
+      y: vis.height + 85,
+    })
+    .text(function(d, i) {
+      var max = vis.colorScale.domain()[1]; 
+      var min = vis.colorScale.domain()[0]; 
+      var diff = max - min;
+
+      var increment = diff / vis.colorScale.range().length;
+
+      return (min+(increment * i)).toFixed(2)
+    })
+
+}
 Heatmap.prototype.showFilters = showFilters;
 
 // Update heatmap ==================================
@@ -83,10 +145,9 @@ Heatmap.prototype.updateCells = function(d) {
       y: function(d) { return vis.yScale(d.factor); },
       width: vis.xScale.rangeBand() - 5,
       height: vis.yScale.rangeBand() - 5,
-      fill: function(d) {
-        if (d.effect > 0) return 'blue';
-        else return 'yellow';
-      }
+      fill: function(d) { 
+        if(d.factor == "earlyAppl") console.log(d.effect)
+        return vis.colorScale(d.effect)}
     })
 
   vis.cells.exit().remove();
@@ -116,7 +177,13 @@ Heatmap.prototype.initData = function(data) {
       vis.data.push(sample);
     }
   }
+
+  console.log(vis.data)
 }
+
+
+
+
 // Wrangle data
 Heatmap.prototype.wrangleData = applyFilter;
 
