@@ -30,6 +30,10 @@
     "College-by-college Differences",
     "<p>Most of us have an intuitive sense about which factors of an application are most important for determining admissions. However, things get murky when we start to think about how each college might differentially weight the factors. Much of the uncertainty surrounding applying to Ivy League schools arises from the seeming randomness of admissions-- why should a 4.0 student with high SAT scores get into Harvard, but not Princeton or Yale? We aimed to quantify some over this inter-college variation. We asked whether being a legacy had different levels of importance in determining admissions across our 25 schools. We find that although legacy has a positive effect on admission at every school, it is especially important at the Ivy League schools, as well as at Stanford and MIT.</p>"
   ],
+  "comparison": [
+    "Comparison of Applicants",
+    "<p> Now lets look at how your application compares to previous applicants. The most important factors to consider are standardized test scores and grade point average. You can also compare your AP scores and the number of test taken, as well as filter out applicants according to their application factors. </p>"
+  ],
   "conclusion": [
     "Conclusion",
     "<p>We have provided some much-needed insight into the murky waters of the college admissions process. Our hope is that this information empowers students and their supporters to make informed decisions about priorities and factors to consider when applying to college. Clearly, SAT scores and GPA are the most important factors of an application. Students should focus on boosting their academic profiles in lieu of joining more and more extracurricular activities. There are some limitations to our approach given the structure of our dataset. For example, we are unable to take account of any personal statements or recommendation letters, which are obviously very important in the application procedure. However, to the best of our knowledge, this analysis is the most extensive open-source tool available to high school students to date.</p>"

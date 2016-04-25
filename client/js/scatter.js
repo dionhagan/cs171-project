@@ -1,5 +1,5 @@
 var Scatter = function(_parentElement, _category) {
-  this.parentElement = _parentElement;
+  this.parentElement = d3.select("#"+_parentElement);
   this.data = p171.data.raw;
   for (label in p171.data.labels) {
     if (p171.data.labels[label] == _category) this.category = label;
@@ -14,7 +14,7 @@ Scatter.prototype.initVis = function() {
   var vis = this;
 
   vis.margin = {top: 10, right: 20, bottom: 60, left: 60};
-  vis.width = p171.DD.subPlotWidth - vis.margin.left - vis.margin.right,
+  vis.width = window.innerWidth - 350 - vis.margin.left - vis.margin.right,
   vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
@@ -98,6 +98,8 @@ Scatter.prototype.updateVis = function() {
   var vis = this;
 
   vis.wrangleData();
+  
+  vis.isDemographicData = d3.extent(vis.displayData, function(d) { return d }) == [-1,1]
 
   // Add user to dataset
   if (Object.keys(p171.user).length > 1) {
@@ -239,7 +241,7 @@ Scatter.prototype.createSelectors = function() {
   var options = p171.data.quantFactors;
 
   // Add selectors to the filters section 
-  vis.selectorsElement = vis.filtersElement.insert("div",".filter-choices")
+  vis.selectorsElement = vis.plotElement.append("div")
     .attr({class:"scatter-selectors"});
 
   vis.selectorsElement.append("b")
@@ -265,10 +267,8 @@ Scatter.prototype.createSelectors = function() {
   vis.xCategory
     .property('value', vis.category);
 
-  vis.selectorsElement.append("br");
-
   vis.selectorsElement.append("b")
-    .text("Y Axis: ")
+    .text("  Y Axis: ")
 
   vis.yCategory = vis.selectorsElement.append("select")
     .attr({
@@ -292,35 +292,6 @@ Scatter.prototype.createSelectors = function() {
   vis.yCategory
     .property('value', initCategory);
 
-  vis.selectorsElement.append("br");
-
-  vis.selectorsElement.append("b")
-    .text("College: ");
-
-  vis.collegeSelector = vis.selectorsElement.append("select")
-    .attr({
-      id:"college-selector"
-    })
-    .on('change', function(d) {
-      vis.updateVis();
-    });
-
-  vis.selectorsElement.append("br");
-
-  var colleges = Object.keys(p171.data.colleges)
-
-  for (var collegeIndex=0; collegeIndex<colleges.length; collegeIndex++) {
-    var college = colleges[collegeIndex];
-    var option = vis.collegeSelector.append("option")
-      .attr({
-        value:college
-      })
-      .text(college);
-  }
-
-  if ("collegeID" in p171.user) {
-    vis.collegeSelector.property('value', p171.user.collegeID);
-  }
   
 
 }

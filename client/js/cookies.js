@@ -33,7 +33,10 @@ function checkCookie() {
 }
 
 function saveUserData(user) {
+    var result = [];
     for (factor in user) {
-        setCookie(factor, user[factor], 1000); 
+        result.push(user[factor]); 
     }
+    localStorage.setItem("user", result)
+    console.log(result)
 }

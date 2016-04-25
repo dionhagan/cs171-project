@@ -26,6 +26,11 @@ Histogram.prototype.initVis = function () {
 
   vis.bins = 10;
   
+  if (vis.category in p171.data.nomFactors) {
+    vis.xScale = d3.scale.ordinal()
+      .rangeRoundBands([0, vis.width]);
+  }
+  
   vis.x = d3.scale.linear()
     .range([0, vis.width]);
 
@@ -49,20 +54,34 @@ Histogram.prototype.updateVis = function() {
   var min = Math.min(...vis.displayData);
   var max = Math.max(...vis.displayData);
 
-  vis.x
-    .domain([min, max])
+  if (vis.category in p171.data.nomFactors) {
+    vis.xScale
+      .domain(p171.data.nomFactors[vis.category])
+  } else {
+    vis.x
+      .domain([min, max])
+  }
+
 
   vis.histogramData = d3.layout.histogram()
     .bins(vis.x.ticks(vis.bins))
     (vis.displayData);
 
-  console.log(vis.displayData.length)
+  if (vis.category in p171.data.nomFactors) {
+    console.log(vis.histogramData)
+    vis.histogramData = vis.histogramData.filter(function(d) {
+      return d.length > 0
+    })
+  }
 
+    
   vis.y
     .domain([0, d3.max(vis.histogramData, function(d){ return d.y; })]);
 
+  var xScale = (vis.category in p171.data.nomFactors) ? vis.xScale : vis.x;
+  
   var xAxis = d3.svg.axis()
-    .scale(vis.x)
+    .scale(xScale)
     .orient("bottom");
   
   vis.bar = vis.svg.selectAll(".bar")

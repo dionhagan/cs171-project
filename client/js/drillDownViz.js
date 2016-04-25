@@ -268,18 +268,17 @@ DrillDownController.prototype.updateSubPlots = function() {
   }
 
   DD.heatmap.updateVis();
+  DD.scatter.updateVis();
 }
 
 
 var drillDownCharts = {
     "admissionstest": {
       Distribution: Histogram,
-      Scatter: Scatter
     },
     "acceptrate": {},
     "GPA": {
       Distribution: Histogram,
-      Scatter: Scatter
     },
     "averageAP": {
       Distribution: Histogram,
@@ -293,25 +292,35 @@ var drillDownCharts = {
       Distribution: Histogram
     },
     "female": {
+      Distribution: Histogram,
       Effect: EffectGraph
     },
     "schooltype":  {
       Distirbution: Histogram
     },
     "MinorityRace": {
+      Distribution: Histogram,
       Effect: EffectGraph
     },
     "earlyAppl": {
+      Distribution: Histogram,
       Effect: EffectGraph
     },
     "outofstate": {
+      Distribution: Histogram
     },
-    "public": {},
-    "alumni": {},
+    "public": {
+      Distribution: Histogram
+    },
+    "alumni": {
+      Distribution: Histogram
+    },
     "international": {
+      Distribution: Histogram,
       Effect: EffectGraph
     },
     "sports": {
+      Distribution: Histogram,
       Effect: EffectGraph
     }
 }
