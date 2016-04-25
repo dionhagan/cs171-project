@@ -22,11 +22,13 @@ var convertFormVar = {
   college: "collegeID"
 }
 
-var cookies = document.cookie.split("; ")
-for (var i=0; i<cookies.length; i++) {
-  var cname = cookies[i].split("=")[0];
-  var value = cookies[i].split("=")[1];
-  p171.user[convertFormVar[cname]] = !isNaN(value) ? +value : value;
+if ("user" in localStorage) {
+  var userInput = localStorage.user.split(",")
+  for (var i=0; i<userInput.length; i++) {
+    var factor = userInput[i].split(":")[0];
+    var value = userInput[i].split(":")[1];
+    p171.user[convertFormVar[factor]] = !isNaN(value) ? +value : value;
+  }
 }
 
 // Create an object for website text
@@ -43,21 +45,23 @@ queue()
     .defer(d3.csv, "data/collegedata_unnormalized.csv")
     .defer(d3.csv, "data/collegedata_normalized.csv")
     .defer(d3.json, "data/feature_effect.json")
+    .defer(d3.json, "data/factors.json")    
     .defer(d3.json, "text/drilldowntext.json")
     .defer(d3.csv,"data/normalize_means.csv")
     .defer(d3.csv,"data/normalize_stds.csv")
     .await(storeData)
 
-function storeData(err, collegeList, appData, appDataNorm, featureImportance,
-                    drillDownText,normalizeMeans, normalizeStds) {
+function storeData(err, collegeList, appData, appDataNorm, factorImportance, factorEffect, drillDownText,normalizeMeans, normalizeStds) {
   // Get text for drill down page
   p171.text.drillDown = drillDownText;
-
+  addDrillDownText();
+  
   // Store data from csv files
   p171.data.normalized = appDataNorm;
   p171.data.raw = appData;
   p171.data.colleges = {};
-  p171.data.featureImportance = featureImportance
+  p171.data.factorImportance = factorImportance;
+  p171.data.factorEffect = factorEffect;
 
   // Collect data for each college
   for (var collegeIndex=0; collegeIndex<collegeList.length; collegeIndex++) {
@@ -89,6 +93,7 @@ function storeData(err, collegeList, appData, appDataNorm, featureImportance,
     "admissionstest": "ACT/SAT score",
     "acceptrate": "College acceptance rate",
     "GPA": "GPA",
+    "GPA_w": "Weighted GPA",
     "averageAP": "Average AP score",
     "size": "College size",
     "AP": "# AP exams taken",
@@ -103,6 +108,7 @@ function storeData(err, collegeList, appData, appDataNorm, featureImportance,
     "international": "International Student",
     "sports": "Varsity Sports"
     }
+
   p171.data.quantFactors = quantFactors;
   p171.data.nomFactors = nomFactors;
   p171.data.mainFactors = quantFactors.concat(Object.keys(nomFactors));
@@ -140,9 +146,13 @@ function createVis() {
   //p171.featureImportanceVis = new FeatureImportanceVis("feature-importance-vis");
   //p171.hist = new Histogram("distribution");
   //p171.scatter = new Scatter("scatter-plot");
+
   // Determine which visualization to display based on the page
   if (window.location.pathname.indexOf("howitworks") >= 0) {
-    var DD = new DrillDownController("feature-importance-vis");
+    p171.DD = new DrillDownController("feature-importance-vis");
+    p171.DD.heatmap = new Heatmap("college_breakdown");
+    p171.DD.scatter = new Scatter("comparison");
+
   } else {
     predictRandom();
     p171.lineChart = new InteractiveVis('chart-area');

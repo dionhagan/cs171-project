@@ -146,6 +146,8 @@ InteractiveVis.prototype.updateAllSchools = function() {
   {
     vis.allSchools.push($(this).val());
   });
+
+  localStorage.setItem("colleges", vis.allSchools)
 }
 
 InteractiveVis.prototype.wrangleData = function () {

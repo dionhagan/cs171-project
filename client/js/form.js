@@ -14,6 +14,8 @@ function FormData(userInput) {
     college: 'Harvard'
   }
 
+  console.log(p171.data)
+
   for (var inputName in userInput) {
     var value = userInput[inputName];
     var defaultValue = defaultValues[inputName];

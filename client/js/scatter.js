@@ -1,25 +1,21 @@
-
-var Scatter = function(_parentElement) {
-  this.parentElement = _parentElement;
-  this.plotElement = this.parentElement.append("div")
-  this.selectorsElement = this.parentElement.append("div")
-    .style({
-      position: "relative",
-      float: "right"
-    });
+var Scatter = function(_parentElement, _category) {
+  this.parentElement = d3.select("#"+_parentElement);
   this.data = p171.data.raw;
+  for (label in p171.data.labels) {
+    if (p171.data.labels[label] == _category) this.category = label;
+  }
+  this.createElements();
   this.createSelectors();
-  this.createFilters();
-  this.initVis();  
-  
+  //this.createFilters();
+  this.initVis();   
 }
 
 Scatter.prototype.initVis = function() {
   var vis = this;
 
-  vis.margin = {top: 60, right: 20, bottom: 60, left: 60};
-  vis.width = 800 - vis.margin.left - vis.margin.right,
-  vis.height = 700 - vis.margin.top - vis.margin.bottom;
+  vis.margin = {top: 10, right: 20, bottom: 60, left: 60};
+  vis.width = window.innerWidth - 270 - vis.margin.left - vis.margin.right,
+  vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
   vis.svg = vis.plotElement.append("svg")
@@ -62,11 +58,25 @@ Scatter.prototype.initVis = function() {
       })
       .style("text-anchor", "end")*/
 
+  vis.tip = d3.tip()
+    .attr("class", "d3-tip")
+    .offset([-10,0])
+    .html(function(d) {
+      var html = "";
+      if (d.isUser) html += "<b>You</b><br>"
+      p171.data.quantFactors.forEach(function(feature) {
+        html += p171.data.labels[feature] + ": " + d[feature] + "<br>";
+      });
+      return html;
+    });
+
   vis.zoomBehavior = d3.behavior.zoom()
     .x(vis.x)
     .y(vis.y)
     .scaleExtent([1,100])
-    .on("zoom", zoom);
+    .on("zoom", function(d) {
+      vis.zoom(d);
+    });
 
   vis.container
     .call(vis.zoomBehavior);
@@ -80,9 +90,6 @@ Scatter.prototype.initVis = function() {
 
   vis.drag = d3.behavior.drag()
     .origin(function(d) { return d; })
-    //.on("dragstart", dragstarted)
-    //.on("drag", dragged)
-    //.on("dragend", dragended);
 
   vis.updateVis();
 }
@@ -90,55 +97,30 @@ Scatter.prototype.initVis = function() {
 Scatter.prototype.updateVis = function() {
   var vis = this;
 
-  // Filter data based on user selections
-  var categoryX = vis.xCategory.property('value'),
-      categoryY = vis.yCategory.property('value'),
-      college = vis.collegeSelector.property('value');
-
-  console.log('Updating Visualization');
-
-  vis.data = p171.data.raw.filter(function(d){
-
-    var collegeFilter = college == 'All' ? true : d.collegeID == college,
-        factorFilter = true,
-        filters = vis.filters;
-
-    for (factor in vis.filters) {
-      for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
-        var subFactor = p171.data.nomFactors[factor][subFactorIndex];
-        var isChecked = vis.filters[factor][subFactor];
-        if (!isChecked) {
-          if (subFactorIndex==0 && d[factor]==1) {
-            factorFilter = false
-          } else if (subFactorIndex==1 && d[factor]==-1) {
-            factorFilter = false;
-          }
-        }
-      }
-    }
-
-    return collegeFilter && factorFilter;
-  });
+  vis.wrangleData();
 
   // Add user to dataset
-  if (p171.user.length > 1) {
+  if (Object.keys(p171.user).length > 1) {
     var userData = p171.user
     userData["isUser"] = true;
-    vis.data.push(userData);
+    vis.displayData.push(userData);
   }
-  
+
+  // Filter data based on user selections
+  var categoryX = vis.xCategory.property('value'),
+      categoryY = vis.yCategory.property('value');
 
   // Create axes for graph
   vis.x
     .domain([
       0, 
-      d3.max(p171.data.raw, function(d){ return d[categoryX]; })
+      d3.max(vis.displayData, function(d){ return d[categoryX]; })
     ])
 
   vis.y
     .domain([
       0, 
-      d3.max(p171.data.raw, function(d){ return d[categoryY]; })
+      d3.max(vis.displayData, function(d){ return d[categoryY]; })
     ])
 
   vis.xAxis = d3.svg.axis()
@@ -159,24 +141,12 @@ Scatter.prototype.updateVis = function() {
 
   var color = d3.scale.category10();
 
-  vis.tip = d3.tip()
-    .attr("class", "d3-tip")
-    .offset([-10,0])
-    .html(function(d) {
-      var html = "";
-      if (d.isUser) html += "<b>You</b><br>"
-      p171.data.quantFactors.forEach(function(feature) {
-        html += p171.data.labels[feature] + ": " + d[feature] + "<br>";
-      });
-      return html;
-    });
-
   vis.container
     .call(vis.tip);
   
   // Create data points in scatter plot
   vis.points = vis.container.selectAll(".points")
-    .data(vis.data);
+    .data(vis.displayData);
   
   vis.points
     .enter().append("circle");
@@ -189,7 +159,7 @@ Scatter.prototype.updateVis = function() {
       cy: function(d) { return vis.y(d[categoryY]); },
       r: function(d) { return d.isUser ? 6 : 3; },
       fill: function(d) { 
-        if (d.isUser) return "yellow";
+        if (d.isUser) return "brown";
         return d.acceptStatus == 1 ? "#98fb98" : "lightsteelblue";
       }
     })
@@ -208,13 +178,14 @@ Scatter.prototype.updateVis = function() {
   vis.points.exit().remove();
 }
 
-function zoom() {
-  var vis = p171.scatter;
+Scatter.prototype.wrangleData = applyFilter;
+
+Scatter.prototype.zoom = function(d) {
+  var vis = this;
 
   // Filter data based on user selections
   var categoryX = vis.xCategory.property('value'),
-      categoryY = vis.yCategory.property('value'),
-      college = vis.collegeSelector.property('value');
+      categoryY = vis.yCategory.property('value');
 
   var xMax = d3.max(p171.data.raw, function(d){ return d[categoryX]; });
       yMax = d3.max(p171.data.raw, function(d){ return d[categoryY]; });
@@ -249,77 +220,9 @@ function dragended(d) {
   d3.select(this).classed("dragging", false);
 }
 
-Scatter.prototype.createFilters = function() {
-  var vis = this;
+Scatter.prototype.createElements = createElements;
 
-  // Create title for filter section
-  vis.selectorsElement.append("b")
-    .text("Filters: ");
-
-  vis.selectorsElement.append("br");
-
-  // Create form element to hold checkboxes
-  var filters = vis.selectorsElement.append("form")
-    .attr({
-      id: "filters",
-      class: "form-horizontal",
-      role: "form"
-    })
-
-  // Create object in vis to store filter options
-  vis.filters = {};
-
-  // Get factors that need to be filtered
-  var factorsToFilter = Object.keys(p171.data.nomFactors);
-
-  // Create a form group for each application factor 
-  for (var factorIndex=0; factorIndex<factorsToFilter.length; factorIndex++) {
-    var factor = factorsToFilter[factorIndex];
-
-    filters.append("div")
-      .attr("class","filter-label")
-      .text(p171.data.labels[factor])
-    
-    vis.filters[factor] = {};
-    
-    for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
-      var subFactor = p171.data.nomFactors[factor][subFactorIndex];
-      // Set initial filter status for each sub factor
-      vis.filters[factor][subFactor] = true;
-
-      // Append form group
-      var formGroup = filters.append("div")
-        .attr("class","form-group");
-
-      formGroup.append("label")
-        .attr({
-          class: "control-label col-sm-1",
-          for: subFactor
-        })
-        .text(subFactor);
-
-      formGroup.append("div")
-          .append("input")
-            .attr({
-              class:"form-control",
-              id: subFactor.replace(" ","_"),
-              value: factor,
-              type: "checkbox",
-              checked: ""
-            })
-            .on("change", function() {
-              var checkBox = this;
-              var factor = checkBox.value;
-              var subFactor = checkBox.id.replace("_"," ");
-              vis.updateFilters(factor, subFactor);
-            });
-    }
-    
-
-
-    
-  }
-}
+Scatter.prototype.showFilters = showFilters;
 
 Scatter.prototype.updateFilters = function(factor, subFactor) {
   var vis = this;
@@ -334,6 +237,10 @@ Scatter.prototype.createSelectors = function() {
   var vis = this; 
 
   var options = p171.data.quantFactors;
+
+  // Add selectors to the filters section 
+  vis.selectorsElement = vis.plotElement.append("div")
+    .attr({class:"scatter-selectors"});
 
   vis.selectorsElement.append("b")
     .text("X Axis: ");
@@ -356,12 +263,10 @@ Scatter.prototype.createSelectors = function() {
   }
 
   vis.xCategory
-    .property('value','GPA');
-
-  vis.selectorsElement.append("br");
+    .property('value', vis.category);
 
   vis.selectorsElement.append("b")
-    .text("Y Axis: ")
+    .text("  Y Axis: ")
 
   vis.yCategory = vis.selectorsElement.append("select")
     .attr({
@@ -380,34 +285,12 @@ Scatter.prototype.createSelectors = function() {
       .text(p171.data.labels[category]);
   }
 
+  var initCategory  = vis.category == "GPA" ? "admissionstest" : "GPA";
+
   vis.yCategory
-    .property('value','admissionstest');
+    .property('value', initCategory);
 
-  vis.selectorsElement.append("b")
-    .text("College: ");
-
-  vis.collegeSelector = vis.selectorsElement.append("select")
-    .attr({
-      id:"college-selector"
-    })
-    .on('change', function(d) {
-      vis.updateVis();
-    });
-
-  var colleges = Object.keys(p171.data.colleges)
-
-  for (var collegeIndex=0; collegeIndex<colleges.length; collegeIndex++) {
-    var college = colleges[collegeIndex];
-    var option = vis.collegeSelector.append("option")
-      .attr({
-        value:college
-      })
-      .text(college);
-  }
-
-  if ("collegeID" in p171.user) {
-    vis.collegeSelector.property('value', p171.user.collegeID);
-  }
   
 
 }
+

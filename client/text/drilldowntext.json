@@ -3,7 +3,7 @@
   "<p>Standardized tests, GPA and the school the student is applying to are by far the most important factors that determine admission success. This should come as no surprise. What is surprising is how little other factors matter. Sports can be <a href=\"http://collegepuzzle.stanford.edu/?p=2088\">a huge time sink</a> yet make no difference to a successful admission. Unless the student is a star recruited athlete, a fraction of the time spent on sports would be better spent improving standardized tests, especially the SAT or ACT score.</p>"
   ],
 "introduction": [
-  "Intro", 
+  "", 
   "<p class=\"lead\">Across the country four million students will be submitting upwards of forty million applications (<a href=\"http://www.nytimes.com/2014/11/16/nyregion/applications-by-the-dozen-as-anxious-students-hedge-college-bets.html\">source</a>) and then fretting until late March to find the results. Our team at Harvard's Data Science Class has analyzed more than 13,000 applications to determine which factors matter most to the top twenty-five colleges in the USA. We have also built an <a href=\"http://www.chanceme.info/\">online predictor</a>          that lets a student or parent enter current results, see the chances of getting into an elite college. Even more importantly, the student can then change the values to see if time is better spent improving grades or playing more varsity sports.</p>"
   ],
   "objectives": [
@@ -18,7 +18,7 @@
     "Legacy",
     "<p>Having Legacy which many parents count on and many students wish for turns out not to be as important better AP exams or SAT subject tests.</p>"
   ],
-  "diversity": [
+  "Underrepresented Minority": [
     "Diversity &amp; Underrepresented Minorities",
     "<p>Being an underrepresented minority (Hispanic, African-American, Native American) provides an average boost to the candidate's SAT or ACT by 87 points. This can make a huge difference when the schools are so competitive. However, this advantage varies significantly by school. Carnegie Mellon gives the greatest boost to minorities, with an average increase of 149 points. Harvard is notably the only of the top twenty-five that has statistically no premium given to underrepresented minorities.</p>"
   ],
@@ -29,6 +29,10 @@
   "college_breakdown": [
     "College-by-college Differences",
     "<p>Most of us have an intuitive sense about which factors of an application are most important for determining admissions. However, things get murky when we start to think about how each college might differentially weight the factors. Much of the uncertainty surrounding applying to Ivy League schools arises from the seeming randomness of admissions-- why should a 4.0 student with high SAT scores get into Harvard, but not Princeton or Yale? We aimed to quantify some over this inter-college variation. We asked whether being a legacy had different levels of importance in determining admissions across our 25 schools. We find that although legacy has a positive effect on admission at every school, it is especially important at the Ivy League schools, as well as at Stanford and MIT.</p>"
+  ],
+  "comparison": [
+    "Comparison of Applicants",
+    "<p> Now lets look at how your application compares to previous applicants. The most important factors to consider are standardized test scores and grade point average. You can also compare your AP scores and the number of test taken, as well as filter out applicants according to their application factors. </p>"
   ],
   "conclusion": [
     "Conclusion",
