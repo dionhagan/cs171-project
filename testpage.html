@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/chanceme.min.css">
+  <title>Test page</title>
+  <style>
+    [class*='col-'] {
+      /* for testing only */
+      border: blue;
+      border-style: solid;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <!-- Header -->
+    <div class="row">
+      <header class="col-6">
+        <h1>Header goes here</h1>
+      </header>
+    </div>
+
+    <!--- Nav -->
+    <div class="row">
+      <nav class="col-6">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="howitworks.html">How It Works</a></li>
+          <li><a href="testpage.html">Test Page</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- 6x1 columns -->
+    <div class="row">
+      <div class="col-1">
+        <p>
+          col 1 / 6
+        </p>
+      </div>
+      <div class="col-1">
+        <p>
+          col 2 / 6
+        </p>
+      </div>
+      <div class="col-1">
+        <p>
+          col 3 / 6
+        </p>
+      </div>
+      <div class="col-1">
+        <p>
+          col 4 / 6
+        </p>
+      </div>
+      <div class="col-1">
+        <p>
+          col 5 / 6
+        </p>
+      </div>
+      <div class="col-1">
+        <p>
+          col 6 / 6
+        </p>
+      </div>
+    </div>
+    <!-- 3x2 columns -->
+    <div class="row">
+      <div class="col-2">
+        <p>
+          col 1 / 3
+        </p>
+      </div>
+      <div class="col-2">
+        <p>
+          col 2 / 3
+        </p>
+      </div>
+      <div class="col-2">
+        <p>
+          col 3 / 3
+        </p>
+      </div>
+    </div>
+    <!-- 2 x 3 columns -->
+    <div class="row">
+      <div class="col-3">
+        <p>
+          col 1/2
+        </p>
+      </div>
+      <div class="col-3">
+        <p>
+          col 2/2
+        </p>
+      </div>
+    </div>
+    <!-- 4 + 2 columns -->
+    <div class="row">
+      <div class="col-4">
+        4 columns
+      </div>
+      <div class="col-2">
+        2 columns
+      </div>
+    </div>
+    <!-- 2 + 4 columns -->
+    <div class="row">
+      <div class="col-2">
+        2 columns
+      </div>
+      <div class="col-4">
+        4 columns
+      </div>
+    </div>
+    <!-- 5 + 1 columns -->
+    <div class="row">
+      <div class="col-5">
+        5 columns
+      </div>
+      <div class="col-1">
+        1 column
+      </div>
+    </div>
+    <!-- 1 + 5 columns -->
+    <div class="row">
+      <div class="col-1">
+        1 column
+      </div>
+      <div class="col-5">
+        5 columns
+      </div>
+    </div>
+    <!-- 6 columns -->
+    <div class="row">
+      <div class="col-6">
+        6 columns
+      </div>
+    </div>
+    <!-- 1, 4, 1 columns -->
+    <div class="row">
+      <div class="col-1">
+        1 column
+      </div>
+      <div class="col-4">
+        4 columns
+      </div>
+      <div class="col-1">
+        1 column
+      </div>
+    </div>
+    <!-- 1, 2, 2, 1 columns -->
+    <div class="row">
+      <div class="col-1">
+        1 column
+      </div>
+      <div class="col-2">
+        2 columns
+      </div>
+      <div class="col-2">
+        2 columns
+      </div>
+      <div class="col-1">
+        1 column
+      </div>
+    </div>
+    <!-- offset 1, 5 columns -->
+    <div class="row">
+      <div class="col-offset-1 col-5">
+        Offset 1, 5 columns
+      </div>
+    </div>
+    <!-- offset 2, 4 columns -->
+    <div class="row">
+      <div class="col-offset-2 col-4">
+        Offset 2, 4 columns
+      </div>
+    </div>
+    <!-- offset 3, 3 columns -->
+    <div class="row">
+      <div class="col-offset-3 col-3">
+        Offset 3, 3 columns
+      </div>
+    </div>
+    <!-- col-4-6 -->
+    <div class="row">
+      <div class="col-4-6">
+        4 on large width, 6 on small width
+      </div>
+    </div>
+
+    <div id="wrapper_footer"></div>
+  </div>
+  <footer id="footer">
+    <a href="http://www.cs171.org/">CS171</a> Team Braavos
+  </footer>
+
+  <!-- Use jQuery from CDN -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="js/chanceme.js"></script>
+</body>
+
+</html>
