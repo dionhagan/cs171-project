@@ -197,6 +197,9 @@ div#notebook {
 <li><a href="#secondsketch">Second Set of Sketches</a></li>
 <li><a href="#Redesign">Redesign Based on Heuristic Testing</a></li>
 <li><a href="#predictionPrototype">Prediction Prototype V1</a></li>
+<li><a href="#studiofeedback">Studio Feedback</a></li>
+<li><a href="#innovative">Innovative Visualization</a></li>
+<li><a href="#drilldownevolution">Drill Down V2</a></li>
 </ul>
 
 </div>
@@ -264,6 +267,19 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -288,9 +304,84 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="finalstudio"></a></p>
+<h2 id="Final-Studio-Feedback">Final Studio Feedback<a class="anchor-link" href="#Final-Studio-Feedback">&#182;</a></h2><p>April 20, 2016</p>
+<p>The final studio provided very valuable feedback on our current design. This summarizes the changes we will be making:</p>
+<ul>
+<li>All data fields are not captured<ul>
+<li>foreign national</li>
+<li>first in family</li>
+<li>varsity sports</li>
+<li>legacy</li>
+<li>out of state</li>
+<li>applying early</li>
+</ul>
+</li>
+<li>&lt;ove the demographics down below the vis so all the form info is together. </li>
+<li>Make the vis take the whole width. </li>
+<li>The line connecting the schools is confusing - use dots or a vertical bar chart. </li>
+<li>For the college checkboxes, have a radio button for select all, select none, select Ivies. </li>
+<li>Allow sorting of resulting by best chances in addition to school name (as we already discussed).</li>
+<li>Checkbox selection 1) won't work well on mobile 2) won't work if we have 100 colleges</li>
+<li>Move styles into its own style sheet (or update the chanceme Sass file - do not update chanceme.css)</li>
+</ul>
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="innovative"></a></p>
+<h2 id="Innovative-Visualization">Innovative Visualization<a class="anchor-link" href="#Innovative-Visualization">&#182;</a></h2><p>April 25, 2016</p>
+<p>For the innovative visualization, we experimented with a visualization to quickly give perspective on close vs. far schools.</p>
+<p>From our poster, we wanted to try a distorted map, like this cartogram:</p>
+<p><img src="cartogram.png" alt="distorted cartogram"></p>
+<p>When we dug into this further, the thought of adding a third dimension to a fan chart seemed very appealing, like the Ancient Theatre of Epidavros:</p>
+<p><img src="epidavros.jpg" alt="Epidavros Theatre"></p>
+<p>So we sketched a 3d representation of this:</p>
+<p><img src="3dsketch.jpg" alt="3d sketch"></p>
+<p>Then the question became how to implement a 3d representation. D3.js has limited support for 3d. There is a separate JavaScript library for 3d visualizations called <a href="http://threejs.org/">three.js</a> which has some beautiful visualizations that even work on mobile devices.</p>
+<p>So this is our V2 prototype including the innovative 3d visualzation which is linked to the prior visualization:</p>
+<p><img src="v2prototype.png" alt="V2 prototype"></p>
+<p>It is still missing numerous important things like a legend, the semi-circular "benches" of the theatre, and better encoding. We expect to do some user testing and address these issues prior to the project deadline. Note that the real visualization allows 3d exploration of the space for panning, zooming and changing camera angle.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="drilldownevolution"></a></p>
+<h2 id="Drill-Down-Evolution">Drill Down Evolution<a class="anchor-link" href="#Drill-Down-Evolution">&#182;</a></h2><p>At the final studio session, we also received much useful feedback regarding the drill down visualization. This visualization has evolved significantly since our first attempt.</p>
+<p>Here is the updated interaction diagram for the newly revamped Drill Down Visualization:
+<img src="drilldowninteraction.jpg" alt="drill down interaction"></p>
+<p>Drilling into a specific category is much clearer now:
+<img src="dd-v2-1.png" alt="drill down"></p>
+<p>There is also a heat map to compare criteria vs colleges that allows very specific filtering by school or candidate profile. (This particular screen shot does not show the applicant's placement but this is already working - trust us).</p>
+<p><img src="dd-v2-2.png" alt="heatmap"></p>
+<p>And finally, there is a scatterplot comparison available for many dimensions, with more dimensions coming before the project deadline.</p>
+<p><img src="dd-v2-3.png" alt="comparison"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span> 
+</pre></div>
+
+</div>
+</div>
+</div>
+
 </div>
     </div>
   </div>

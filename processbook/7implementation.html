@@ -210,7 +210,10 @@ there were unsuccessful.</p>
 <h2 id="Solving-the-Webservice-Performance-Problem">Solving the Webservice Performance Problem<a class="anchor-link" href="#Solving-the-Webservice-Performance-Problem">&#182;</a></h2><p>April 20, 2016</p>
 <p>Today, we made major progress in solving the web service performance problem. It turns out that when being hosted on Heroku, the webservice was retraining the entire Random Forest for every single prediction request. We made three changes to the web service that <strong>dropped the prediction time from at least 20 seconds to 2 seconds</strong>:</p>
 <ul>
-<li>We trained the Random Forest on our development machines and persisted the result in a file (using Python pickling). We tried the using recommended Sci-kit <a href="http://scikit-learn.org/stable/tutorial/basic/tutorial.html#model-persistence">jobload</a> but that generated 2 GB of 5000 persistence files!</li>
+<li>We trained the Random Forest on our development machines and persisted the result in a file (using Python pickling). We tried the using recommended Sci-kit <a href="http://scikit-learn.org/stable/tutorial/basic/tutorial.html#model-persistence">jobload</a> but that generated 2 GB of 5000 persistence files! <ul>
+<li>We also looked into using Redis, but that had other complications. It wasn't clear if we could store a 300 MB string in Redis. It would have involved other dependencies in the webservice, and the performance improvement may not have been great. Given we were reading a static Random Forest object, there was likely little advantage to using Redis.</li>
+</ul>
+</li>
 <li>We reduced the number of estimators / decision trees from 1000 to 150 to save time and pickle file size. The resulting pickle size was <em>only</em> 271 MB. We do not believe there is a significant difference in prediction accuracy.</li>
 <li>We reduced the number of gunicorn threads from unlimited to 2 based on a <a href="http://stackoverflow.com/questions/12079582/error-r14-memory-quota-exceeded-not-visible-in-new-relic">Stackoverflow Suggestion</a> that worked out really well. It had the added advantage of keeping the classifier in memory more frequently.</li>
 </ul>
