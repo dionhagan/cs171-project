@@ -258,6 +258,8 @@ function showValue(elementID, newValue) {
 InteractiveVis.prototype.saveScenario = function () {
     var vis = this;
 
+    var savedColor = ["blue", "green", "orange", "purple"];
+
     var selected_gpa = d3.select("#gpa").property("value");
     var selected_sat = d3.select("#sat").property("value");
     var selected_act = d3.select("#act").property("value");
@@ -265,14 +267,14 @@ InteractiveVis.prototype.saveScenario = function () {
 
     vis.tip2 = d3.tip().attr('class', 'd3-tip').html(function(d) {
         console.log(d["college"]);
-        return ("<strong>" + d["college"] + ": </strong> " +
-        "<strong style='color:crimson;'>" + d3.format("2.2%")(d["prob"]) + "</strong>"
-            + "<br> <strong style='color: (savedColor[(vis.counter - 1) % 4]); background: lightgrey'>" + "GPA: " + p171.user.gpa + "</strong>"
-            + "<br> <strong style='color: black'>" + "SAT: " + selected_sat + "</strong>"
-            + "<br> <strong style='color: black'>" + "ACT: " + selected_act + "</strong>"
-            + "<br> <strong style='color: black'>" + "AP Exams: " + p171.user.apnum + "</strong>"
-            + "<br> <strong style='color: black'>" + "Ave AP: " + p171.user.apave + "</strong>"
-            + "<br> <strong style='color: black'>" + "SAT Subj Tests: " + selected_sat_subj + "</strong>"
+        return ("<div class='jumbotron'><strong>" + d["college"] + ": </strong> " +
+                "<strong style='color:crimson;'>" + d3.format("2.2%")(d["prob"]) + "</strong>"
+              + "<br> <strong style='color:" + (savedColor[(vis.counter - 2) % 4]) + ";'>" + "GPA: " + p171.user.gpa + "</strong>"
+              + "<br> <strong style='color:" + (savedColor[(vis.counter - 2) % 4]) + ";'>" + "SAT: " + selected_sat + "</strong>"
+              + "<br> <strong style='color:" + (savedColor[(vis.counter - 2) % 4]) + ";'>" + "ACT: " + selected_act + "</strong>"
+              + "<br> <strong style='color:" + (savedColor[(vis.counter - 2) % 4]) + ";'>" + "AP Exams: " + p171.user.apnum + "</strong>"
+              + "<br> <strong style='color:" + (savedColor[(vis.counter - 2) % 4]) + ";'>" + "Ave AP: " + p171.user.apave + "</strong>"
+              + "<br> <strong style='color:" + (savedColor[(vis.counter - 2) % 4]) + ";'>" + "SAT Subj Tests: " + selected_sat_subj + "</strong></div>"
         )
     });
 
@@ -282,8 +284,6 @@ InteractiveVis.prototype.saveScenario = function () {
       d3.selectAll(".saved-rect").remove();
       vis.counter = 1;
     }
-
-    var savedColor = ["blue", "green", "orange", "purple"];
 
     vis.savedRect = vis.svg.selectAll("rect" + vis.counter)
         .data(vis.newData);
