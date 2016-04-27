@@ -8,6 +8,8 @@ var InteractiveVis = function (_parentElement) {
 InteractiveVis.prototype.initVis = function (callback) {
   var vis = this;
 
+  vis.counter = 1;
+
   // Static stuff
   vis.margin = { top: 50, right: 20, bottom: 120, left: 80 };
 
@@ -251,21 +253,31 @@ function showValue(elementID, newValue) {
 InteractiveVis.prototype.saveScenario = function () {
     var vis = this;
 
-    vis.savedCircle = vis.svg.selectAll("rect")
+    if (vis.counter == 5) {
+      d3.selectAll(".saved-rect").remove();
+      vis.counter = 1;
+      return false;
+    }
+
+    var savedColor = ["blue", "green", "orange", "purple"];
+
+    vis.savedRect = vis.svg.selectAll("rect" + vis.counter)
         .data(vis.newData);
 
-    vis.savedCircle.enter().append("rect")
-        .attr("class", "dot")
-        .attr("fill", "blue")
-        .attr("transform", "translate(20,5)")
+    vis.savedRect.enter().append("rect")
+        .attr("class", "saved-rect")
+        .attr("fill", savedColor[(vis.counter - 1) % 4])
+        .attr("transform", "translate(15,0)")
         .attr("width", 10)
         .attr("height", 10)
         .on('mouseover', vis.tip.show)
         .on('mouseout', vis.tip.hide);
 
-    vis.savedCircle
+    vis.savedRect
         .attr("opacity", .8)
         .attr("x", function (d) { return vis.x(d.college) })
-        .attr("y", function (d) { return vis.y(d.prob) })
+        .attr("y", function (d) { return vis.y(d.prob) });
+
+    vis.counter = vis.counter + 1;
 
 }

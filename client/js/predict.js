@@ -276,7 +276,7 @@ function predict() {
     var apaveValue = (apave.property("value") - means.averageAP) / stds.averageAP;
     var sat2aveValue = (sat2ave.property("value") - means.SATsubject) / stds.SATsubject;
     var minority = 0;
-    if (race.property("value") > 1) {
+    if (race.property("value") > 0) {
       minority = 1;
     }
 
