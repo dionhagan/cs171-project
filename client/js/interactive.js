@@ -253,6 +253,26 @@ function showValue(elementID, newValue) {
 InteractiveVis.prototype.saveScenario = function () {
     var vis = this;
 
+    var selected_gpa = d3.select("#gpa").property("value");
+    var selected_sat = d3.select("#sat").property("value");
+    var selected_act = d3.select("#act").property("value");
+    var selected_sat_subj = d3.select("#num_sat").property("value");
+
+    vis.tip2 = d3.tip().attr('class', 'd3-tip').html(function(d) {
+        console.log(d["college"]);
+        return ("<strong>" + d["college"] + ": </strong> " +
+        "<strong style='color:crimson;'>" + d3.format("2.2%")(d["prob"]) + "</strong>"
+            + "<br> <strong style='color: (savedColor[(vis.counter - 1) % 4]); background: lightgrey'>" + "GPA: " + p171.user.gpa + "</strong>"
+            + "<br> <strong style='color: black'>" + "SAT: " + selected_sat + "</strong>"
+            + "<br> <strong style='color: black'>" + "ACT: " + selected_act + "</strong>"
+            + "<br> <strong style='color: black'>" + "AP Exams: " + p171.user.apnum + "</strong>"
+            + "<br> <strong style='color: black'>" + "Ave AP: " + p171.user.apave + "</strong>"
+            + "<br> <strong style='color: black'>" + "SAT Subj Tests: " + selected_sat_subj + "</strong>"
+        )
+    });
+
+    vis.svg.call(vis.tip2);
+
     if (vis.counter == 5) {
       d3.selectAll(".saved-rect").remove();
       vis.counter = 1;
@@ -269,8 +289,8 @@ InteractiveVis.prototype.saveScenario = function () {
         .attr("transform", "translate(15,0)")
         .attr("width", 10)
         .attr("height", 10)
-        .on('mouseover', vis.tip.show)
-        .on('mouseout', vis.tip.hide);
+        .on('mouseover', vis.tip2.show)
+        .on('mouseout', vis.tip2.hide);
 
     vis.savedRect
         .attr("opacity", .8)
