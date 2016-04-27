@@ -256,7 +256,6 @@ InteractiveVis.prototype.saveScenario = function () {
     if (vis.counter == 5) {
       d3.selectAll(".saved-rect").remove();
       vis.counter = 1;
-      return false;
     }
 
     var savedColor = ["blue", "green", "orange", "purple"];
