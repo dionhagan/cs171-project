@@ -172,11 +172,16 @@ InteractiveVis.prototype.wrangleData = function () {
   vis.updateAllSchools();
   vis.updateVis();
 
-    d3.select("#save")
-        .on("click", function(){
-            console.log("hi");
-            vis.saveScenario ();
-        })
+  d3.select("#save")
+    .on("click", function(){
+      vis.saveScenario ();
+    });
+
+  d3.select("#clear")
+    .on("click", function (){
+      d3.selectAll(".saved-rect").remove();
+      vis.counter = 1;
+    });
 
 }
 
