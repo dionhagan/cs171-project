@@ -181,7 +181,7 @@ function predict() {
   //console.log(formData);
 
   // url template for webservice request src
-  var url = "http://ws.chanceme.info/predict?admissionstest={TEST}&AP={AP}&averageAP={APAVE}&SATsubject={SAT2}&GPA={GPA}&schooltype={HS}&intendedgradyear=2017&female={GENDER}&MinorityRace=0&international=0&sports=0&earlyAppl=0&alumni=0&outofstate=0&acceptrate=0.151&size=6621&public=0&finAidPct=0&instatePct=0";
+  var url = "http://ws.chanceme.info/predict?admissionstest={TEST}&AP={AP}&averageAP={APAVE}&SATsubject={SAT2}&GPA={GPA}&schooltype={HS}&intendedgradyear=2017&female={GENDER}&MinorityRace={MINOR}&international=0&sports=0&earlyAppl=0&alumni=0&outofstate=0&acceptrate=0.151&size=6621&public=0&finAidPct=0&instatePct=0";
 
   // object to convert ACT to SAT scores
   var act2sat = {
@@ -275,6 +275,10 @@ function predict() {
     var gpaValue = (gpa.property("value") - means.GPA) / stds.GPA;
     var apaveValue = (apave.property("value") - means.averageAP) / stds.averageAP;
     var sat2aveValue = (sat2ave.property("value") - means.SATsubject) / stds.SATsubject;
+    var minority = 0;
+    if (race.property("value") > 1) {
+      minority = 1;
+    }
 
     //console.log(gpaValue);
     //console.log(apnum.property("value"));
@@ -286,8 +290,8 @@ function predict() {
       .replace("{APAVE}", apaveValue)
       .replace("{SAT2}", sat2aveValue)
       .replace("{HS}", hs.property("value"))
-      .replace("{GENDER}", gender.property("value"));
-    //.replace("{RACE}", race.value);
+      .replace("{GENDER}", gender.property("value"))
+      .replace("{MINOR}", minority);
     return result_url;
   }
 
