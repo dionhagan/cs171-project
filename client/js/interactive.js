@@ -143,6 +143,7 @@ InteractiveVis.prototype.initVis = function (callback) {
 
 InteractiveVis.prototype.updateAllSchools = function() {
   var vis = this;
+
   vis.allSchools = [];
   $('input:checkbox[name="colleges"]:checked').each(function()
   {
@@ -159,6 +160,32 @@ InteractiveVis.prototype.wrangleData = function () {
   vis.filtered = [];
 
   vis.displayData = p171.predictions;
+
+    // Listen for click on toggle checkbox
+    $('#select-all').click(function(event) {
+        if(this.checked) {
+            // Iterate each checkbox
+            $(':checkbox').each(function() {
+                this.checked = true;
+            });
+            vis.updateAllSchools();
+            vis.updateVis();
+            p171.innovation3d.wrangleData();
+        }
+    });
+
+    // Listen for click on toggle checkbox
+    $('#unselect-all').click(function(event) {
+        if(this.checked) {
+            // Iterate each checkbox
+            $(':checkbox').each(function() {
+                this.checked = false;
+            });
+            vis.updateAllSchools();
+            vis.updateVis();
+            p171.innovation3d.wrangleData();
+        }
+    });
 
   // Get list of all selected schools
   d3.select("#school-select")
