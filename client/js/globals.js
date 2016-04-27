@@ -156,6 +156,12 @@ function createVis() {
   } else {
     predictRandom();
     p171.lineChart = new InteractiveVis('chart-area');
-    p171.innovation3d = new Innovation3d('three-area');
+    //p171.innovation3d = new Innovation3d('three-area');
+
+    d3.select("#save")
+        .on("click", function(){
+          console.log("hi");
+          p171.saved = new SaveScenario('chart-area');
+        })
   }
 }

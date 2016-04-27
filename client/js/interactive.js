@@ -169,6 +169,13 @@ InteractiveVis.prototype.wrangleData = function () {
   // first time through
   vis.updateAllSchools();
   vis.updateVis();
+
+    d3.select("#save")
+        .on("click", function(){
+            console.log("hi");
+            vis.saveScenario ();
+        })
+
 }
 
 InteractiveVis.prototype.updateVis = function () {
@@ -239,4 +246,26 @@ InteractiveVis.prototype.updateVis = function () {
 
 function showValue(elementID, newValue) {
     document.getElementById(elementID).innerHTML=newValue;
+}
+
+InteractiveVis.prototype.saveScenario = function () {
+    var vis = this;
+
+    vis.savedCircle = vis.svg.selectAll("rect")
+        .data(vis.newData);
+
+    vis.savedCircle.enter().append("rect")
+        .attr("class", "dot")
+        .attr("fill", "blue")
+        .attr("transform", "translate(20,5)")
+        .attr("width", 10)
+        .attr("height", 10)
+        .on('mouseover', vis.tip.show)
+        .on('mouseout', vis.tip.hide);
+
+    vis.savedCircle
+        .attr("opacity", .8)
+        .attr("x", function (d) { return vis.x(d.college) })
+        .attr("y", function (d) { return vis.y(d.prob) })
+
 }
