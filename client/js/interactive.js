@@ -57,8 +57,8 @@ InteractiveVis.prototype.initVis = function (callback) {
 
   vis.tip = d3.tip().attr('class', 'd3-tip').html(function(d) {
     console.log(d["college"]);
-    return ("<strong style='background: lightgrey'>" + d["college"] + ": </strong> " +
-    "<strong style='color:crimson; background: lightgrey'>" + d3.format("2.2%")(d["prob"]) + "</strong>")
+    return ("<strong>" + d["college"] + ": </strong> " +
+    "<strong style='color:crimson;'>" + d3.format("2.2%")(d["prob"]) + "</strong>")
   });
     //return (d["college"] + ": " + d3.format("2.2%")(d["prob"])); });
 
@@ -269,12 +269,12 @@ InteractiveVis.prototype.saveScenario = function () {
         console.log(d["college"]);
         return ("<div class='jumbotron'><strong>" + d["college"] + ": </strong> " +
                 "<strong style='color:crimson;'>" + d3.format("2.2%")(d["prob"]) + "</strong>"
-              + "<br> <strong style='color:" + (savedColor[(vis.counter - 2) % 4]) + ";'>" + "GPA: " + p171.user.gpa + "</strong>"
-              + "<br> <strong style='color:" + (savedColor[(vis.counter - 2) % 4]) + ";'>" + "SAT: " + selected_sat + "</strong>"
-              + "<br> <strong style='color:" + (savedColor[(vis.counter - 2) % 4]) + ";'>" + "ACT: " + selected_act + "</strong>"
-              + "<br> <strong style='color:" + (savedColor[(vis.counter - 2) % 4]) + ";'>" + "AP Exams: " + p171.user.apnum + "</strong>"
-              + "<br> <strong style='color:" + (savedColor[(vis.counter - 2) % 4]) + ";'>" + "Ave AP: " + p171.user.apave + "</strong>"
-              + "<br> <strong style='color:" + (savedColor[(vis.counter - 2) % 4]) + ";'>" + "SAT Subj Tests: " + selected_sat_subj + "</strong></div>"
+              + "<p class='tip-text'>" + "GPA: " + p171.user.gpa + "</p>"
+              + "<p class='tip-text'>" + "SAT: " + selected_sat + "</p>"
+              + "<p class='tip-text'>" + "ACT: " + selected_act + "</p>"
+              + "<p class='tip-text'>" + "AP Exams: " + p171.user.apnum + "</p>"
+              + "<p class='tip-text'>" + "Ave AP: " + p171.user.apave + "</p>"
+              + "<p class='tip-text'>" + "SAT Subj Tests: " + selected_sat_subj + "</p></div>"
         )
     });
 
