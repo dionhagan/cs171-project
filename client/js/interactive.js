@@ -265,16 +265,18 @@ InteractiveVis.prototype.saveScenario = function () {
     var selected_sat = d3.select("#sat").property("value");
     var selected_act = d3.select("#act").property("value");
     var selected_sat_subj = d3.select("#num_sat").property("value");
+    var selected_apnum = d3.select("#num_ap").property("value");
+    var selected_apave = d3.select("#ave_ap").property("value");
 
     vis.tip2 = d3.tip().attr('class', 'd3-tip').html(function(d) {
         console.log(d["college"]);
         return ("<div class='jumbotron'><strong>" + d["college"] + ": </strong> " +
                 "<strong style='color:crimson;'>" + d3.format("2.2%")(d["prob"]) + "</strong>"
-              + "<p class='tip-text'>" + "GPA: " + p171.user.gpa + "</p>"
+              + "<p class='tip-text'>" + "GPA: " + selected_gpa + "</p>"
               + "<p class='tip-text'>" + "SAT: " + selected_sat + "</p>"
               + "<p class='tip-text'>" + "ACT: " + selected_act + "</p>"
-              + "<p class='tip-text'>" + "AP Exams: " + p171.user.apnum + "</p>"
-              + "<p class='tip-text'>" + "Ave AP: " + p171.user.apave + "</p>"
+              + "<p class='tip-text'>" + "AP Exams: " + selected_apnum + "</p>"
+              + "<p class='tip-text'>" + "Ave AP: " + selected_apave + "</p>"
               + "<p class='tip-text'>" + "SAT Subj Tests: " + selected_sat_subj + "</p></div>"
         )
     });
