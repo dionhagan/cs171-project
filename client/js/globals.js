@@ -45,7 +45,7 @@ queue()
     .defer(d3.csv, "data/collegedata_unnormalized.csv")
     .defer(d3.csv, "data/collegedata_normalized.csv")
     .defer(d3.json, "data/feature_effect.json")
-    .defer(d3.json, "data/factors.json")    
+    .defer(d3.json, "data/factors.json")
     .defer(d3.json, "text/drilldowntext.json")
     .defer(d3.csv,"data/normalize_means.csv")
     .defer(d3.csv,"data/normalize_stds.csv")
@@ -55,7 +55,7 @@ function storeData(err, collegeList, appData, appDataNorm, factorImportance, fac
   // Get text for drill down page
   p171.text.drillDown = drillDownText;
   addDrillDownText();
-  
+
   // Store data from csv files
   p171.data.normalized = appDataNorm;
   p171.data.raw = appData;
@@ -176,5 +176,6 @@ function createVis() {
   } else {
     predictRandom();
     p171.lineChart = new InteractiveVis('chart-area');
+    p171.innovation3d = new Innovation3d('three-area');
   }
 }

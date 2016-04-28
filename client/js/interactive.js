@@ -11,7 +11,7 @@ InteractiveVis.prototype.initVis = function (callback) {
   // Static stuff
   vis.margin = { top: 50, right: 20, bottom: 120, left: 80 };
 
-  vis.width = 650 - vis.margin.left - vis.margin.right;
+  vis.width = 1000 - vis.margin.left - vis.margin.right;
     vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
     vis.svg = d3.select("#" + vis.parentElement).append("svg")
@@ -77,7 +77,7 @@ InteractiveVis.prototype.initVis = function (callback) {
   vis.chart = vis.svg.append("path")
      .attr("class", "line")
      .attr("fill", "none")
-     .attr("stroke", "steelblue")
+     .attr("stroke", "white")
      .attr("stroke-width", "1.5px");
 
 
@@ -147,7 +147,7 @@ InteractiveVis.prototype.updateAllSchools = function() {
     vis.allSchools.push($(this).val());
   });
 
-  localStorage.setItem("colleges", vis.allSchools)
+  localStorage.setItem("colleges", JSON.stringify(vis.allSchools));
 }
 
 InteractiveVis.prototype.wrangleData = function () {
@@ -163,6 +163,7 @@ InteractiveVis.prototype.wrangleData = function () {
     .on("change", function(){
       vis.updateAllSchools();
       vis.updateVis()
+      p171.innovation3d.wrangleData();
     })
 
   // first time through
@@ -220,6 +221,8 @@ InteractiveVis.prototype.updateVis = function () {
 
     vis.circle.enter().append("circle")
       .attr("class", "dot")
+      .attr("fill", "crimson")
+      .attr("transform", "translate(20,5)")
       .attr("r", 1)
     .on('mouseover', vis.tip.show)
     .on('mouseout', vis.tip.hide);

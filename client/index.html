@@ -145,37 +145,10 @@
       <div class="col-md-6">
         <div id="chart-area"></div>
       </div>
-      <div class="col-md-4">
-        <br>
-        <br>
-        <h2>Tell us about you:</h2> Gender:
-        <select id="gender" class="dropdown">
-          <option value="-1">Male</option>
-          <option value="1">Female</option>
-          <option value="0">Other</option>
-        </select>
-        <br>
-        <br> Race:
-        <select id="race" class="dropdown">
-          <option value="1">African American/Black</option>
-          <option value="2">Hispanic/Latino</option>
-          <option value="0">Asian</option>
-          <option value="-1">Middle Eastern</option>
-          <option value="3">Pacific Islander</option>
-          <option value="4">Native American</option>
-          <option value="-2" selected>White</option>
-          <option value="5">Other</option>
-        </select>
-        <br>
-        <br> Type of High School:
-        <select id="hs">
-          <option value="0" selected>Public</option>
-          <option value="1">Private</option>
-          <option value="2">Parochial</option>
-          <option value="3">Homeschool</option>
-        </select>
-        <br>
-        <br>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div id="three-area"></div>
       </div>
     </div>
 
@@ -183,8 +156,9 @@
     <br>
 
     <!-- Dynamic Slider input-->
+
     <div class="row">
-      <div class="col-6">
+      <div class="col-4">
         <div class="interaction-text">
           <h2>Expected GPA and Test Scores: </h2>
           <form method="post" id="user_info">
@@ -225,18 +199,47 @@
             <span id="current-num-sat">5</span>
             <br>
             <br>
-            <input type="submit" value="Save Scenario" class="button">
-            <br>
-            <br>
           </form>
         </div>
       </div>
+      <div class="col-md-4">
+        <h2>Tell us about you:</h2> Gender:
+        <select id="gender" class="dropdown">
+          <option value="-1">Male</option>
+          <option value="1">Female</option>
+          <option value="0">Other</option>
+        </select>
+        <br>
+        <br> Race:
+        <select id="race" class="dropdown">
+          <option value="1">African American/Black</option>
+          <option value="2">Hispanic/Latino</option>
+          <option value="0">Asian</option>
+          <option value="-1">Middle Eastern</option>
+          <option value="3">Pacific Islander</option>
+          <option value="4">Native American</option>
+          <option value="-2" selected>White</option>
+          <option value="5">Other</option>
+        </select>
+        <br>
+        <br> Type of High School:
+        <select id="hs" class="dropdown">
+          <option value="0" selected>Public</option>
+          <option value="1">Private</option>
+          <option value="2">Parochial</option>
+          <option value="3">Homeschool</option>
+        </select>
+        <br>
+        <br>
+      </div>
+    </div>
     </div>
   </div>
 
   <!-- Prediction Visualization -->
+  <!-- TODO: not used? Remove? -->
   <div class="row">
-    <div class="col-6">
+    <div class="col-12">
       <div id="prediction-viz"></div>
       <div id="result"></div>
     </div>
@@ -250,16 +253,26 @@
   </footer>
 
   <!-- Use jQuery from CDN -->
+  <!-- TODO: fix load order to console errors -->
   <script src="js/jquery.min.js"></script>
   <script src="js/queue.v1.min.js"></script>
   <script src="js/d3.min.js"></script>
   <script src="js/d3-tip.min.js"></script>
   <script src="js/cookies.js"></script>
+  <script src="js/histogram.js"></script>
+  <script src="js/three.min.js"></script>
+  <script src="js/innovation3d.js"></script>
   <script src="js/globals.js"></script>
+  <script src="js/drillDownViz.js"></script>
   <script src="js/predict.js"></script>
   <script src="js/predictViz.js"></script>
-  <script src="js/drillDownViz.js"></script>
   <script src="js/interactive.js"></script>
+  <!-- Three.js dependencies -->
+  <script src="js/TrackballControls.js"></script>
+  <script src="js/AnimationClipCreator.js"></script>
+  <script src="js/Detector.js"></script>
+  <script src="js/utils/GeometryUtils.js"></script>
+  <script src='js/dat.gui.min.js'></script>
 </body>
 
 </html>
