@@ -25,7 +25,6 @@ Heatmap.prototype.initVis = function(first_argument) {
 
   vis.xScale.rangeRoundBands([0, vis.width]);
   vis.yScale.rangeRoundBands([vis.height, 0]);
-  vis.createCells();
   vis.createLegend()
   vis.updateVis();
 };
@@ -43,15 +42,6 @@ Heatmap.prototype.createDimensions = function() {
 Heatmap.prototype.addMainSVG = addMainSVG;
 
 Heatmap.prototype.addAxes = addAxes;
-
-Heatmap.prototype.createCells = function() {
-  var vis = this;
-
-  vis.cells = vis.svg.selectAll(".heat-cell")
-    .on("click", function(d) {
-      console.log(d);
-    })
-}
 
 Heatmap.prototype.createLegend = function() {
   var vis = this;

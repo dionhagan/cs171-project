@@ -136,6 +136,26 @@ function storeData(err, collegeList, appData, appDataNorm, factorImportance, fac
     }
   }
 
+  var applicants = {};
+
+  p171.data.raw.forEach(function(d) {
+    if (d.studentID in applicants) {
+      applicants[d.studentID].app = d
+      applicants[d.studentID].colleges[d.collegeID] = {}
+      applicants[d.studentID].colleges[d.collegeID].accepted = d.acceptStatus
+      applicants[d.studentID].colleges[d.collegeID].appliedEarly = d.earlyAppl
+    } else {
+      applicants[d.studentID] = {}
+      applicants[d.studentID].app = {} 
+      applicants[d.studentID].colleges = {}
+    }
+  })
+
+  p171.data.applicants = []
+  for (var a in applicants) {
+    p171.data.applicants.push(applicants[a])
+  }
+
   p171.normalize.means = normalizeMeans[0];
   p171.normalize.stds  = normalizeStds[0];
 

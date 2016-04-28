@@ -6,12 +6,12 @@ function createElements() {
     .attr({ class: "subplot"});
 
   // Create filter tabs
-  vis.filtersElement = this.parentElement.append("div")
+  /*vis.filtersElement = this.parentElement.append("div")
     .attr({
       class:"filters"
     })
 
-  closeFilterElement(vis)
+  closeFilterElement(vis) */
 }
 
 function closeFilterElement(vis) {
@@ -35,10 +35,6 @@ function closeFilterElement(vis) {
 
       tab.append("br")
   }
-
-
-
-  console.log("closing filter")
 }
 
 function applyFilter() {
@@ -67,6 +63,55 @@ function applyFilter() {
           }
         }
       } 
+    }
+
+    return collegeFilter && factorFilter;
+  });
+}
+
+function filterApplicants() {
+  var vis = this; 
+
+  if (p171.DD.filters["All"]) {
+    for (var college in p171.data.colleges) p171.DD.filters[college] = true;
+    vis.collegeFilters.selectAll('rect').attr("opacity",1)
+  } 
+
+  vis.currentColleges = [];
+  for (var college in p171.DD.filters) {
+    if (p171.DD.filters[college]) vis.currentColleges.push(college);
+  }
+
+  vis.displayData = vis.data.filter(function(applicant){
+
+    var d = applicant.app
+
+    var collegeFilter = false,
+        factorFilter = true;
+
+    // Filter out application types
+    for (factor in p171.DD.filters) {
+      if (typeof p171.DD.filters[factor] == "object") {
+
+        for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
+
+          var subFactor = p171.data.nomFactors[factor][subFactorIndex];
+          var isChecked = p171.DD.filters[factor][subFactor];
+
+          if (!isChecked) {
+            if (subFactorIndex==0 && d[factor]==1) {
+              factorFilter = false
+            } else if (subFactorIndex==1 && d[factor]==-1) {
+              factorFilter = false;
+            }
+          }
+        }
+      } 
+    }
+
+    // Filter out colleges 
+    for (var college in applicant.colleges) {
+      if (p171.DD.filters[college]) collegeFilter = true;
     }
 
     return collegeFilter && factorFilter;

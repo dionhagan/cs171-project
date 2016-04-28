@@ -1,6 +1,6 @@
 var Scatter = function(_parentElement, _category) {
   this.parentElement = d3.select("#"+_parentElement);
-  this.data = p171.data.raw;
+  this.data = p171.data.applicants;
   for (label in p171.data.labels) {
     if (p171.data.labels[label] == _category) this.category = label;
   }
@@ -13,8 +13,8 @@ var Scatter = function(_parentElement, _category) {
 Scatter.prototype.initVis = function() {
   var vis = this;
 
-  vis.margin = {top: 10, right: 20, bottom: 60, left: 60};
-  vis.width = window.innerWidth - 270 - vis.margin.left - vis.margin.right,
+  vis.margin = {top: 10, right: 300, bottom: 60, left: 60};
+  vis.width = (.9*window.innerWidth) - vis.margin.left - vis.margin.right,
   vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
@@ -23,6 +23,8 @@ Scatter.prototype.initVis = function() {
       .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
     .append("g")
       .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
+
+  vis.createFilters();
 
   vis.x = d3.scale.linear()
     .range([0, vis.width]).nice();
@@ -61,15 +63,9 @@ Scatter.prototype.initVis = function() {
   vis.tip = d3.tip()
     .attr("class", "d3-tip")
     .offset([-10,0])
-    .html(function(d) {
-      var html = "";
-      if (d.isUser) html += "<b>You</b><br>"
-      p171.data.quantFactors.forEach(function(feature) {
-        html += p171.data.labels[feature] + ": " + d[feature] + "<br>";
-      });
-      return html;
-    });
+    .html(toolTipDisplay);
 
+/*
   vis.zoomBehavior = d3.behavior.zoom()
     .x(vis.x)
     .y(vis.y)
@@ -80,7 +76,7 @@ Scatter.prototype.initVis = function() {
 
   vis.container
     .call(vis.zoomBehavior);
-
+*/
   vis.background = vis.container.append("rect")
     .attr({
       height: vis.height,
@@ -99,9 +95,11 @@ Scatter.prototype.updateVis = function() {
 
   vis.wrangleData();
 
+  console.log(vis.displayData)
+
   // Add user to dataset
   if (Object.keys(p171.user).length > 1) {
-    var userData = p171.user
+    var userData = {app: p171.user}
     userData["isUser"] = true;
     vis.displayData.push(userData);
   }
@@ -113,14 +111,14 @@ Scatter.prototype.updateVis = function() {
   // Create axes for graph
   vis.x
     .domain([
-      0, 
-      d3.max(vis.displayData, function(d){ return d[categoryX]; })
+      d3.min(vis.displayData, function(d){ return d.app[categoryX]; })*.9, 
+      d3.max(vis.displayData, function(d){ return d.app[categoryX]; })
     ])
 
   vis.y
     .domain([
-      0, 
-      d3.max(vis.displayData, function(d){ return d[categoryY]; })
+      d3.min(vis.displayData, function(d){ return d.app[categoryY]; })*.9, 
+      d3.max(vis.displayData, function(d){ return d.app[categoryY]; })
     ])
 
   vis.xAxis = d3.svg.axis()
@@ -152,33 +150,50 @@ Scatter.prototype.updateVis = function() {
     .enter().append("circle");
 
   vis.points
-    .transition().duration(750)
+    .transition().duration(1000)
     .attr({
       class: "points",
-      cx: function(d) { return vis.x(d[categoryX]); },
-      cy: function(d) { return vis.y(d[categoryY]); },
+      cx: function(d) { return vis.x(d.app[categoryX]); },
+      cy: function(d) { return vis.y(d.app[categoryY]); },
       r: function(d) { return d.isUser ? 6 : 3; },
       fill: function(d) { 
         if (d.isUser) return "brown";
-        return d.acceptStatus == 1 ? "#98fb98" : "lightsteelblue";
+        var isAccepted = false;
+        for (var c in d.colleges) {
+          if ((d.colleges[c].accepted == 1) && (vis.currentColleges.indexOf(c) >= 0)) isAccepted = true;
+        }
+        return isAccepted ? "#98fb98" : "lightsteelblue";
       }
     })
     .style({
       opacity: function(d) { 
         if (d.isUser) return 1;
-        return d.acceptStatus == 1 ? .8 : .3; }
+        var isAccepted = false;
+        for (var c in d.colleges) {
+          if ((d.colleges[c].accepted == 1) && (vis.currentColleges.indexOf(c) >= 0)) isAccepted = true;
+        }
+        return isAccepted ? .7 : .3;
+      }
     });
     
 
   vis.points
-    .on("mouseover", vis.tip.show)
-    .on("mouseout", vis.tip.hide)
+    .on("mouseover", function(d) {
+      d3.select(this).attr("r","8")
+      vis.tip.show(d)
+    })
+    .on("mouseout", function (d) {
+      d3.select(this).attr("r",function(d) {
+        return d.isUser ? 6 : 3
+      })
+      vis.tip.hide(d)
+    })
     .call(vis.drag);;
 
   vis.points.exit().remove();
 }
 
-Scatter.prototype.wrangleData = applyFilter;
+Scatter.prototype.wrangleData = filterApplicants;
 
 Scatter.prototype.zoom = function(d) {
   var vis = this;
@@ -222,8 +237,182 @@ function dragended(d) {
 
 Scatter.prototype.createElements = createElements;
 
-Scatter.prototype.showFilters = showFilters;
 
+//Scatter.prototype.showFilters = showFilters;
+
+Scatter.prototype.createFilters = function() {
+  var vis = this
+
+  vis.svg.append('text')
+    .attr({
+      x: vis.margin.left + vis.width - 40,
+      y: vis.margin.top - 5
+    })
+    .style({"font-size":18,"font-weight":"bold"})
+    .text("Colleges")
+
+  // Add filter elements for each college 
+  vis.collegeFilters = vis.svg.selectAll(".college-filters")
+    .data(Object.keys(p171.data.colleges))
+    .enter().append('g')
+      .attr({
+        class: "college-filters"
+      })
+
+  vis.collegeFilters
+    .append("rect")
+      .attr({
+        x: vis.margin.left + vis.width - 40,
+        y: function(d,i) { return vis.margin.top+(i*15)},
+        fill: "red",
+        height: 10,
+        width: 10,
+        opacity: function(college) {
+          return p171.DD.filters[college] ? 1 : .3
+        }
+      })
+      .on("click", function(d) {
+        d3.select(this)
+          .attr({
+            opacity: function(college) {
+              p171.DD.filters[college] = p171.DD.filters[college] ? false : true
+              vis.updateVis()
+              return p171.DD.filters[college] ? 1 : .3
+            }
+          })
+      })
+
+  vis.collegeFilters
+      .append("text")
+        .attr({
+          x: vis.margin.left + vis.width - 28,
+          y: function(d,i) { return vis.margin.top+(i*15)+11}
+        })
+        .text(function(college) {return college })
+
+  // Get factors that need to be filtered
+  var factorsToFilter = Object.keys(p171.data.nomFactors);
+
+  vis.svg.append("text")
+    .attr({
+      x: vis.margin.left + vis.width + 75,
+      y: vis.margin.top - 5
+    })
+    .style({"font-size":18,"font-weight":"bold"})
+    .text("Applicants")
+
+  // Add filter elements for each applicant type
+  vis.appFilters = vis.svg.selectAll(".app-filters")
+    .data(factorsToFilter)
+    .enter().append('g')
+      .attr({
+        class: "app-filters"
+      })
+
+  vis.appFilters.append("text")
+      .attr({
+        x: vis.margin.left + vis.width + 75,
+        y: function(d,i) { return vis.margin.top+(i*50)+13}
+      })
+      .style({
+        "text-decoration": "underline"
+      })
+      .text(function(d,i) {
+        return p171.data.labels[d]
+      })
+
+  for (var i=0; i<2; i++) {
+    vis.appFilters.append("rect")
+      .attr({
+        class: function(d) {
+          return Object.keys(p171.DD.filters[factor])[i];
+        },
+        x: vis.margin.left + vis.width + 75,
+        y: function(d,j) { return 20+vis.margin.top+(j*50)+(i*18)},
+        fill: "red",
+        height: 10,
+        width: 10,
+        opacity: function(factor) {
+          var subFactor = Object.keys(p171.DD.filters[factor])[i];
+          return p171.DD.filters[factor][subFactor] ? 1 : .3
+        }
+      })
+      .on("click", function(d) {
+        var subFactor = d3.select(this).attr("class")
+
+        d3.select(this)
+          .attr({ 
+            opacity: function(d) {
+              p171.DD.filters[factor][subFactor] = p171.DD.filters[factor][subFactor] ? false : true
+              vis.updateVis()
+              return p171.DD.filters[factor][subFactor] ? 1 : .3
+            }
+          })
+      })
+
+    vis.appFilters.append("text")
+      .attr({
+        x: vis.margin.left + vis.width + 87,
+        y: function(d,j) { return 20+vis.margin.top+(j*50)+(i*16)+11}
+      })
+      .text(function(d) {
+        return p171.data.nomFactors[d][i]
+      })
+  }
+  
+/*
+  // Create a form group for each application factor 
+  for (var factorIndex=0; factorIndex<factorsToFilter.length; factorIndex++) {
+    var factor = factorsToFilter[factorIndex];
+
+    vis.appFilters.append("text")
+      .attr({
+        class: "filter-label",
+        x: vis.margin.left + vis.margin.right + 20,
+        y: function(d,i) { return vis.margin.top+(i*30)+11}
+      })
+      .text(p171.data.labels[factor])
+    
+    for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
+      var subFactor = p171.data.nomFactors[factor][subFactorIndex];
+      /*
+      vis.appFilters
+        .append("rect")
+          .attr({
+            x: vis.margin.left + vis.width - 40,
+            y: function(d,i) { return vis.margin.top+(i*15)},
+            fill: "red",
+            height: 10,
+            width: 10,
+            opacity: function(college) {
+              return p171.DD.filters[college] ? 1 : .3
+            }
+          })
+          .on("click", function(d) {
+            d3.select(this)
+              .attr({
+                opacity: function(college) {
+                  p171.DD.filters[college] = p171.DD.filters[college] ? false : true
+                  vis.updateVis()
+                  return p171.DD.filters[college] ? 1 : .3
+                }
+              })
+          })
+
+      vis.appFiltres.append("text")
+        .attr({
+          class: "filter-label",
+          x: vis.margin.left + vis.margin.right + 20,
+          y: function(d,i) { return vis.margin.top+(i*30)+11}
+        })
+        .text(subFactor)
+
+      
+    }
+
+
+  }  */
+}
 Scatter.prototype.updateFilters = function(factor, subFactor) {
   var vis = this;
   var prevValue = vis.filters[factor][subFactor];
@@ -288,9 +477,22 @@ Scatter.prototype.createSelectors = function() {
   var initCategory  = vis.category == "GPA" ? "admissionstest" : "GPA";
 
   vis.yCategory
-    .property('value', initCategory);
+    .property('value', initCategory);  
 
-  
+}
 
+var toolTipDisplay = function(applicant) {
+  var html = ""
+
+  for (var college in applicant.colleges) {
+    var acceptStatus = applicant.colleges[college].accepted == 1 ? true: false;
+
+    html += "<b>"+college+": </b>" 
+    html += '<span style="color:'
+    html += acceptStatus ? "#97F450\">Accepted" : "#C13434\">Rejected"
+    html += "</span></br>"
+  }
+
+  return html
 }
 

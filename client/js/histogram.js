@@ -68,7 +68,6 @@ Histogram.prototype.updateVis = function() {
     (vis.displayData);
 
   if (vis.category in p171.data.nomFactors) {
-    console.log(vis.histogramData)
     vis.histogramData = vis.histogramData.filter(function(d) {
       return d.length > 0
     })
@@ -179,8 +178,6 @@ Histogram.prototype.wrangleData = function() {
   vis.displayData = filteredData.map(function(d) {
     return d[vis.category];
   });
-  console.log(filteredData)
-  console.log(vis.displayData)
 
 }
 

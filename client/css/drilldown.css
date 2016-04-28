@@ -161,6 +161,10 @@ svg.histogram g rect {
   background-color: lightsteelblue;
 }
 
+#heat-map-legend {
+  
+}
+
 
 body{font-family:arial, 'Hiragino Sans GB',Tahoma, Arial, Helvetica, STHeiti;font-size: 14px;}
 .days-hours-heatmap{padding: 20px 0 20px 0;width: 500px;margin: 0 auto;}
