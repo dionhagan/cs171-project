@@ -116,6 +116,23 @@ Innovation3d.prototype.initVis = function(callback) {
 
   // Objects are added in WrangleData()
 
+  var start3 = new THREE.Vector3(0, 50, -250);
+  var middle3 = new THREE.Vector3(-250, 50, 0);
+  var end3 = new THREE.Vector3(0, 50, 250);
+
+  var curve = new THREE.QuadraticBezierCurve3(start3, middle3, end3);
+  //   var curveCubic = new THREE.CubicBezierCurve3(start3, start3_control, end3_control, end3);
+
+  var geometry = new THREE.Geometry();
+  geometry.vertices = curve.getPoints(50);
+
+  var curvedLineMaterial = new THREE.LineBasicMaterial({
+    color: 0xFFFFAA,
+    linewidth: 200
+  });
+  var curvedLine = new THREE.Line(geometry, materialPhong);
+  vis.scene.add(curvedLine);
+
   // LIGHTS
 
   ambientLight = new THREE.AmbientLight(0x3f2806);
