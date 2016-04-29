@@ -8,6 +8,8 @@ var InteractiveVis = function (_parentElement) {
 InteractiveVis.prototype.initVis = function (callback) {
   var vis = this;
 
+  vis.counter = 1;
+
   // Static stuff
   vis.margin = { top: 50, right: 20, bottom: 120, left: 80 };
 
@@ -55,8 +57,8 @@ InteractiveVis.prototype.initVis = function (callback) {
 
   vis.tip = d3.tip().attr('class', 'd3-tip').html(function(d) {
     console.log(d["college"]);
-    return ("<strong style='background: lightgrey'>" + d["college"] + ": </strong> " +
-    "<strong style='color:crimson; background: lightgrey'>" + d3.format("2.2%")(d["prob"]) + "</strong>")
+    return ("<strong>" + d["college"] + ": </strong> " +
+    "<strong style='color:crimson;'>" + d3.format("2.2%")(d["prob"]) + "</strong>")
   });
     //return (d["college"] + ": " + d3.format("2.2%")(d["prob"])); });
 
@@ -141,6 +143,7 @@ InteractiveVis.prototype.initVis = function (callback) {
 
 InteractiveVis.prototype.updateAllSchools = function() {
   var vis = this;
+
   vis.allSchools = [];
   $('input:checkbox[name="colleges"]:checked').each(function()
   {
@@ -169,6 +172,18 @@ InteractiveVis.prototype.wrangleData = function () {
   // first time through
   vis.updateAllSchools();
   vis.updateVis();
+
+  d3.select("#save")
+    .on("click", function(){
+      vis.saveScenario ();
+    });
+
+  d3.select("#clear")
+    .on("click", function (){
+      d3.selectAll(".saved-rect").remove();
+      vis.counter = 1;
+    });
+
 }
 
 InteractiveVis.prototype.updateVis = function () {
@@ -239,4 +254,57 @@ InteractiveVis.prototype.updateVis = function () {
 
 function showValue(elementID, newValue) {
     document.getElementById(elementID).innerHTML=newValue;
+}
+
+InteractiveVis.prototype.saveScenario = function () {
+    var vis = this;
+
+    var savedColor = ["blue", "green", "orange", "purple"];
+
+    var selected_gpa = d3.select("#gpa").property("value");
+    var selected_sat = d3.select("#sat").property("value");
+    var selected_act = d3.select("#act").property("value");
+    var selected_sat_subj = d3.select("#num_sat").property("value");
+    var selected_apnum = d3.select("#num_ap").property("value");
+    var selected_apave = d3.select("#ave_ap").property("value");
+
+    vis.tip2 = d3.tip().attr('class', 'd3-tip').html(function(d) {
+        console.log(d["college"]);
+        return ("<div class='jumbotron'><strong>" + d["college"] + ": </strong> " +
+                "<strong style='color:crimson;'>" + d3.format("2.2%")(d["prob"]) + "</strong>"
+              + "<p class='tip-text'>" + "GPA: " + selected_gpa + "</p>"
+              + "<p class='tip-text'>" + "SAT: " + selected_sat + "</p>"
+              + "<p class='tip-text'>" + "ACT: " + selected_act + "</p>"
+              + "<p class='tip-text'>" + "AP Exams: " + selected_apnum + "</p>"
+              + "<p class='tip-text'>" + "Ave AP: " + selected_apave + "</p>"
+              + "<p class='tip-text'>" + "SAT Subj Tests: " + selected_sat_subj + "</p></div>"
+        )
+    });
+
+    vis.svg.call(vis.tip2);
+
+    if (vis.counter == 5) {
+      d3.selectAll(".saved-rect").remove();
+      vis.counter = 1;
+    }
+
+    vis.savedRect = vis.svg.selectAll("rect" + vis.counter)
+        .data(vis.newData);
+
+    vis.savedRect.enter().append("rect")
+        .attr("class", "saved-rect")
+        .attr("fill", savedColor[(vis.counter - 1) % 4])
+        .attr("transform", "translate(15,0)")
+        .attr("width", 10)
+        .attr("height", 10)
+        .on('mouseover', vis.tip2.show)
+        .on('mouseout', vis.tip2.hide);
+
+    vis.savedRect
+        .attr("opacity", .8)
+        .attr("x", function (d) { return vis.x(d.college) })
+        .attr("y", function (d) { return vis.y(d.prob) });
+
+    vis.counter = vis.counter + 1;
+
 }
