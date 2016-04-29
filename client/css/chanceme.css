@@ -301,6 +301,8 @@ header h1 {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
   border-radius: 2px;
 }
 
@@ -372,4 +374,16 @@ header h1 {
 .warningNote {
   background-color: red;
   font-size: 2.5em;
+}
+
+.jumbotron {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.tip-text {
+  font-weight: bold;
+  font-size: 10pt;
 }
