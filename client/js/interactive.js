@@ -200,39 +200,22 @@ InteractiveVis.prototype.updateAllSchools = function() {
       vis.allSchools.push(p171.data.colleges[c].name);
     }
   }
-  /*
-    $('input:checkbox[name="colleges"]:checked').each(function() {
-      vis.allSchools.push($(this).val());
-    });
-  */
+
   localStorage.setItem("colleges", JSON.stringify(vis.allSchools));
 }
 
 InteractiveVis.prototype.wrangleData = function() {
   var vis = this;
 
-  // filter out schools based on user input
-  vis.filtered = [];
-
   vis.displayData = p171.predictions;
-
   vis.updateVis();
-
 }
 
 InteractiveVis.prototype.updateVis = function() {
   var vis = this;
 
-  var colleges = d3.map(vis.newData, function(d) {
-    return d.college;
-  })
-
-  //console.log(vis.allSchools);
-  //console.log(vis.newData);
-
   vis.newData = [];
-
-
+  // subset data by user selection
   for (var i = 0; i < vis.allSchools.length; i++) {
     for (var j = 0; j < vis.displayData.length; j++) {
       if (vis.displayData[j].college == vis.allSchools[i]) {
