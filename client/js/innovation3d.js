@@ -6,32 +6,35 @@ var Innovation3d = function(_parentElement) {
 
 Innovation3d.prototype.initVis = function(callback) {
   var vis = this;
-  vis.aspectratio = 0.4;
+  vis.aspectratio = 0.5;
   vis.innerWidth = 1000;
   vis.innerHeight = vis.innerWidth * vis.aspectratio;
+  vis.zoneSize = 250;
+  vis.zoneHeight = 200;
+  vis.college3d = [];
+
+  // Colors
+  vis.color = {};
+  vis.color.black = new THREE.Color(0, 0, 0);
 
   // Text
   vis.options = {
-    size: 20,
-    height: 10,
+    size: 50,
+    height: 1,
     weight: 'normal',
     style: 'normal',
-    bevelThickness: 1,
-    bevelSize: 1,
-    bevelSegments: 3,
-    bevelEnabled: true,
+    bevelEnabled: false,
     curveSegments: 12,
     steps: 1
   };
   var loader = new THREE.FontLoader();
   loader.load('fonts/helvetiker_bold.typeface.js', function(response) {
     vis.options.font = response;
+    vis.buildBackground(response);
     vis.wrangleData();
   });
 
   var mesh, geometry;
-
-  var cubeCamera;
 
   var sunLight, pointLight, ambientLight;
 
@@ -56,13 +59,13 @@ Innovation3d.prototype.initVis = function(callback) {
 
   // CAMERA
 
-  vis.camera = new THREE.PerspectiveCamera(45, vis.innerWidth / vis.innerHeight, 2, 10000);
-  vis.camera.position.set(600, 300, 000);
+  vis.camera = new THREE.PerspectiveCamera(45, vis.innerWidth / vis.innerHeight, 2, 1000000);
+  vis.camera.position.set(8 * vis.zoneSize, 15 * vis.zoneHeight, 100);
 
   // SCENE
 
   vis.scene = new THREE.Scene();
-  vis.scene.fog = new THREE.Fog(0, 1000, 10000);
+  //vis.scene.fog = new THREE.Fog(0, 1000, 10000);
 
   // TEXTURES
   var textureLoader = new THREE.TextureLoader();
@@ -116,26 +119,10 @@ Innovation3d.prototype.initVis = function(callback) {
 
   // Objects are added in WrangleData()
 
-  var start3 = new THREE.Vector3(0, 50, -250);
-  var middle3 = new THREE.Vector3(-250, 50, 0);
-  var end3 = new THREE.Vector3(0, 50, 250);
-
-  var curve = new THREE.QuadraticBezierCurve3(start3, middle3, end3);
-  //   var curveCubic = new THREE.CubicBezierCurve3(start3, start3_control, end3_control, end3);
-
-  var geometry = new THREE.Geometry();
-  geometry.vertices = curve.getPoints(50);
-
-  var curvedLineMaterial = new THREE.LineBasicMaterial({
-    color: 0xFFFFAA,
-    linewidth: 200
-  });
-  var curvedLine = new THREE.Line(geometry, materialPhong);
-  vis.scene.add(curvedLine);
 
   // LIGHTS
 
-  ambientLight = new THREE.AmbientLight(0x3f2806);
+  ambientLight = new THREE.AmbientLight(0xffffff); //0x3f2806);
   vis.scene.add(ambientLight);
 
   pointLight = new THREE.PointLight(0xffaa00, 1, 5000);
@@ -157,6 +144,48 @@ Innovation3d.prototype.initVis = function(callback) {
   shadowCameraHelper = new THREE.CameraHelper(sunLight.shadow.camera);
   shadowCameraHelper.visible = shadowConfig.shadowCameraVisible;
   vis.scene.add(shadowCameraHelper);
+
+  // SKY
+
+  var sky, sunSphere;
+  sky = new THREE.Sky();
+  vis.scene.add(sky.mesh);
+
+  sunSphere = new THREE.Mesh(
+    new THREE.SphereBufferGeometry(2000, 16, 8),
+    new THREE.MeshBasicMaterial({
+      color: 0xffffff
+    })
+  );
+  sunSphere.position.y = 0000;
+  sunSphere.visible = false;
+  vis.scene.add(sunSphere);
+
+  var distance = 00;
+  var effectController = {
+    turbidity: 10,
+    reileigh: 0.2,
+    mieCoefficient: 0.005,
+    mieDirectionalG: 0.8,
+    luminance: 1,
+    inclination: 0, // elevation / inclination
+    azimuth: 0.25, // Facing front,
+    sun: !true
+  };
+  var uniforms = sky.uniforms;
+  uniforms.turbidity.value = effectController.turbidity;
+  uniforms.reileigh.value = effectController.reileigh;
+  uniforms.luminance.value = effectController.luminance;
+  uniforms.mieCoefficient.value = effectController.mieCoefficient;
+  uniforms.mieDirectionalG.value = effectController.mieDirectionalG;
+  var theta = Math.PI * (effectController.inclination - 0.5);
+  var phi = 2 * Math.PI * (effectController.azimuth - 0.5);
+  sunSphere.position.x = -100; //distance * Math.cos(phi);
+  sunSphere.position.y = 0; //distance * Math.sin(phi) * Math.sin(theta);
+  sunSphere.position.z = 0; //distance * Math.sin(phi) * Math.cos(theta);
+  sunSphere.visible = effectController.sun;
+  sky.uniforms.sunPosition.value.copy(sunSphere.position);
+
 
   // RENDERER
 
@@ -204,24 +233,60 @@ Innovation3d.prototype.initVis = function(callback) {
 
 }
 
-
-Innovation3d.prototype.wrangleData = function() {
+Innovation3d.prototype.buildBackground = function(myFont) {
   var vis = this;
-  vis.selectedSchools = JSON.parse(localStorage.getItem("colleges"));
+  var x, y, z, cube, angle, textGeometry, zoneLabel;
+  var textMaterial = new THREE.MeshBasicMaterial({
+    color: vis.color.black,
+    vertexColors: THREE.FaceColors,
+    wireframe: false,
+    opacity: 1.0,
+    transparent: false,
+    side: THREE.DoubleSide,
+    visible: true
+  });
+  var options = {
+    size: 30,
+    height: 2,
+    font: myFont,
+    weight: 'normal',
+    style: 'normal',
+    bevelEnabled: false,
+    curveSegments: 12,
+    steps: 1
+  };
 
-  drawColleges();
-  vis.updateVis();
+  for (var zone = 0; zone < 6; zone++) {
+    // pi /16 stones per semi-circle
+    for (var stone = 0; stone < 17; stone++) {
+      angle = stone * Math.PI / 16 - (Math.PI / 2);
+      r = (zone + 1) * vis.zoneSize;
+      //console.log("angle:" + angle * 57.3 + ",r=", r);
+      z = Math.sin(angle) * r;
+      x = -Math.sqrt(Math.pow(r, 2) - Math.pow(z, 2));
 
-  function addObjectColor(geometry, color, x, y, z, ry) {
+      cube = new THREE.BoxGeometry(vis.zoneSize,
+        (zone * vis.zoneHeight) + vis.zoneHeight, r * Math.PI / 16);
 
-    var material = new THREE.MeshPhongMaterial({
-      color: color
-    });
+      vis.scene.add(vis.addObjectColor(cube, 0xff0000, x, 0, z, angle));
+    }
+    // don't label the outermost band
+    if (zone == 5) continue;
+    zoneLabel = String((4 - zone) * 20) + "%-" + String((4 - zone + 1) * 20) + "%";
+    textGeometry = new THREE.TextGeometry(zoneLabel, options);
 
-    return addObject(geometry, material, x, y, z, ry);
+    var mesh = new THREE.Mesh(textGeometry, textMaterial);
+    mesh.rotation.y = 1.5;
+    mesh.position.set(30 * zone + 80, 20, (zone + 1) * vis.zoneSize + 50);
 
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    vis.scene.add(mesh);
   }
 
+}
+
+Innovation3d.prototype.addObjectColor = function addObjectColor(geometry, color, x, y, z, ry) {
   function addObject(geometry, material, x, y, z, ry) {
 
     var tmpMesh = new THREE.Mesh(geometry, material);
@@ -235,25 +300,42 @@ Innovation3d.prototype.wrangleData = function() {
     tmpMesh.castShadow = true;
     tmpMesh.receiveShadow = true;
 
-    vis.scene.add(tmpMesh);
-
     return tmpMesh;
 
   }
+  var material = new THREE.MeshPhongMaterial({
+    color: color
+  });
+
+  return addObject(geometry, material, x, y, z, ry);
+
+}
+
+
+
+
+Innovation3d.prototype.wrangleData = function() {
+  var vis = this;
+  vis.selectedSchools = JSON.parse(localStorage.getItem("colleges"));
+
+  drawColleges();
+  vis.updateVis();
+
 
   function addCubes(predictions, cube) {
     var zoneCount = [0, 0, 0, 0, 0];
     var zone;
     var x, z, alt;
-    console.log(predictions);
+    //console.log(predictions);
     for (var i = 0; i < predictions.length; i++) {
       zone = Math.floor(predictions[i].prob * 100 / 20);
-      x = zone * (-250);
-      z = zoneCount[zone] * 250;
+      x = zone * (-vis.zoneSize);
+      z = zoneCount[zone] * vis.zoneSize;
       alt = (zoneCount[zone] % 2 == 0) ? 1 : -1;
       z *= alt;
       zoneCount[zone]++;
-      addObjectColor(cube, 0x00ff00, x, 50, z, 0); // close
+      // close
+      vis.scene.add(vis.addObjectColor(cube, 0x00ff00, x, vis.zoneHeight, z, 0));
     }
     /*
             addObjectColor(smallCube, 0x00ff00, -500, 50, 00, 0); // far
@@ -264,30 +346,6 @@ Innovation3d.prototype.wrangleData = function() {
     */
   }
 
-  function drawLegend() {
-    return;
-    // Ref: http://stackoverflow.com/questions/28008608/why-cant-i-draw-a-complete-circle-with-arc-in-three-js
-    var extrudeSettings = {
-      bevelEnabled: false,
-      steps: 1,
-      amount: 2
-    };
-
-    var shape = new THREE.Shape();
-    var circleRadius = 250;
-
-    // THIS LINE SOLVES THE ISSUE
-    shape.moveTo(-circleRadius, 0);
-
-    shape.absarc(0, 0, circleRadius, 0, 1.5 * Math.PI, false);
-    shape.lineTo(0, 0);
-    shape.closePath();
-
-    var geometry = shape.extrude(extrudeSettings);
-
-    vis.scene.add(new THREE.Mesh(geometry, new THREE.MeshNormalMaterial()));
-    return;
-  }
 
   function drawColleges() {
 
@@ -296,34 +354,37 @@ Innovation3d.prototype.wrangleData = function() {
     var x, y, z, r, alt, angle;
     var cube;
 
-    drawLegend();
-
     for (var i = 0; i < p171.predictions.length; i++) {
+      if (vis.college3d[i]) {
+        vis.scene.remove(vis.college3d[i]._3dmesh);
+        vis.scene.remove(vis.college3d[i]._3dbox);
+        vis.college3d[i] = null;
+      }
       if (vis.selectedSchools.indexOf(p171.predictions[i].college) < 0) continue;
       zone = Math.floor(p171.predictions[i].prob * 100 / 20);
-      x = (4 - zone) * (-250);
-      y = 50 + (4 - zone) * 50;
-      z = zoneCount[zone] * 250;
+      //x = (4 - zone) * (-vis.zoneSize);
+      y = 0.8*(4 - zone) * vis.zoneHeight;// + zoneCount[zone] * 50;
+      //z = zoneCount[zone] * vis.zoneSize;
       // switch sides from left to right of center
       alt = (zoneCount[zone] % 2 == 0) ? 1 : -1;
       z *= alt;
 
       angle = alt * zoneCount[zone] * Math.PI / 16;
-      r = (5 - zone) * 250;
-      console.log("angle:" + angle * 57.3 + ",r=", r);
+      r = (5 - zone) * vis.zoneSize;
+      //console.log("angle:" + angle * 57.3 + ",r=", r);
 
       z = Math.sin(angle) * r;
       x = -Math.sqrt(Math.pow(r, 2) - Math.pow(z, 2));
-      console.log(p171.predictions[i].college + "," + p171.predictions[i].prob + ",zone=" + zone + ",x=" + x + ",y=" + y + ",z=" + z);
+      //console.log(p171.predictions[i].college + "," + p171.predictions[i].prob + ",zone=" + zone + ",x=" + x + ",y=" + y + ",z=" + z);
       zoneCount[zone]++;
-
+      vis.options.size = 20;
       var textGeometry = new THREE.TextGeometry(p171.predictions[i].college, vis.options);
       var textMaterial = new THREE.MeshBasicMaterial({
-        color: p171.predictions[i].color,
+        color: vis.color.black, //p171.predictions[i].color,
         vertexColors: THREE.FaceColors,
         wireframe: false,
-        opacity: 0.8,
-        transparent: true,
+        opacity: 1.0,
+        transparent: false,
         side: THREE.DoubleSide,
         visible: true
       });
@@ -334,10 +395,13 @@ Innovation3d.prototype.wrangleData = function() {
 
       mesh.castShadow = true;
       mesh.receiveShadow = true;
-      vis.scene.add(mesh);
-      cube = new THREE.BoxGeometry(1, y + (4 - zone) * 50, 10);
+      vis.college3d[i] = {};
+      vis.college3d[i]['_3dmesh'] = mesh;
+      vis.scene.add(vis.college3d[i]['_3dmesh']);
 
-      addObjectColor(cube, 0x000000, x, 0, z, 0);
+      cube = new THREE.BoxGeometry(1, 2*y, 10);
+      //vis.college3d[i]['_3dbox'] = vis.addObjectColor(cube, 0x000000, x, 0, z, 0);
+      //vis.scene.add(vis.college3d[i]['_3dbox']);
     }
   }
 }
