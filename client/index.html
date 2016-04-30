@@ -75,66 +75,11 @@
     <div class="row">
       <h2 class="schools-text">Which schools would you like to consider? </h2>
       <div id="school-select">
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="Brown" checked class="custom"> Brown
-          <br>
-          <input type="checkbox" name="colleges" value="CalTech" checked> Cal Tech
-          <br>
-          <input type="checkbox" name="colleges" value="CarnegieMellon" checked> Carnegie Mellon
-          <br>
-          <input type="checkbox" name="colleges" value="Columbia" checked> Colombia
-          <br>
-          <input type="checkbox" name="colleges" value="Cornell" checked> Cornell
-          <br>
-        </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="Dartmouth" checked> Dartmouth
-          <br>
-          <input type="checkbox" name="colleges" value="Duke" checked> Duke
-          <br>
-          <input type="checkbox" name="colleges" value="Emory" checked> Emory
-          <br>
-          <input type="checkbox" name="colleges" value="Georgetown" checked> Georgetown
-          <br>
-          <input type="checkbox" name="colleges" value="Harvard" checked> Harvard
-          <br>
-        </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="JohnsHopkins" checked> Johns Hopkins
-          <br>
-          <input type="checkbox" name="colleges" value="MIT" checked> MIT
-          <br>
-          <input type="checkbox" name="colleges" value="Northwestern" checked> Northwestern
-          <br>
-          <input type="checkbox" name="colleges" value="NotreDame" checked> Notre Dame
-          <br>
-          <input type="checkbox" name="colleges" value="Princeton" checked> Princeton
-          <br>
-        </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="Rice" checked> Rice
-          <br>
-          <input type="checkbox" name="colleges" value="Stanford" checked> Stanford
-          <br>
-          <input type="checkbox" name="colleges" value="UCB" checked> UCB
-          <br>
-          <input type="checkbox" name="colleges" value="UChicago" checked> UChicago
-          <br>
-          <input type="checkbox" name="colleges" value="UCLA" checked> UCLA
-          <br>
-        </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="UPenn" checked> UPenn
-          <br>
-          <input type="checkbox" name="colleges" value="USC" checked> USC
-          <br>
-          <input type="checkbox" name="colleges" value="Vanderbilt" checked> Vanderbilt
-          <br>
-          <input type="checkbox" name="colleges" value="WashU" checked> WashU
-          <br>
-          <input type="checkbox" name="colleges" value="Yale" checked> Yale
-          <br>
-        </div>
+        <select id="school-choice">
+          <option value="all" selected>All schools</option>
+          <option value="ivy">Ivy League Only</option>
+          <option value="nonivy">Non Ivy League</option>
+        </select>
       </div>
       <br>
     </div>
