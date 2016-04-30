@@ -285,7 +285,7 @@ InteractiveVis.prototype.updateVis = function() {
     })
     .attr("cy", function(d) {
       return vis.y(d.prob)
-    })
+    });
 
   vis.circle.exit().remove();
 }
