@@ -311,7 +311,7 @@ function predict() {
       setCollegeColors();
       console.log("web service returned");
       p171.lineChart.wrangleData();
-      p171.innovation3d.wrangleData();
+      //p171.innovation3d.wrangleData();
     }
   }
 }

@@ -119,10 +119,6 @@ InteractiveVis.prototype.initVis = function(callback) {
     });
 
   // attach event listeners to dropdowns
-  vis.college_menu = d3.select("#college")
-    .on("change", function() {
-      predict();
-    });
 
   vis.gender_menu = d3.select("#gender")
     .on("change", function() {
@@ -146,6 +142,16 @@ InteractiveVis.prototype.initVis = function(callback) {
       vis.wrangleData();
     });
 
+  var sortOrder = document.getElementsByName('sortOrder');
+  for (var i = 0; i < sortOrder.length; i++) {
+    if (sortOrder[i].checked) {
+      p171.sortOrder = sortOrder[i].value;
+      localStorage.setItem("sortOrder", p171.sortOrder);
+    }
+    sortOrder[i].addEventListener('click', function(e) {
+      vis.updateSortOrder(e);
+    }, false);
+  }
 
   d3.select("#save")
     .on("click", function() {
@@ -161,6 +167,11 @@ InteractiveVis.prototype.initVis = function(callback) {
   // first time through
   vis.updateAllSchools();
   vis.wrangleData();
+}
+
+InteractiveVis.prototype.updateSortOrder = function(e) {
+  p171.sortOrder = e.currentTarget.value;
+  localStorage.setItem("sortOrder", p171.sortOrder);
 }
 
 InteractiveVis.prototype.updateAllSchools = function() {
@@ -189,11 +200,11 @@ InteractiveVis.prototype.updateAllSchools = function() {
       vis.allSchools.push(p171.data.colleges[c].name);
     }
   }
-/*
-  $('input:checkbox[name="colleges"]:checked').each(function() {
-    vis.allSchools.push($(this).val());
-  });
-*/
+  /*
+    $('input:checkbox[name="colleges"]:checked').each(function() {
+      vis.allSchools.push($(this).val());
+    });
+  */
   localStorage.setItem("colleges", JSON.stringify(vis.allSchools));
 }
 
@@ -204,9 +215,6 @@ InteractiveVis.prototype.wrangleData = function() {
   vis.filtered = [];
 
   vis.displayData = p171.predictions;
-
-
-
 
   vis.updateVis();
 
@@ -219,26 +227,40 @@ InteractiveVis.prototype.updateVis = function() {
     return d.college;
   })
 
-  console.log(vis.allSchools);
-  console.log(vis.newData);
+  //console.log(vis.allSchools);
+  //console.log(vis.newData);
 
   vis.newData = [];
 
-  if (vis.allSchools == undefined) {
-    xdomain = colleges.keys();
 
-  } else {
-    xdomain = vis.allSchools;
-    for (var i = 0; i < vis.allSchools.length; i++) {
-      for (var j = 0; j < vis.displayData.length; j++) {
-        if (vis.displayData[j].college == vis.allSchools[i]) {
-          vis.newData.push(vis.displayData[j]);
-        }
+  for (var i = 0; i < vis.allSchools.length; i++) {
+    for (var j = 0; j < vis.displayData.length; j++) {
+      if (vis.displayData[j].college == vis.allSchools[i]) {
+        vis.newData.push(vis.displayData[j]);
       }
     }
   }
 
-  vis.x.domain(xdomain);
+  if (p171.sortOrder == "name") {
+    // sort increasing
+    vis.newData.sort(function(a, b) {
+      // Ref: http://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
+      var nameA = a.college.toLowerCase(),
+        nameB = b.college.toLowerCase();
+      if (nameA < nameB) return -1;
+      if (nameA > nameB) return 1;
+      return 0;
+    });
+  } else {
+    // we are sorting by probability - sort decreasing
+    vis.newData.sort(function(a, b) {
+      return b.prob - a.prob;
+    });
+  }
+
+  vis.x.domain(vis.newData.map(function(d) {
+    return d.college;
+  }));
 
   vis.xGroup.call(vis.xAxis)
     .selectAll("text")

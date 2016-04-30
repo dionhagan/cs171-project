@@ -73,13 +73,18 @@
     </div>
     <!-- User input panel -->
     <div class="row">
-      <h2 class="schools-text">Which schools would you like to consider? </h2>
       <div id="school-select">
+        <label for="school-choice">Which schools: &nbsp;</label>
         <select id="school-choice">
           <option value="all" selected>All schools</option>
           <option value="ivy">Ivy League Only</option>
           <option value="nonivy">Non Ivy League</option>
         </select>
+        &nbsp;&nbsp;
+        <label for="sortOrder">Sort by:&nbsp;</label>
+        <input name="sortOrder" type="radio" checked value="name">School name&nbsp;
+        <input name="sortOrder" type="radio" value="prob">Best chance
+        <br>
       </div>
       <br>
     </div>
