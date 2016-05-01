@@ -14,7 +14,7 @@ Scatter.prototype.initVis = function() {
   var vis = this;
 
   vis.margin = {top: 10, right: 300, bottom: 60, left: 60};
-  vis.width = (.9*window.innerWidth) - vis.margin.left - vis.margin.right,
+  vis.width = (.9*p171.DD.wrapperWidth) - vis.margin.left - vis.margin.right,
   vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area

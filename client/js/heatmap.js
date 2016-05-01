@@ -47,7 +47,7 @@ Heatmap.prototype.createDimensions = function() {
   var vis = this;
 
   vis.margin = {top:20,right:150, bottom:200,left:50};
-  vis.width = (.9*window.innerWidth) - vis.margin.left - vis.margin.right,
+  vis.width = (.9*p171.DD.wrapperWidth) - vis.margin.left - vis.margin.right,
   vis.height = 800 - vis.margin.top - vis.margin.bottom;
 };
 

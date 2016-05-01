@@ -28,11 +28,12 @@ DrillDownController.prototype.initFilters = function() {
 
   DD.filters = {}; 
 
-  var initColleges = "colleges" in localStorage ? localStorage.colleges.split(",") : ["Harvard", "Princton","Yale"];
+  var initColleges = "colleges" in localStorage ? JSON.parse(localStorage.getItem("colleges")) : ["Harvard", "Princton","Yale"];
 
   for (collegeName in p171.data.colleges) {
+    console.log(initColleges)
     console.log(initColleges.indexOf(collegeName))
-    if (initColleges.indexOf(collegeName) > -1) DD.filters[collegeName] = true;
+    if (initColleges.indexOf(collegeName) >= 0) DD.filters[collegeName] = true;
     else DD.filters[collegeName] = false;
   } 
 
