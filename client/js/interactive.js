@@ -280,33 +280,41 @@ InteractiveVis.prototype.updateVis = function() {
   vis.circle.enter().append("circle")
     .attr("class", "dot")
     .attr("fill", "crimson")
-    .attr("transform", function () {
-      console.log(vis.choice);
-      if (vis.choice == "all"){
-        return "translate(20,5)";
-      }
-      else if (vis.choice == "ivy"){
-        return "translate(30,5)";
-      }
-      else if (vis.choice == "nonivy"){
-        return "translate(70,5)";
-      }
-      else if (vis.choice == "1"){
-        return "translate(20,5)";
-      }
-      else if (vis.choice == "2"){
-        return "translate(20,5)";
-      }
-      else if (vis.choice == "3"){
-        return "translate(20,5)";
-      }
-      else if (vis.choice == "4"){
-        return "translate(20,5)";
-      }
-    })
+    //.attr("transform", vis.translation)
     .attr("r", 1)
     .on('mouseover', vis.tip.show)
     .on('mouseout', vis.tip.hide);
+
+  if(vis.choice == "all"){
+    vis.circle
+        .attr("transform", "translate(20,5)");
+  }
+  else if(vis.choice == "ivy"){
+    vis.circle
+        .attr("transform", "translate(55,5)");
+  }
+  else if(vis.choice == "nonivy"){
+    vis.circle
+        .attr("transform", "translate(28,5)");
+  }
+  else if(vis.choice == "1"){
+    vis.circle
+        .attr("transform", "translate(45,5)");
+  }
+  else if(vis.choice == "2"){
+    vis.circle
+        .attr("transform", "translate(90,5)");
+  }
+  else if(vis.choice == "3"){
+    vis.circle
+        .attr("transform", "translate(90,5)");
+  }
+  else if(vis.choice == "4"){
+    vis.circle
+        .attr("transform", "translate(115,5)");
+  }
+
+
 
   vis.circle
     .transition().duration(800)
