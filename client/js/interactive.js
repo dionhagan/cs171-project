@@ -157,14 +157,28 @@ InteractiveVis.prototype.initVis = function(callback) {
 
   d3.select("#save")
     .on("click", function() {
-      vis.scenarios[counter - 1] = vis.displayData;
-      vis.saveScenario();
+
+      if (vis.counter == 5) {
+        d3.selectAll(".point").remove();
+        vis.counter = 1;
+        vis.scenarios = [vis.displayData];
+        vis.saveScenario(vis.scenarios[0]);
+        return false;
+      }
+
+      vis.scenarios[vis.counter - 1] = vis.displayData;
+
+      vis.saveScenario(vis.scenarios);
+
+      vis.counter = vis.counter + 1;
     });
 
   d3.select("#clear")
     .on("click", function() {
-      d3.selectAll(".saved-rect").remove();
+      d3.selectAll(".point").remove();
       vis.counter = 1;
+      vis.scenarios = [];
+      vis.saveScenario(vis.scenarios[0]);
     });
 
   // first time through
@@ -232,6 +246,17 @@ InteractiveVis.prototype.updateVis = function() {
     }
   }
 
+  // vis.newScenarios = [];
+  // for (var k = 0; k < vis.scenarios.length; k++) {
+  //   for (var i = 0; i < vis.allSchools.length; i++) {
+  //     for (var j = 0; j < vis.displayData.length; j++) {
+  //       if (vis.scenarios[k][j].college == vis.allSchools[i]) {
+  //         vis.newScenarios.push(vis.scenarios[k][j]);
+  //       }
+  //     }
+  //   }  
+  // }
+
   if (p171.sortOrder == "name") {
     // sort increasing
     vis.newData.sort(function(a, b) {
@@ -260,19 +285,6 @@ InteractiveVis.prototype.updateVis = function() {
     .attr("dy", ".15em")
     .attr("transform", "rotate(-65)");
 
-  vis.line
-    .x(function(d) {
-      return vis.x(d.college);
-    })
-    .y(function(d) {
-      return vis.y(d.prob);
-    });
-
-  vis.chart
-    .transition()
-    .duration(800)
-    .attr("d", vis.line(vis.newData));
-
   vis.circle = vis.svg.selectAll("circle")
     .data(vis.newData);
 
@@ -294,15 +306,13 @@ InteractiveVis.prototype.updateVis = function() {
     .attr("cy", function(d) {
       return vis.y(d.prob)
     });
-
-  vis.circle.exit().remove();
 }
 
 function showValue(elementID, newValue) {
   document.getElementById(elementID).innerHTML = newValue;
 }
 
-InteractiveVis.prototype.saveScenario = function() {
+InteractiveVis.prototype.saveScenario = function(data) {
   var vis = this; 
 
   var savedColor = ["blue", "green", "orange", "purple"];
@@ -323,32 +333,26 @@ InteractiveVis.prototype.saveScenario = function() {
 
   vis.svg.call(vis.tip2);
 
-  if (vis.counter == 5) {
-    d3.selectAll(".saved-rect").remove();
-    vis.counter = 1;
+  vis.series = [vis.newData];
+
+  for (var i = 0; i < data.length; i++) {
+    vis.series.push(data[i]);
   }
 
-  vis.savedRect = vis.svg.selectAll("rect" + vis.counter)
-    .data(vis.newData);
+  vis.points = vis.svg.selectAll(".series")
+    .data(vis.series)
+  .enter().append("g")
+    .attr("class", "series")
+    .style("fill", function(d, i) { return savedColor[i - 1]; })
+  .selectAll(".point")
+    .data(function(d) { return d; });
 
-  vis.savedRect.enter().append("rect")
-    .attr("class", "saved-rect")
-    .attr("fill", savedColor[(vis.counter - 1) % 4])
-    .attr("transform", "translate(15,0)")
-    .attr("width", 10)
-    .attr("height", 10)
-    .on('mouseover', vis.tip2.show)
-    .on('mouseout', vis.tip2.hide);
-
-  vis.savedRect
-    .attr("opacity", .8)
-    .attr("x", function(d) {
-      return vis.x(d.college)
-    })
-    .attr("y", function(d) {
-      return vis.y(d.prob)
-    });
-
-  vis.counter = vis.counter + 1;
+  vis.points
+    .enter().append("circle")
+      .attr("class", "point")
+      .attr("transform", "translate(20,5)")
+      .attr("r", 4.5)
+      .attr("cx", function(d) { return vis.x(d.college); })
+      .attr("cy", function(d) { return vis.y(d.prob); });
 
 }
