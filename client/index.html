@@ -52,16 +52,11 @@
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="howitworks.html">How It Works</a></li>
+          <li><a href="ourstory.html">Our Story</a></li>
         </ul>
       </nav>
     </div>
-    <!--
-    <div class="row">
-      <div class="col-6 warningNote">
-        Our predictor is really slow (like 20 sec). We know. Please be patient.
-      </div>
-    </div>
-    -->
+
     <!-- Main area -->
     <div class="row">
       <div class="col-6">
@@ -71,92 +66,8 @@
         </p>
       </div>
     </div>
-    <!-- User input panel -->
-    <div class="row">
-      <h2 class="schools-text">Which schools would you like to consider? </h2>
-      <div id="school-select">
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="Brown" checked class="custom"> Brown
-          <br>
-          <input type="checkbox" name="colleges" value="CalTech" checked> Cal Tech
-          <br>
-          <input type="checkbox" name="colleges" value="CarnegieMellon" checked> Carnegie Mellon
-          <br>
-          <input type="checkbox" name="colleges" value="Columbia" checked> Colombia
-          <br>
-          <input type="checkbox" name="colleges" value="Cornell" checked> Cornell
-          <br>
-        </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="Dartmouth" checked> Dartmouth
-          <br>
-          <input type="checkbox" name="colleges" value="Duke" checked> Duke
-          <br>
-          <input type="checkbox" name="colleges" value="Emory" checked> Emory
-          <br>
-          <input type="checkbox" name="colleges" value="Georgetown" checked> Georgetown
-          <br>
-          <input type="checkbox" name="colleges" value="Harvard" checked> Harvard
-          <br>
-        </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="JohnsHopkins" checked> Johns Hopkins
-          <br>
-          <input type="checkbox" name="colleges" value="MIT" checked> MIT
-          <br>
-          <input type="checkbox" name="colleges" value="Northwestern" checked> Northwestern
-          <br>
-          <input type="checkbox" name="colleges" value="NotreDame" checked> Notre Dame
-          <br>
-          <input type="checkbox" name="colleges" value="Princeton" checked> Princeton
-          <br>
-        </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="Rice" checked> Rice
-          <br>
-          <input type="checkbox" name="colleges" value="Stanford" checked> Stanford
-          <br>
-          <input type="checkbox" name="colleges" value="UCB" checked> UCB
-          <br>
-          <input type="checkbox" name="colleges" value="UChicago" checked> UChicago
-          <br>
-          <input type="checkbox" name="colleges" value="UCLA" checked> UCLA
-          <br>
-        </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="UPenn" checked> UPenn
-          <br>
-          <input type="checkbox" name="colleges" value="USC" checked> USC
-          <br>
-          <input type="checkbox" name="colleges" value="Vanderbilt" checked> Vanderbilt
-          <br>
-          <input type="checkbox" name="colleges" value="WashU" checked> WashU
-          <br>
-          <input type="checkbox" name="colleges" value="Yale" checked> Yale
-          <br>
-        </div>
-      </div>
-      <br>
-    </div>
-
-
-    <!-- Visualization & Static input -->
-    <div class="row">
-      <div class="col-md-6">
-        <div id="chart-area"></div>
-      </div>
-
-    <div class="row">
-      <div class="col-md-6">
-        <div id="three-area"></div>
-      </div>
-    </div>
-
-    <br>
-    <br>
 
     <!-- Dynamic Slider input-->
-
     <div class="row">
       <div class="col-4">
         <div class="interaction-text">
@@ -198,62 +109,98 @@
             <input type="range" id="num_sat" min="0" max="10" class="interactive-slider" oninput="showValue('current-num-sat', this.value)">
             <span id="current-num-sat">5</span>
             <br>
-            <br>
-          </form>
         </div>
       </div>
-      <div class="col-md-4">
-        <h2>Tell us about you:</h2> Gender:
-        <select id="gender" class="dropdown">
-          <option value="-1">Male</option>
-          <option value="1">Female</option>
-          <option value="0">Other</option>
-        </select>
-        <br>
-        <br> Race:
-        <select id="race" class="dropdown">
-          <option value="1">African American/Black</option>
-          <option value="2">Hispanic/Latino</option>
-          <option value="0">Asian</option>
-          <option value="-1">Middle Eastern</option>
-          <option value="3">Pacific Islander</option>
-          <option value="4">Native American</option>
-          <option value="-2" selected>White</option>
-          <option value="5">Other</option>
-        </select>
-        <br>
-        <br> Type of High School:
-        <select id="hs" class="dropdown">
-          <option value="0" selected>Public</option>
-          <option value="1">Private</option>
-          <option value="2">Parochial</option>
-          <option value="3">Homeschool</option>
-        </select>
-        <br>
-        <br>
+      <div class="col-2 demographics-text">
+        <h2>Tell us about you:</h2>
+        <div class="row">
+          <div class="col-3">Gender:</div>
+          <div class="col-3">
+            <select id="gender" class="dropdown">
+              <option value="-1">Male</option>
+              <option value="1">Female</option>
+              <option value="0">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">Race:</div>
+          <div class="col-3">
+            <select id="race" class="dropdown">
+              <option value="1">African American/Black</option>
+              <option value="2">Hispanic/Latino</option>
+              <option value="0">Asian</option>
+              <option value="-1">Middle Eastern</option>
+              <option value="3">Pacific Islander</option>
+              <option value="4">Native American</option>
+              <option value="-2" selected>White</option>
+              <option value="5">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3">Type of High School:</div>
+          <div class="col-3">
+            <select id="hs" class="dropdown">
+              <option value="0" selected>Public</option>
+              <option value="1">Private</option>
+              <option value="2">Parochial</option>
+              <option value="3">Homeschool</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <input type="button" value="Save Scenario" id="save">
+            </div>
+            <div class="col-3">
+              <input type="button" value="Clear All Scenarios" id="clear">
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    </div>
-  </div>
 
-  <!-- Prediction Visualization -->
-  <!-- TODO: not used? Remove? -->
-  <div class="row">
-    <div class="col-12">
-      <div id="prediction-viz"></div>
-      <div id="result"></div>
-    </div>
-  </div>
+      <!-- School choice and sort order -->
+      <div class="row">
+        <div id="school-select" class="col-6">
+          <span class="interaction-text">
+          <label for="school-choice">Filter schools: &nbsp;</label>
+          <select id="school-choice">
+            <option value="all" selected>All schools</option>
+            <option value="ivy">Ivy League Only</option>
+            <option value="nonivy">Non Ivy League</option>
+            <option value="1">Northeast Region</option>
+            <option value="2">West Coast Region</option>
+            <option value="3">Midwest Region</option>
+            <option value="4">Mid-Atlantic Region</option>
+          </select>
+        </span> &nbsp;&nbsp;
+          <label for="sortOrder">Sort by:&nbsp;</label>
+          <input name="sortOrder" type="radio" checked value="name">&nbsp;School name&nbsp;
+          <input name="sortOrder" type="radio" value="prob">&nbsp;Best chance &nbsp;&nbsp;
+          <br>
+        </div>
+        <br>
+        </form>
+      </div>
 
-  <!-- filler and footer -->
-  <div id="wrapper_footer"></div>
+      <!-- Visualizations -->
+      <div class="row">
+        <div class="col-md-6">
+          <div id="chart-area"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div id="three-area"></div>
+        </div>
+      </div>
+
+    </div>
   </div>
   <footer id="footer">
     <a href="http://www.cs171.org/">CS171</a> Team Braavos
   </footer>
 
-  <!-- Use jQuery from CDN -->
-  <!-- TODO: fix load order to console errors -->
   <script src="js/jquery.min.js"></script>
   <script src="js/queue.v1.min.js"></script>
   <script src="js/d3.min.js"></script>
