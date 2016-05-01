@@ -328,8 +328,6 @@ InteractiveVis.prototype.updateVis = function() {
         .attr("transform", "translate(115,5)");
   }
 
-
-
   vis.circle
     .transition().duration(800)
     .attr("r", 4)
@@ -340,6 +338,9 @@ InteractiveVis.prototype.updateVis = function() {
     .attr("cy", function(d) {
       return vis.y(d.prob)
     });
+
+  // vis.circle.exit().remove();
+  // vis.points.exit().remove();
 }
 
 function showValue(elementID, newValue) {
