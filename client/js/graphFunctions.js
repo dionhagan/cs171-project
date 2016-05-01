@@ -69,6 +69,129 @@ function applyFilter() {
   });
 }
 
+function createFilters(colleges=false, applicants=false, offset=40) {
+  var vis = this
+
+  var fontSize = 12
+
+  if (colleges) {
+    vis.svg.append('text')
+      .attr({
+        x: vis.margin.left + vis.width - offset,
+        y: vis.margin.top - 5
+      })
+      .style({"font-size":18,"font-weight":"bold"})
+      .text("Colleges")
+
+    // Add filter elements for each college 
+    vis.collegeFilters = vis.svg.selectAll(".college-filters")
+      .data(Object.keys(p171.data.colleges))
+      .enter().append('g')
+        .attr({
+          class: "college-filters"
+        })
+
+    vis.collegeFilters
+      .append("rect")
+        .attr({
+          x: vis.margin.left + vis.width - offset,
+          y: function(d,i) { return vis.margin.top+(i*15)},
+          fill: "steelblue",
+          height: 10,
+          width: 10,
+          opacity: function(college) {
+            return p171.DD.filters[college] ? 1 : .3
+          }
+        })
+        .on("click", function(college) {  
+          p171.DD.filters[college] = p171.DD.filters[college] ? false : true
+          updateAllFilters()
+        })
+
+    vis.collegeFilters
+        .append("text")
+          .attr({
+            x: vis.margin.left + vis.width - (offset - 12),
+            y: function(d,i) { return vis.margin.top+(i*15)+11}
+          })
+          .style('font-size','12')
+          .text(function(college) {return college })
+  } 
+
+  if (applicants) {
+    // Get factors that need to be filtered
+    var factorsToFilter = Object.keys(p171.data.nomFactors);
+
+    vis.svg.append("text")
+      .attr({
+        x: vis.margin.left + vis.width + 75 + offset,
+        y: vis.margin.top - 5
+      })
+      .style({"font-size":18,"font-weight":"bold"})
+      .text("Applicants")
+
+    // Add filter elements for each applicant type
+    vis.appFilters = vis.svg.selectAll(".app-filters")
+      .data(factorsToFilter)
+      .enter().append('g')
+        .attr({
+          class: "app-filters"
+        })
+
+    vis.appFilters.append("text")
+        .attr({
+          x: vis.margin.left + vis.width + 75 + offset,
+          y: function(d,i) { return vis.margin.top+(i*50)+13}
+        })
+        .style({
+          "text-decoration": "underline",
+          "font-size": fontSize
+        })
+        .text(function(d,i) {
+          return p171.data.labels[d]
+        })
+
+    for (var i=0; i<2; i++) {
+      vis.appFilters.append("rect")
+        .attr({
+          x: vis.margin.left + vis.width + 75 + offset,
+          y: function(d,j) { return 20+vis.margin.top+(j*50)+(i*18)},
+          fill: "steelblue",
+          height: 10,
+          width: 10,
+          opacity: function(factor) {
+            var subFactor = Object.keys(p171.DD.filters[factor])[i];
+            return p171.DD.filters[factor][subFactor] ? 1 : .3
+          }
+        })
+        .on("click", function(factor) {
+
+
+          var subFactor 
+
+          if (this.parentNode.childNodes[1] == this) {
+            subFactor = Object.keys(p171.DD.filters[factor])[0]
+          } else {
+            subFactor = Object.keys(p171.DD.filters[factor])[1]
+          }
+          
+          p171.DD.filters[factor][subFactor] = p171.DD.filters[factor][subFactor] ? false : true
+          updateAllFilters()
+        })
+
+      vis.appFilters.append("text")
+        .attr({
+          x: vis.margin.left + vis.width + 87 + offset,
+          y: function(d,j) { return 20+vis.margin.top+(j*50)+(i*16)+11}
+        })
+        .style('font-size',fontSize)
+        .text(function(d) {
+          return p171.data.nomFactors[d][i]
+        })
+    }
+  }
+}
+
 function filterApplicants() {
   var vis = this; 
 
@@ -312,4 +435,21 @@ function showFilters(filterType) {
       }
     }
   }
+}
+
+function updateAllFilters() {
+  p171.DD.updateSubPlots()
+  var collegefilters = d3.selectAll('g.college-filters rect')
+  collegefilters.attr('opacity', function(d) {
+    return p171.DD.filters[d] ? 1 : .3;
+  })
+
+  var appfilters = d3.selectAll('g.app-filters rect')
+
+  appfilters.attr('opacity', function(d, i) {
+    var subfactor = i % 2
+    return p171.DD.filters[d][Object.keys(p171.DD.filters[d])[subfactor]] ? 1 : .3
+  })
+
+
 }

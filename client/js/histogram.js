@@ -12,18 +12,19 @@ var Histogram = function(_parentElement, _category) {
 Histogram.prototype.initVis = function () {
   var vis = this;
 
-  vis.margin = { top: 40, right: 60, bottom: 60, left:20};
-  vis.width = p171.DD.subPlotWidth - vis.margin.left - vis.margin.right,
+  vis.margin = { top: 40, right: 250, bottom: 60, left:20};
+  vis.width = (.9*p171.DD.wrapperWidth) - vis.margin.left - vis.margin.right,
   vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
-  vis.svg = vis.plotElement.append("svg")
+  vis.svg = vis.parentElement.append("svg")
       .attr("width", vis.width + vis.margin.left + vis.margin.right)
       .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
       .attr("class","histogram")
     .append("g")
       .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
+  vis.createFilters(colleges=true, applicants=true, offset=10)
   vis.bins = 10;
   
   if (vis.category in p171.data.nomFactors) {
@@ -45,6 +46,8 @@ Histogram.prototype.initVis = function () {
 
   vis.updateVis();
 }
+
+Histogram.prototype.createFilters = createFilters
 
 Histogram.prototype.updateVis = function() {
   var vis = this;
@@ -104,12 +107,12 @@ Histogram.prototype.updateVis = function() {
         if (i+1 < vis.histogramData.length) {
           var nextBin = vis.histogramData[i+1];
           if ((p171.user[vis.category] > d.x) && (p171.user[vis.category] <= nextBin.x)) {
-            return "lightgreen";
+            return "green";
           }
         } else if (p171.user[vis.category] > d.x) {
-          return "lightgreen"
+          return "green"
         } else {
-          return "white";
+          return "lightgreen";
         }
         
       });
@@ -128,7 +131,7 @@ Histogram.prototype.updateVis = function() {
       class:"labels",
       y: function(d) { return vis.y(d.y)-10; },
       x: function(d,i){ return (i*barWidth) + (0.2*barWidth); },
-      fill: "lightgreen"
+      fill: "steelblue"
     })
     .text(function(d){
       var pct = ((d.y / vis.displayData.length)*100).toFixed(1)

@@ -1,6 +1,6 @@
-var EffectGraph = function(_parentElement, _factorLabel) {
-  this.parentElement = _parentElement;
-  this.factorLabel = _factorLabel
+var EffectGraph = function(_parentElement, _factor) {
+  this.parentElement = d3.select("#"+_parentElement);
+  this.factor= _factor
   this.data = p171.data.factorEffect;
   this.colleges = {};
   this.createElements();
@@ -55,11 +55,6 @@ EffectGraph.prototype.initVis = function() {
 EffectGraph.prototype.wrangleData = function() {
   var vis = this;
 
-  // Get the factor key 
-  for (label in p171.data.labels) {
-    if (vis.factorLabel== p171.data.labels[label]) vis.factor = label;
-  }
-
   // Get relevant subset of data 
   var data; 
   if (vis.showAllColleges) {
@@ -67,7 +62,8 @@ EffectGraph.prototype.wrangleData = function() {
   } else {
     data = vis.data[vis.factor];
   }
-
+console.log(vis.data)
+console.log(vis.factorLabel)
   // Format the data to be displayed
   vis.displayData = [];
   

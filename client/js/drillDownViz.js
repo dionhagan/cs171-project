@@ -104,7 +104,6 @@ DrillDownController.prototype.initVis = function() {
         class: "more-details row"
       })
 
-    moreDetails.append("div").attr({class: "text"})
     moreDetails.append("div").attr({class: "chart"})
 
     DD.factors[factor.name].moreDetails = moreDetails;

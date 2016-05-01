@@ -42,6 +42,11 @@
   background-color: lightgreen;
 }
 
+div.scatter-selectors {
+  margin-left: 100px;
+  background-color: lightsteelblue;
+  width: 425px;
+}
 .control-label {
   font-size: 12px;
 }
@@ -117,9 +122,9 @@ h2 {
   opacity: 0;
 }
 
-svg.histogram g rect {
-  fill: white;
-  stroke: lightgreen;
+svg.histogram g rect.bar {
+  fill: lightgreen;
+  stroke: white;
   stroke-width: 2px;
 }
 
