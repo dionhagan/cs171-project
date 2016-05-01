@@ -141,6 +141,7 @@ InteractiveVis.prototype.initVis = function(callback) {
     .on("change", function() {
       vis.updateAllSchools();
       vis.wrangleData();
+      p171.innovation3d.wrangleData();
     });
 
   var sortOrder = document.getElementsByName('sortOrder');

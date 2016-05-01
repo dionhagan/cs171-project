@@ -298,7 +298,7 @@ function predict() {
       p171.predictions = JSON.parse(this.response).preds;
       setCollegeColors();
       p171.lineChart.wrangleData();
-      //p171.innovation3d.wrangleData();
+      p171.innovation3d.wrangleData();
     }
   }
 }
