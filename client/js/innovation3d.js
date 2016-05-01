@@ -6,7 +6,7 @@ var Innovation3d = function(_parentElement) {
 
 Innovation3d.prototype.initVis = function(callback) {
   var vis = this;
-  vis.aspectratio = 0.5;
+  vis.aspectratio = 0.4;
   vis.innerWidth = 1000;
   vis.innerHeight = vis.innerWidth * vis.aspectratio;
   vis.zoneSize = 250;
@@ -16,6 +16,8 @@ Innovation3d.prototype.initVis = function(callback) {
   // Colors
   vis.color = {};
   vis.color.black = new THREE.Color(0, 0, 0);
+  vis.color.crimson = new THREE.Color("hsl(0,100%,27%)");
+  vis.color.sand = new THREE.Color(0x816452);
 
   // Text
   vis.options = {
@@ -28,7 +30,7 @@ Innovation3d.prototype.initVis = function(callback) {
     steps: 1
   };
   var loader = new THREE.FontLoader();
-  loader.load('fonts/helvetiker_bold.typeface.js', function(response) {
+  loader.load('fonts/optimer_regular.typeface.js', function(response) {
     vis.options.font = response;
     vis.buildBackground(response);
     vis.wrangleData();
@@ -60,7 +62,7 @@ Innovation3d.prototype.initVis = function(callback) {
   // CAMERA
 
   vis.camera = new THREE.PerspectiveCamera(45, vis.innerWidth / vis.innerHeight, 2, 1000000);
-  vis.camera.position.set(8 * vis.zoneSize, 15 * vis.zoneHeight, 100);
+  vis.camera.position.set(6 * vis.zoneSize, 4 * vis.zoneHeight, 100);
 
   // SCENE
 
@@ -258,6 +260,7 @@ Innovation3d.prototype.buildBackground = function(myFont) {
 
   for (var zone = 0; zone < 6; zone++) {
     // pi /16 stones per semi-circle
+    //console.log("brick y",(zone * vis.zoneHeight) + vis.zoneHeight );
     for (var stone = 0; stone < 17; stone++) {
       angle = stone * Math.PI / 16 - (Math.PI / 2);
       r = (zone + 1) * vis.zoneSize;
@@ -268,7 +271,8 @@ Innovation3d.prototype.buildBackground = function(myFont) {
       cube = new THREE.BoxGeometry(vis.zoneSize,
         (zone * vis.zoneHeight) + vis.zoneHeight, r * Math.PI / 16);
 
-      vis.scene.add(vis.addObjectColor(cube, 0xff0000, x, 0, z, angle));
+      vis.scene.add(vis.addObjectColor(cube, vis.color.sand,
+        x, 0, z, angle));
     }
     // don't label the outermost band
     if (zone == 5) continue;
@@ -291,7 +295,7 @@ Innovation3d.prototype.addObjectColor = function addObjectColor(geometry, color,
 
     var tmpMesh = new THREE.Mesh(geometry, material);
 
-    tmpMesh.material.color.offsetHSL(0.1, -0.1, 0);
+    //tmpMesh.material.color.offsetHSL(0.1, -0.1, 0);
 
     tmpMesh.position.set(x, y, z);
 
@@ -362,22 +366,18 @@ Innovation3d.prototype.wrangleData = function() {
       }
       if (vis.selectedSchools.indexOf(p171.predictions[i].college) < 0) continue;
       zone = Math.floor(p171.predictions[i].prob * 100 / 20);
-      //x = (4 - zone) * (-vis.zoneSize);
-      y = 0.8*(4 - zone) * vis.zoneHeight;// + zoneCount[zone] * 50;
-      //z = zoneCount[zone] * vis.zoneSize;
+
       // switch sides from left to right of center
       alt = (zoneCount[zone] % 2 == 0) ? 1 : -1;
-      z *= alt;
-
-      angle = alt * zoneCount[zone] * Math.PI / 16;
+      angle = alt * zoneCount[zone] * Math.PI / 10;
       r = (5 - zone) * vis.zoneSize;
-      //console.log("angle:" + angle * 57.3 + ",r=", r);
-
       z = Math.sin(angle) * r;
       x = -Math.sqrt(Math.pow(r, 2) - Math.pow(z, 2));
-      //console.log(p171.predictions[i].college + "," + p171.predictions[i].prob + ",zone=" + zone + ",x=" + x + ",y=" + y + ",z=" + z);
+      y = (4 - zone) * vis.zoneHeight/ 2 + 150;
+      //console.log("zone,r,angle,x,z",p171.predictions[i].college,zone,r,angle*57.3,x,z);
+
       zoneCount[zone]++;
-      vis.options.size = 20;
+      vis.options.size = Math.max(20,(5- zone)* 10);
       var textGeometry = new THREE.TextGeometry(p171.predictions[i].college, vis.options);
       var textMaterial = new THREE.MeshBasicMaterial({
         color: vis.color.black, //p171.predictions[i].color,
@@ -390,7 +390,17 @@ Innovation3d.prototype.wrangleData = function() {
       });
 
       var mesh = new THREE.Mesh(textGeometry, textMaterial);
-      mesh.rotation.y = 1.5;
+      if (angle < (-Math.PI / 2)) {
+        mesh.rotation.y = angle - Math.PI / 2;
+      } else {
+        mesh.rotation.y = angle + Math.PI / 2;
+      }
+      if (angle > (Math.PI / 2)) {
+        mesh.rotation.y = angle - Math.PI / 2;
+      } else {
+        mesh.rotation.y = angle + Math.PI / 2;
+      }
+
       mesh.position.set(x, y, z);
 
       mesh.castShadow = true;
@@ -399,7 +409,11 @@ Innovation3d.prototype.wrangleData = function() {
       vis.college3d[i]['_3dmesh'] = mesh;
       vis.scene.add(vis.college3d[i]['_3dmesh']);
 
-      cube = new THREE.BoxGeometry(1, 2*y, 10);
+      // get size of resulting mesh
+      //var box = new THREE.Box3().setFromObject(mesh);
+      //console.log(p171.predictions[i].college,box.min, box.max, box.size());
+
+      //cube = new THREE.BoxGeometry(1, 2*y, 10);
       //vis.college3d[i]['_3dbox'] = vis.addObjectColor(cube, 0x000000, x, 0, z, 0);
       //vis.scene.add(vis.college3d[i]['_3dbox']);
     }
@@ -410,8 +424,12 @@ Innovation3d.prototype.updateVis = function() {
   var vis = this;
   animate();
 
+  // slow animation to 20 fps save CPU time
+  // Ref: http://stackoverflow.com/questions/11285065/limiting-framerate-in-three-js-to-increase-performance-requestanimationframe
   function animate() {
-    requestAnimationFrame(animate);
+    setTimeout( function() {
+      requestAnimationFrame(animate);
+    },1000/20.);
     render();
   }
 
