@@ -3,17 +3,27 @@
 
 var p171 = {}; // global namespace
 
-p171.margin          = {top: 60, right: 20, bottom: 60, left: 60};
-p171.padding         = {top: 20, right: 0, bottom: 100, left: 40};
-p171.aspect         = 1.1; // charts will be 10% taller than wide
+p171.margin = {
+  top: 60,
+  right: 20,
+  bottom: 60,
+  left: 60
+};
+p171.padding = {
+  top: 20,
+  right: 0,
+  bottom: 100,
+  left: 40
+};
+p171.aspect = 1.1; // charts will be 10% taller than wide
 
 // Store user data from cookies
 p171.user = {};
 
 var convertFormVar = {
-  sat:"admissionstest",
-  gpa:"GPA",
-  apnum:"AP",
+  sat: "admissionstest",
+  gpa: "GPA",
+  apnum: "AP",
   apave: "averageAP",
   sat2ave: "SATsubject",
   hs: "schooltype",
@@ -24,7 +34,7 @@ var convertFormVar = {
 
 if ("user" in localStorage) {
   var userInput = localStorage.user.split(",")
-  for (var i=0; i<userInput.length; i++) {
+  for (var i = 0; i < userInput.length; i++) {
     var factor = userInput[i].split(":")[0];
     var value = userInput[i].split(":")[1];
     p171.user[convertFormVar[factor]] = !isNaN(value) ? +value : value;
@@ -40,18 +50,22 @@ p171.data = {};
 // Normalization values
 p171.normalize = {};
 
-queue()
+// Ensure all JS modules are loaded before loading CSVs:
+window.addEventListener("load", function() {
+  queue()
     .defer(d3.csv, "data/collegelist.csv")
     .defer(d3.csv, "data/collegedata_unnormalized.csv")
     .defer(d3.csv, "data/collegedata_normalized.csv")
     .defer(d3.json, "data/feature_effect.json")
     .defer(d3.json, "data/factors.json")
     .defer(d3.json, "text/drilldowntext.json")
-    .defer(d3.csv,"data/normalize_means.csv")
-    .defer(d3.csv,"data/normalize_stds.csv")
+    .defer(d3.csv, "data/normalize_means.csv")
+    .defer(d3.csv, "data/normalize_stds.csv")
     .await(storeData)
+}, false);
 
-function storeData(err, collegeList, appData, appDataNorm, factorImportance, factorEffect, drillDownText,normalizeMeans, normalizeStds) {
+
+function storeData(err, collegeList, appData, appDataNorm, factorImportance, factorEffect, drillDownText, normalizeMeans, normalizeStds) {
   // Get text for drill down page
   p171.text.drillDown = drillDownText;
   addDrillDownText();
@@ -64,7 +78,7 @@ function storeData(err, collegeList, appData, appDataNorm, factorImportance, fac
   p171.data.factorEffect = factorEffect;
 
   // Collect data for each college
-  for (var collegeIndex=0; collegeIndex<collegeList.length; collegeIndex++) {
+  for (var collegeIndex = 0; collegeIndex < collegeList.length; collegeIndex++) {
     var collegeInfo = collegeList[collegeIndex];
     collegeInfo.ivy = (collegeList[collegeIndex].ivy == "1");
     collegeInfo.region = parseInt(collegeList[collegeIndex].region) || 0;
@@ -84,11 +98,11 @@ function storeData(err, collegeList, appData, appDataNorm, factorImportance, fac
     "sports": ["Played Sports", "Didn't Play Sports"],
     "schooltype": ["Public", "Private"],
     "outofstate": ["Out of State", "Local"],
-    "international": ["International","Domestic"],
+    "international": ["International", "Domestic"],
     "female": ["Female", "Male"],
     "earlyAppl": ["Applied Early", "Didn't Apply Early"],
     "alumni": ["Has Legacy", "No Legacy"],
-    "MinorityRace": ["Is Racial Minority","Isn't Racial Minority"]
+    "MinorityRace": ["Is Racial Minority", "Isn't Racial Minority"]
   };
 
   p171.data.labels = {
@@ -109,7 +123,7 @@ function storeData(err, collegeList, appData, appDataNorm, factorImportance, fac
     "alumni": "Legacy",
     "international": "International Student",
     "sports": "Varsity Sports"
-    }
+  }
 
   p171.data.quantFactors = quantFactors;
   p171.data.nomFactors = nomFactors;
@@ -117,11 +131,11 @@ function storeData(err, collegeList, appData, appDataNorm, factorImportance, fac
 
   p171.data.colleges['All'] = {};
 
-  for (var sampleIndex=0; sampleIndex<appData.length; sampleIndex++) {
+  for (var sampleIndex = 0; sampleIndex < appData.length; sampleIndex++) {
     var sample = appData[sampleIndex];
     var college = sample.collegeID;
 
-    for (var factorIndex=0; factorIndex<p171.data.mainFactors.length; factorIndex++) {
+    for (var factorIndex = 0; factorIndex < p171.data.mainFactors.length; factorIndex++) {
 
       var factor = p171.data.mainFactors[factorIndex];
       var collegeInfo = p171.data.colleges[college];
@@ -159,7 +173,7 @@ function storeData(err, collegeList, appData, appDataNorm, factorImportance, fac
   }
 
   p171.normalize.means = normalizeMeans[0];
-  p171.normalize.stds  = normalizeStds[0];
+  p171.normalize.stds = normalizeStds[0];
 
   createVis();
 }
@@ -178,6 +192,6 @@ function createVis() {
   } else {
     predictRandom();
     p171.lineChart = new InteractiveVis('chart-area');
-    //p171.innovation3d = new Innovation3d('three-area');
+    p171.innovation3d = new Innovation3d('three-area');
   }
 }

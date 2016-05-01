@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
   <!-- Favicon -->
   <!-- Generated from http://www.favicon-generator.org/ -->
@@ -69,50 +70,66 @@
 
     <!-- Dynamic Slider input-->
     <div class="row">
-      <div class="col-4">
-        <div class="interaction-text">
-          <h2>Expected GPA and Test Scores: </h2>
-          <form method="post" id="user_info">
-            <label for="gpa"> GPA (unweighted):
-              <span id="gpa-value"></span>
-            </label>
-            <input type="range" id="gpa" min="0.0" max="4.0" step="0.01" class="interactive-slider" oninput="showValue('current-gpa', this.value)">
-            <span id="current-gpa">2.0</span>
-            <br>
-            <label for="sat">SAT Composite Score:
-              <span id="sat-value"></span>
-            </label>
-            <input type="range" id="sat" min="0" max="2400" step="10" class="interactive-slider" oninput="showValue('current-sat', this.value)">
-            <span id="current-sat">1200</span>
-            <br>
-            <label for="act">ACT Composite Score:
-              <span id="act-value"></span>
-            </label>
-            <input type="range" id="act" min="0" max="36" class="interactive-slider" oninput="showValue('current-act', this.value)">
-            <span id="current-act">18</span>
-            <br>
-            <label for="num_ap">Number of AP Exams Taken:
-              <span id="num-ap-value"></span>
-            </label>
-            <input type="range" id="num_ap" min="0" max="10" class="interactive-slider" oninput="showValue('current-num-ap', this.value)">
-            <span id="current-num-ap">5</span>
-            <br>
-            <label for="ave_ap">Average AP Exam Score:
-              <span id="ave-ap-value"></span>
-            </label>
-            <input type="range" id="ave_ap" min="0" max="5" step="0.1" class="interactive-slider" oninput="showValue('current-ave-ap', this.value)">
-            <span id="current-ave-ap">2.5</span>
-            <br>
-            <label for="num_sat">Number of SAT Subject Tests Taken:
-              <span id="num-sat-value"></span>
-            </label>
-            <input type="range" id="num_sat" min="0" max="10" class="interactive-slider" oninput="showValue('current-num-sat', this.value)">
-            <span id="current-num-sat">5</span>
-            <br>
-        </div>
+      <div class="col-4 demographics-text">
+        <h2>Your Student Profile: </h2>
+        <form method="post" id="user_info">
+          <div class="row slider-row">
+            <div class="col-2">
+              <label for="gpa"> GPA (unweighted):</label>
+            </div>
+            <div class="col-4">
+              <input type="range" id="gpa" min="0.0" max="4.0" step="0.01" class="interactive-slider" oninput="showValue('current-gpa', this.value)">
+              <span id="current-gpa">2.0</span>
+            </div>
+          </div>
+          <div class="row slider-row">
+            <div class="col-2">
+              <label for="sat">SAT Composite Score:</label>
+            </div>
+            <div class="col-4">
+              <input type="range" id="sat" min="0" max="2400" step="10" class="interactive-slider" oninput="showValue('current-sat', this.value)">
+              <span id="current-sat">1200</span>
+            </div>
+          </div>
+          <div class="row slider-row">
+            <div class="col-2">
+              <label for="act">ACT Composite Score:</label>
+            </div>
+            <div class="col-4">
+              <input type="range" id="act" min="0" max="36" class="interactive-slider" oninput="showValue('current-act', this.value)">
+              <span id="current-act">18</span>
+            </div>
+          </div>
+          <div class="row slider-row">
+            <div class="col-2">
+              <label for="num_ap">Number of AP Exams:</label>
+            </div>
+            <div class="col-4">
+              <input type="range" id="num_ap" min="0" max="10" class="interactive-slider" oninput="showValue('current-num-ap', this.value)">
+              <span id="current-num-ap">5</span>
+            </div>
+          </div>
+          <div class="row slider-row">
+            <div class="col-2">
+              <label for="ave_ap">Average AP Exam Score:</label>
+            </div>
+            <div class="col-4">
+              <input type="range" id="ave_ap" min="0" max="5" step="0.1" class="interactive-slider" oninput="showValue('current-ave-ap', this.value)">
+              <span id="current-ave-ap">2.5</span>
+            </div>
+          </div>
+          <div class="row slider-row">
+            <div class="col-2">
+              <label for="num_sat">Number of SAT Subject Tests:</label>
+            </div>
+            <div class="col-4">
+              <input type="range" id="num_sat" min="0" max="10" class="interactive-slider" oninput="showValue('current-num-sat', this.value)">
+              <span id="current-num-sat">5</span>
+            </div>
+          </div>
       </div>
       <div class="col-2 demographics-text">
-        <h2>Tell us about you:</h2>
+        <h2>About You:</h2>
         <div class="row">
           <div class="col-3">Gender:</div>
           <div class="col-3">
@@ -148,60 +165,58 @@
               <option value="3">Homeschool</option>
             </select>
           </div>
-          <div class="row">
-            <div class="col-3">
-              <input type="button" value="Save Scenario" id="save">
-            </div>
-            <div class="col-3">
-              <input type="button" value="Clear All Scenarios" id="clear">
-            </div>
-          </div>
         </div>
       </div>
 
-      <!-- School choice and sort order -->
-      <div class="row">
-        <div id="school-select" class="col-6">
-          <span class="interaction-text">
-          <label for="school-choice">Filter schools: &nbsp;</label>
-          <select id="school-choice">
-            <option value="all" selected>All schools</option>
-            <option value="ivy">Ivy League Only</option>
-            <option value="nonivy">Non Ivy League</option>
-            <option value="1">Northeast Region</option>
-            <option value="2">West Coast Region</option>
-            <option value="3">Midwest Region</option>
-            <option value="4">Mid-Atlantic Region</option>
-          </select>
-        </span> &nbsp;&nbsp;
-          <label for="sortOrder">Sort by:&nbsp;</label>
-          <input name="sortOrder" type="radio" checked value="name">&nbsp;School name&nbsp;
-          <input name="sortOrder" type="radio" value="prob">&nbsp;Best chance &nbsp;&nbsp;
-          <br>
-        </div>
+    </div>
+
+    <!-- School choice and sort order -->
+    <div id="school-select" class="row slider-row">
+      <div class="col-3 text-right">
+        <label for="school-choice">Filter schools: &nbsp;</label>
+        <select id="school-choice" class="dropdown">
+          <option value="all" selected>All schools</option>
+          <option value="ivy">Ivy League Only</option>
+          <option value="nonivy">Non Ivy League</option>
+          <option value="1">Northeast Region</option>
+          <option value="2">West Coast Region</option>
+          <option value="3">Midwest Region</option>
+          <option value="4">Mid-Atlantic Region</option>
+        </select>
+      </div>
+      <div class="col-3">
+        <label for="sortOrder">Sort by:&nbsp;</label>
+        <input name="sortOrder" type="radio" checked value="name">&nbsp;School name&nbsp;
+        <input name="sortOrder" type="radio" value="prob">&nbsp;Best chance &nbsp;&nbsp;
         <br>
-        </form>
       </div>
+    </div>
+    <div class="row slider-row">
+      <div class="col-3">
+        <input type="button" value="Save Scenario" id="save" class="col-right">
+      </div>
+      <div class="col-3">
+        <input type="button" value="Clear All Scenarios" id="clear">
+      </div>
+    </div>
+    </form>
 
-      <!-- Visualizations -->
-      <div class="row">
-        <div class="col-md-6">
-          <div id="chart-area"></div>
-        </div>
+    <!-- Visualizations -->
+    <div class="row">
+      <div class="col-md-6">
+        <div id="chart-area"></div>
       </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div id="three-area"></div>
-        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div id="three-area"></div>
       </div>
-
     </div>
   </div>
   <footer id="footer">
     <a href="http://www.cs171.org/">CS171</a> Team Braavos
   </footer>
 
-  <!-- TODO: fix load order to console errors -->
   <script src="js/jquery.min.js"></script>
   <script src="js/queue.v1.min.js"></script>
   <script src="js/d3.min.js"></script>
@@ -216,6 +231,7 @@
   <script src="js/predictViz.js"></script>
   <script src="js/interactive.js"></script>
   <!-- Three.js dependencies -->
+  <script src="js/SkyShader.js"></script>
   <script src="js/TrackballControls.js"></script>
   <script src="js/AnimationClipCreator.js"></script>
   <script src="js/Detector.js"></script>
