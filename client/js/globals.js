@@ -192,6 +192,6 @@ function createVis() {
   } else {
     predictRandom();
     p171.lineChart = new InteractiveVis('chart-area');
-    p171.innovation3d = new Innovation3d('three-area');
+    //p171.innovation3d = new Innovation3d('three-area');
   }
 }
