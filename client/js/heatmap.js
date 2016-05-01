@@ -47,7 +47,7 @@ Heatmap.prototype.createDimensions = function() {
   var vis = this;
 
   vis.margin = {top:20,right:150, bottom:200,left:50};
-  vis.width = (.9*p171.DD.wrapperWidth) - vis.margin.left - vis.margin.right,
+  vis.width = (p171.DD.wrapperWidth*1.1) - vis.margin.left - vis.margin.right,
   vis.height = 800 - vis.margin.top - vis.margin.bottom;
 };
 
@@ -72,7 +72,7 @@ Heatmap.prototype.createLegend = function() {
 
   vis.legendElement.append("text")
     .attr({
-      y: vis.height + 125
+      y: vis.height + 150
     })
     .text("Relative effect on college admissions")
 
@@ -84,7 +84,7 @@ Heatmap.prototype.createLegend = function() {
   vis.legend.append("rect")
     .attr({
       x: function(d, i) { return width* i },
-      y: vis.height + 125,
+      y: vis.height + 150,
     })
     .style({
       width: width+"px",
@@ -95,7 +95,7 @@ Heatmap.prototype.createLegend = function() {
   vis.legend.append("text")
     .attr({
       x: function(d, i) { return width * i },
-      y: vis.height + 170,
+      y: vis.height + 195,
     })
     .text(function(d, i) {
       var max = vis.colorScale.domain()[1]; 
@@ -152,7 +152,7 @@ Heatmap.prototype.updateAxes = function(xDomain, yDomain) {
     .selectAll("text")
       .attr({
         transform: function(school) {
-          return "rotate(90) translate(50,0)";
+          return "rotate(90) translate(60,0)";
         }
       }); 
 

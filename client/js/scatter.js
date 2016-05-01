@@ -14,7 +14,7 @@ Scatter.prototype.initVis = function() {
   var vis = this;
 
   vis.margin = {top: 10, right: 300, bottom: 60, left: 60};
-  vis.width = (.9*p171.DD.wrapperWidth) - vis.margin.left - vis.margin.right,
+  vis.width = (p171.DD.wrapperWidth * 1.1) - vis.margin.left - vis.margin.right,
   vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
@@ -24,7 +24,7 @@ Scatter.prototype.initVis = function() {
     .append("g")
       .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
-  vis.createFilters(colleges=true, applicants=true, offset=40);
+  vis.createFilters(colleges=true, applicants=true, offset=20);
 
   vis.x = d3.scale.linear()
     .range([0, vis.width]).nice();
@@ -332,8 +332,9 @@ Scatter.prototype.createSelectors = function() {
 
 var toolTipDisplay = function(applicant, categoryX, categoryY) {
 
-
   var html = ""
+
+  if (applicant.isUser) html += "<h3>You</hs></br></br>"
   html += "<b>"+ p171.data.labels[categoryX]+ ": <b>"
   html += "<span>"+applicant.app[categoryX]+"</span></br>"
   html += "<b>"+ p171.data.labels[categoryY]+ ": <b>"

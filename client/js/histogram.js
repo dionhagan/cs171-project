@@ -12,8 +12,8 @@ var Histogram = function(_parentElement, _category) {
 Histogram.prototype.initVis = function () {
   var vis = this;
 
-  vis.margin = { top: 40, right: 250, bottom: 60, left:20};
-  vis.width = (.9*p171.DD.wrapperWidth) - vis.margin.left - vis.margin.right,
+  vis.margin = { top: 40, right: 270, bottom: 60, left:20};
+  vis.width = p171.DD.wrapperWidth- vis.margin.left - vis.margin.right,
   vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
