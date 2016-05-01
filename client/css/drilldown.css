@@ -11,6 +11,10 @@
   vector-effect: non-scaling-stroke;
 }
 
+.axis text {
+  fill: black
+}
+
 .d3-tip {
   line-height: 1;
   font-weight: bold;
@@ -42,6 +46,11 @@
   background-color: lightgreen;
 }
 
+div.scatter-selectors {
+  margin-left: 100px;
+  background-color: lightsteelblue;
+  width: 500px;
+}
 .control-label {
   font-size: 12px;
 }
@@ -117,9 +126,9 @@ h2 {
   opacity: 0;
 }
 
-svg.histogram g rect {
-  fill: white;
-  stroke: lightgreen;
+svg.histogram g rect.bar {
+  fill: lightgreen;
+  stroke: white;
   stroke-width: 2px;
 }
 
@@ -159,6 +168,10 @@ svg.histogram g rect {
 
 .filters-main {
   background-color: lightsteelblue;
+}
+
+#heat-map-legend {
+  
 }
 
 

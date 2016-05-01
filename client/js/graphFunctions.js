@@ -6,12 +6,12 @@ function createElements() {
     .attr({ class: "subplot"});
 
   // Create filter tabs
-  vis.filtersElement = this.parentElement.append("div")
+  /*vis.filtersElement = this.parentElement.append("div")
     .attr({
       class:"filters"
     })
 
-  closeFilterElement(vis)
+  closeFilterElement(vis) */
 }
 
 function closeFilterElement(vis) {
@@ -35,10 +35,6 @@ function closeFilterElement(vis) {
 
       tab.append("br")
   }
-
-
-
-  console.log("closing filter")
 }
 
 function applyFilter() {
@@ -67,6 +63,178 @@ function applyFilter() {
           }
         }
       } 
+    }
+
+    return collegeFilter && factorFilter;
+  });
+}
+
+function createFilters(colleges=false, applicants=false, offset=40) {
+  var vis = this
+
+  var fontSize = 12
+
+  if (colleges) {
+    vis.svg.append('text')
+      .attr({
+        x: vis.margin.left + vis.width - offset,
+        y: vis.margin.top - 5
+      })
+      .style({"font-size":18,"font-weight":"bold"})
+      .text("Colleges")
+
+    // Add filter elements for each college 
+    vis.collegeFilters = vis.svg.selectAll(".college-filters")
+      .data(Object.keys(p171.data.colleges))
+      .enter().append('g')
+        .attr({
+          class: "college-filters"
+        })
+
+    vis.collegeFilters
+      .append("rect")
+        .attr({
+          x: vis.margin.left + vis.width - offset,
+          y: function(d,i) { return vis.margin.top+(i*15)},
+          fill: "steelblue",
+          height: 10,
+          width: 10,
+          opacity: function(college) {
+            return p171.DD.filters[college] ? 1 : .3
+          }
+        })
+        .on("click", function(college) {  
+          p171.DD.filters[college] = p171.DD.filters[college] ? false : true
+          updateAllFilters()
+        })
+
+    vis.collegeFilters
+        .append("text")
+          .attr({
+            x: vis.margin.left + vis.width - (offset - 12),
+            y: function(d,i) { return vis.margin.top+(i*15)+11}
+          })
+          .style('font-size','12')
+          .text(function(college) {return college })
+  } 
+
+  if (applicants) {
+    // Get factors that need to be filtered
+    var factorsToFilter = Object.keys(p171.data.nomFactors);
+
+    vis.svg.append("text")
+      .attr({
+        x: vis.margin.left + vis.width + 75 + offset,
+        y: vis.margin.top - 5
+      })
+      .style({"font-size":18,"font-weight":"bold"})
+      .text("Applicants")
+
+    // Add filter elements for each applicant type
+    vis.appFilters = vis.svg.selectAll(".app-filters")
+      .data(factorsToFilter)
+      .enter().append('g')
+        .attr({
+          class: "app-filters"
+        })
+
+    vis.appFilters.append("text")
+        .attr({
+          x: vis.margin.left + vis.width + 75 + offset,
+          y: function(d,i) { return vis.margin.top+(i*50)+13}
+        })
+        .style({
+          "text-decoration": "underline",
+          "font-size": fontSize
+        })
+        .text(function(d,i) {
+          return p171.data.labels[d]
+        })
+
+    for (var i=0; i<2; i++) {
+      vis.appFilters.append("rect")
+        .attr({
+          x: vis.margin.left + vis.width + 75 + offset,
+          y: function(d,j) { return 20+vis.margin.top+(j*50)+(i*18)},
+          fill: "steelblue",
+          height: 10,
+          width: 10,
+          opacity: function(factor) {
+            var subFactor = Object.keys(p171.DD.filters[factor])[i];
+            return p171.DD.filters[factor][subFactor] ? 1 : .3
+          }
+        })
+        .on("click", function(factor) {
+
+
+          var subFactor 
+
+          if (this.parentNode.childNodes[1] == this) {
+            subFactor = Object.keys(p171.DD.filters[factor])[0]
+          } else {
+            subFactor = Object.keys(p171.DD.filters[factor])[1]
+          }
+          
+          p171.DD.filters[factor][subFactor] = p171.DD.filters[factor][subFactor] ? false : true
+          updateAllFilters()
+        })
+
+      vis.appFilters.append("text")
+        .attr({
+          x: vis.margin.left + vis.width + 87 + offset,
+          y: function(d,j) { return 20+vis.margin.top+(j*50)+(i*16)+11}
+        })
+        .style('font-size',fontSize)
+        .text(function(d) {
+          return p171.data.nomFactors[d][i]
+        })
+    }
+  }
+}
+
+function filterApplicants() {
+  var vis = this; 
+
+  if (p171.DD.filters["All"]) {
+    for (var college in p171.data.colleges) p171.DD.filters[college] = true;
+    vis.collegeFilters.selectAll('rect').attr("opacity",1)
+  } 
+
+  vis.currentColleges = [];
+  for (var college in p171.DD.filters) {
+    if (p171.DD.filters[college]) vis.currentColleges.push(college);
+  }
+
+  vis.displayData = vis.data.filter(function(applicant){
+
+    var d = applicant.app
+
+    var collegeFilter = false,
+        factorFilter = true;
+
+    // Filter out application types
+    for (factor in p171.DD.filters) {
+      if (typeof p171.DD.filters[factor] == "object") {
+
+        for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
+
+          var subFactor = p171.data.nomFactors[factor][subFactorIndex];
+          var isChecked = p171.DD.filters[factor][subFactor];
+
+          if (!isChecked) {
+            if (subFactorIndex==0 && d[factor]==1) {
+              factorFilter = false
+            } else if (subFactorIndex==1 && d[factor]==-1) {
+              factorFilter = false;
+            }
+          }
+        }
+      } 
+    }
+
+    // Filter out colleges 
+    for (var college in applicant.colleges) {
+      if (p171.DD.filters[college]) collegeFilter = true;
     }
 
     return collegeFilter && factorFilter;
@@ -267,4 +435,21 @@ function showFilters(filterType) {
       }
     }
   }
+}
+
+function updateAllFilters() {
+  p171.DD.updateSubPlots()
+  var collegefilters = d3.selectAll('g.college-filters rect')
+  collegefilters.attr('opacity', function(d) {
+    return p171.DD.filters[d] ? 1 : .3;
+  })
+
+  var appfilters = d3.selectAll('g.app-filters rect')
+
+  appfilters.attr('opacity', function(d, i) {
+    var subfactor = i % 2
+    return p171.DD.filters[d][Object.keys(p171.DD.filters[d])[subfactor]] ? 1 : .3
+  })
+
+
 }

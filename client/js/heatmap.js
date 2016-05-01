@@ -7,12 +7,24 @@ var Heatmap = function(_parentElement) {
 }
 
 // Initialize heatmap ==================================
-Heatmap.prototype.initVis = function(first_argument) {
+Heatmap.prototype.initVis = function() {
   var vis = this; 
   
+  vis.isMain = true;
   vis.createElements();
   vis.createDimensions();
   vis.addMainSVG(); 
+  vis.createFilters(colleges=true, applicants=false, offset=40);
+  vis.tip = d3.tip()
+    .attr("class", "d3-tip")
+    .offset([0,-10])
+    .html(function(d) {
+      var html = ""
+      html += "<b>"+p171.data.labels[d.factor]+" at "+d.collegeID+"</b></br>"
+      html += "<span>  "+ d.effect.toFixed(2)+"</span>"
+      return html
+    });
+  vis.svg.call(vis.tip)
   vis.addAxes(d3.scale.ordinal, d3.scale.ordinal);
   vis.colors = colorbrewer.RdBu[11]
   vis.colorScale = d3.scale.quantize()
@@ -25,7 +37,6 @@ Heatmap.prototype.initVis = function(first_argument) {
 
   vis.xScale.rangeRoundBands([0, vis.width]);
   vis.yScale.rangeRoundBands([vis.height, 0]);
-  vis.createCells();
   vis.createLegend()
   vis.updateVis();
 };
@@ -35,8 +46,8 @@ Heatmap.prototype.createElements = createElements;
 Heatmap.prototype.createDimensions = function() {
   var vis = this;
 
-  vis.margin = {top:20,right:0,bottom:100,left:180};
-  vis.width = p171.DD.wrapperWidth - 200 - vis.margin.left - vis.margin.right,
+  vis.margin = {top:20,right:150, bottom:200,left:50};
+  vis.width = (p171.DD.wrapperWidth*1.1) - vis.margin.left - vis.margin.right,
   vis.height = 800 - vis.margin.top - vis.margin.bottom;
 };
 
@@ -44,14 +55,7 @@ Heatmap.prototype.addMainSVG = addMainSVG;
 
 Heatmap.prototype.addAxes = addAxes;
 
-Heatmap.prototype.createCells = function() {
-  var vis = this;
-
-  vis.cells = vis.svg.selectAll(".heat-cell")
-    .on("click", function(d) {
-      console.log(d);
-    })
-}
+Heatmap.prototype.createFilters = createFilters
 
 Heatmap.prototype.createLegend = function() {
   var vis = this;
@@ -59,7 +63,6 @@ Heatmap.prototype.createLegend = function() {
   var width = 50;
 
   var legendData = vis.colorScale.range()
-  console.log(legendData)
 
   vis.legendElement = vis.svg.append("g")
     .attr({
@@ -69,9 +72,9 @@ Heatmap.prototype.createLegend = function() {
 
   vis.legendElement.append("text")
     .attr({
-      y: vis.height + 35
+      y: vis.height + 150
     })
-    .text("Legend")
+    .text("Relative effect on college admissions")
 
   vis.legend = vis.legendElement.selectAll(".legend")
     .data(legendData);
@@ -81,7 +84,7 @@ Heatmap.prototype.createLegend = function() {
   vis.legend.append("rect")
     .attr({
       x: function(d, i) { return width* i },
-      y: vis.height + 40,
+      y: vis.height + 150,
     })
     .style({
       width: width+"px",
@@ -92,7 +95,7 @@ Heatmap.prototype.createLegend = function() {
   vis.legend.append("text")
     .attr({
       x: function(d, i) { return width * i },
-      y: vis.height + 85,
+      y: vis.height + 195,
     })
     .text(function(d, i) {
       var max = vis.colorScale.domain()[1]; 
@@ -113,9 +116,70 @@ Heatmap.prototype.updateVis = function() {
 
   vis.wrangleData();
 
-  var yDomain = vis.factorNames.filter(function(factor) {
-    return p171.DD.filters[factor];
-  })  
+  if (vis.isMain) {
+    vis.updateCells();
+  } else {
+    vis.updateBars();
+  }
+  
+
+}
+
+Heatmap.prototype.updateAxes = function(xDomain, yDomain) {
+    var vis = this;
+
+  vis.xScale
+    .domain(xDomain)
+
+  vis.yScale
+    .domain(yDomain)
+
+  vis.xAxis = d3.svg.axis()
+    .scale(vis.xScale)
+    .tickSize(0)
+    .orient("bottom");
+
+  vis.yAxis = d3.svg.axis()
+    .scale(vis.yScale)
+    .tickSize(0)
+    .orient("left");
+
+  vis.xAxisGroup
+    .transition().duration(300)
+    .call(vis.xAxis);
+
+  vis.xAxisGroup
+    .selectAll("text")
+      .attr({
+        transform: function(school) {
+          return "rotate(90) translate(60,0)";
+        }
+      }); 
+
+  vis.yAxisGroup
+    .transition().duration(300)
+    .call(vis.yAxis);
+
+  vis.yAxisGroup
+    .selectAll("text")
+      .attr({
+        transform: function(d) {
+          return "rotate(90) translate(50,20)";
+        }
+      })
+      .text(function(d) { 
+        if (d == "Underrepresented Minority") return  "Underrep. Min."
+        else if (d == "International Student") return "Intnl Student"
+        else return d
+      })
+}
+
+Heatmap.prototype.updateCells = function(d) {
+  var vis = this;
+
+  var yDomain = vis.factorNames.filter(function(d) {
+    return d in p171.DD.filters
+  })
   .map(function(factorName) {
     return p171.data.labels[factorName];
   })
@@ -123,17 +187,11 @@ Heatmap.prototype.updateVis = function() {
   var xDomain = vis.collegeNames.filter(function(college) {
     return p171.DD.filters[college];
   });
-
+  vis.yScale = d3.scale.ordinal()
+  vis.yScale.rangeRoundBands([vis.height, 0]);
   vis.updateAxes(xDomain, yDomain);
 
-  vis.updateCells();
-
-}
-
-Heatmap.prototype.updateAxes = updateAxes;
-
-Heatmap.prototype.updateCells = function(d) {
-  var vis = this;
+  
 
   vis.cells = vis.svg.selectAll(".heat-cell")
     .data(vis.displayData)
@@ -149,12 +207,160 @@ Heatmap.prototype.updateCells = function(d) {
       width: vis.xScale.rangeBand() - 5,
       height: vis.yScale.rangeBand() - 5,
       fill: function(d) { 
-        if(d.factor == "earlyAppl") console.log(d.effect)
         return vis.colorScale(d.effect)}
+    })
+    .on("click", function(d) {
+      vis.selectedFactor = d.factor
+      vis.createBarGraph()
+      vis.isMain = false;
+    })
+    .on("mouseover", function(d) {
+      vis.tip.show(d)
+      d3.select(this)
+        .attr({
+          stroke: "black",
+          "stroke-width": 1
+        })
+    })
+    .on("mouseout", function(d) {
+      d3.select(this)
+        .attr({
+          stroke: "white",
+          "stroke-width": 0
+        })
+      vis.tip.hide(d)
     })
 
   vis.cells.exit().remove();
 }
+
+Heatmap.prototype.updateBars = function() {
+  var vis = this;
+
+
+
+  vis.displayData = vis.data.filter(function(d) {
+    return d.factor == vis.selectedFactor && p171.DD.filters[d.collegeID] ;
+  })
+  .sort(function(a,b) {
+    return a.effect < b.effect
+  })
+
+  var yDomain = [
+    d3.min(vis.displayData, function(d) { return d.effect })*.9,
+    d3.max(vis.displayData, function(d) { return d.effect })*1.1
+  ]
+
+  var xDomain = vis.displayData.map(function(d) {
+    return d.collegeID
+  })
+
+  vis.yScale = d3.scale.linear()
+    .range([vis.height, 0])
+
+  vis.updateAxes(xDomain, yDomain);
+
+  vis.yAxisGroup.selectAll('text')
+    .attr({
+      transform: "translate(0,0)"
+    })
+
+  vis.bars = vis.svg.selectAll(".heat-cell")
+    .data(vis.displayData)
+
+  vis.yScale = d3.scale.linear()
+    .range([0,vis.height])
+    .domain([
+      d3.min(vis.displayData, function(d) { return d.effect }) * .9,
+      d3.max(vis.displayData, function(d) { return d.effect }) * 1.1
+    ])
+
+  vis.yAxis = d3.svg.axis()
+    .scale(vis.yScale)
+    .tickSize(0)
+    .orient("left");
+
+  vis.yAxisGroup
+    .call(vis.yAxis)
+
+  vis.bars.enter().append("rect")
+    .attr({
+    class: "heat-cell",
+    fill: "white"
+    })
+
+  vis.bars
+    .transition().duration(750)
+    .attr({ 
+      width: vis.xScale.rangeBand() - 5,
+      height: function(d) { return vis.yScale(d.effect) },
+      x: function(d, i) { return 5+i*vis.xScale.rangeBand() },
+      y: function(d) { return vis.height - vis.yScale(d.effect) },
+      fill: function(d) { return vis.colorScale(d.effect)},
+    })
+
+  vis.bars
+  .exit()
+  .remove()
+
+  vis.bars
+    .on("mouseover", function(d) {
+      vis.tip.show(d)
+      d3.select(this)
+        .attr({
+          stroke: "black",
+          "stroke-width": 1
+        })
+    })
+    .on("mouseout", function(d) {
+      d3.select(this)
+        .attr({
+          stroke: "white",
+          "stroke-width": 0
+        })
+      vis.tip.hide(d)
+    })
+
+
+
+
+}
+
+Heatmap.prototype.createBarGraph = function() {
+  var vis = this;
+
+  vis.updateBars();
+
+  var returnTab = vis.svg.append('g')
+    .attr("class","back_to_heatmap")
+
+  returnTab.append("rect")
+    .attr({
+      x: vis.width + vis.margin.left + 25,
+      y: vis.height - 20,
+      width: 80,
+      height: 20,
+      fill: "steelblue"
+    })
+    .on("click", function(d) { 
+      vis.isMain = true
+      vis.updateVis()
+
+      d3.select(this.parentNode).remove()
+    })
+
+  returnTab.append("text")
+    .attr({
+      x: vis.width + vis.margin.left + 35,
+      y: vis.height - 5
+    })
+    .style("color","white")
+    .text("Back")
+
+
+
+}
+
 
 Heatmap.prototype.initData = function(data) {
   var vis = this;
@@ -174,14 +380,12 @@ Heatmap.prototype.initData = function(data) {
       var sample = {
         collegeID: colleges[i],
         factor: factor,
-        effect: factorEffects[i]
+        effect: (factorEffects[i] + 1) / 2
       }
-      sample[factor] = factorEffects[i]
+      sample[factor] = (factorEffects[i] + 1) / 2
       vis.data.push(sample);
     }
   }
-
-  console.log(vis.data)
 }
 
 
@@ -189,6 +393,8 @@ Heatmap.prototype.initData = function(data) {
 
 // Wrangle data
 Heatmap.prototype.wrangleData = applyFilter;
+
+// 
 
   function initCalibration(){
     d3.select('[role="calibration"] [role="example"]').select('svg')
