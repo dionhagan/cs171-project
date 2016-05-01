@@ -177,7 +177,7 @@ InteractiveVis.prototype.updateSortOrder = function(e) {
 InteractiveVis.prototype.updateAllSchools = function() {
   var vis = this;
   var choice = document.getElementById('school-choice').value;
-  var ivy, allSchools = false;
+  var ivy, region = 0, allSchools = false;
 
   switch (choice) {
     case 'ivy':
@@ -185,6 +185,9 @@ InteractiveVis.prototype.updateAllSchools = function() {
       break;
     case 'nonivy':
       ivy = false;
+      break;
+    case "1": case "2": case "3": case "4":
+      region = parseInt(choice);
       break;
     default:
       allSchools = true;
@@ -195,6 +198,8 @@ InteractiveVis.prototype.updateAllSchools = function() {
   for (var c in p171.data.colleges) {
     if (c == 'All') continue;
     if (allSchools) {
+      vis.allSchools.push(p171.data.colleges[c].name);
+    } else if (region != 0 && p171.data.colleges[c].region == region) {
       vis.allSchools.push(p171.data.colleges[c].name);
     } else if (p171.data.colleges[c].ivy == ivy) {
       vis.allSchools.push(p171.data.colleges[c].name);
