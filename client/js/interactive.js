@@ -8,6 +8,7 @@ InteractiveVis.prototype.initVis = function(callback) {
   var vis = this;
 
   vis.counter = 1;
+  vis.scenarios = [];
 
   // Static stuff
   vis.margin = {
@@ -155,6 +156,7 @@ InteractiveVis.prototype.initVis = function(callback) {
 
   d3.select("#save")
     .on("click", function() {
+      vis.scenarios[counter - 1] = vis.displayData;
       vis.saveScenario();
     });
 
@@ -300,7 +302,7 @@ function showValue(elementID, newValue) {
 }
 
 InteractiveVis.prototype.saveScenario = function() {
-  var vis = this;
+  var vis = this; 
 
   var savedColor = ["blue", "green", "orange", "purple"];
 
