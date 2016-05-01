@@ -288,13 +288,47 @@ InteractiveVis.prototype.updateVis = function() {
   vis.circle = vis.svg.selectAll("circle")
     .data(vis.newData);
 
+  vis.choice = document.getElementById('school-choice').value;
+  console.log(vis.choice);
+
   vis.circle.enter().append("circle")
     .attr("class", "dot")
     .attr("fill", "crimson")
-    .attr("transform", "translate(20,5)")
+    //.attr("transform", vis.translation)
     .attr("r", 1)
     .on('mouseover', vis.tip.show)
     .on('mouseout', vis.tip.hide);
+
+  if(vis.choice == "all"){
+    vis.circle
+        .attr("transform", "translate(20,5)");
+  }
+  else if(vis.choice == "ivy"){
+    vis.circle
+        .attr("transform", "translate(55,5)");
+  }
+  else if(vis.choice == "nonivy"){
+    vis.circle
+        .attr("transform", "translate(28,5)");
+  }
+  else if(vis.choice == "1"){
+    vis.circle
+        .attr("transform", "translate(45,5)");
+  }
+  else if(vis.choice == "2"){
+    vis.circle
+        .attr("transform", "translate(90,5)");
+  }
+  else if(vis.choice == "3"){
+    vis.circle
+        .attr("transform", "translate(90,5)");
+  }
+  else if(vis.choice == "4"){
+    vis.circle
+        .attr("transform", "translate(115,5)");
+  }
+
+
 
   vis.circle
     .transition().duration(800)
