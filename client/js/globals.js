@@ -66,6 +66,8 @@ function storeData(err, collegeList, appData, appDataNorm, factorImportance, fac
   // Collect data for each college
   for (var collegeIndex=0; collegeIndex<collegeList.length; collegeIndex++) {
     var collegeInfo = collegeList[collegeIndex];
+    collegeInfo.ivy = (collegeList[collegeIndex].ivy == "1");
+    collegeInfo.region = parseInt(collegeList[collegeIndex].region) || 0;
     p171.data.colleges[collegeInfo.name] = collegeInfo;
   }
 
@@ -176,6 +178,6 @@ function createVis() {
   } else {
     predictRandom();
     p171.lineChart = new InteractiveVis('chart-area');
-    p171.innovation3d = new Innovation3d('three-area');
+    //p171.innovation3d = new Innovation3d('three-area');
   }
 }
