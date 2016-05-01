@@ -256,7 +256,7 @@ Heatmap.prototype.updateBars = function() {
   })
 
   vis.yScale = d3.scale.linear()
-    .range([0, vis.height])
+    .range([vis.height, 0])
 
   vis.updateAxes(xDomain, yDomain);
 
@@ -269,7 +269,7 @@ Heatmap.prototype.updateBars = function() {
     .data(vis.displayData)
 
   vis.yScale = d3.scale.linear()
-    .range([0,vis.width])
+    .range([0,vis.height])
     .domain([
       d3.min(vis.displayData, function(d) { return d.effect }) * .9,
       d3.max(vis.displayData, function(d) { return d.effect }) * 1.1

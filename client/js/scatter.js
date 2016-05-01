@@ -336,9 +336,9 @@ var toolTipDisplay = function(applicant, categoryX, categoryY) {
 
   if (applicant.isUser) html += "<h3>You</hs></br></br>"
   html += "<b>"+ p171.data.labels[categoryX]+ ": <b>"
-  html += "<span>"+applicant.app[categoryX]+"</span></br>"
+  html += "<span>"+applicant.app[categoryX].toFixed(2)+"</span></br>"
   html += "<b>"+ p171.data.labels[categoryY]+ ": <b>"
-  html += "<span>"+applicant.app[categoryY]+"</span></br></br>"
+  html += "<span>"+applicant.app[categoryY].toFixed(2)+"</span></br></br>"
   for (var college in applicant.colleges) {
     var acceptStatus = applicant.colleges[college].accepted == 1 ? true: false;
     html += "<b>"+college+": </b>" 
