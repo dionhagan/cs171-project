@@ -11,6 +11,10 @@
   vector-effect: non-scaling-stroke;
 }
 
+.axis text {
+  fill: black
+}
+
 .d3-tip {
   line-height: 1;
   font-weight: bold;
@@ -42,6 +46,11 @@
   background-color: lightgreen;
 }
 
+div.scatter-selectors {
+  margin-left: 100px;
+  background-color: lightsteelblue;
+  width: 500px;
+}
 .control-label {
   font-size: 12px;
 }
@@ -66,6 +75,9 @@ text.effect-values {
 }
 
 /* Drill Down Style*/
+h2 {
+  text-align: center;
+}
 .bar-svg {
   height: 35px;
 }
@@ -74,14 +86,12 @@ text.effect-values {
   position: relative;
   float: left;
   width: 200px;
-  margin-left: 100px;
   border-right: solid lightsteelblue 2px;
 }
 
 .chart {
   position: relative;
   float: left;
-  width: 600px;
 }
 
 .select-chart-type {
@@ -94,5 +104,89 @@ text.effect-values {
   text-align: center;
 }
 
+.subplot {
+  position: relative;
+  float: left;
+}
+
+.college-label {
+  opacity: 0;
+}
+
+.selected-college {
+  opacity: .3;
+}
+
+.tick {
+  position: relative;
+  z-index: 100;
+}
+
+.remove-tab {
+  opacity: 0;
+}
+
+svg.histogram g rect.bar {
+  fill: lightgreen;
+  stroke: white;
+  stroke-width: 2px;
+}
+
+.filters {
+  position: relative;
+  float: right;
+}
+
+.open-filters {
+  height:100px;
+  width: 15px;
+  background-color: lightsteelblue;
+}
+
+.college-filters {
+  height: 20px;
+  width: 70px;
+  background-color: grey;
+  float:left;
+}
+
+.app-filters {
+  height: 20px;
+  width: 70px;
+  background-color: lightgrey;
+  float: left;
+}
+
+.close-filters {
+  background-color: red;
+  float:right;
+  height: 20px;
+  width: 30px;
+  text-align: center;
+  opacity: 0.4;
+}
+
+.filters-main {
+  background-color: lightsteelblue;
+}
+
+#heat-map-legend {
+  
+}
 
 
+/*
+Commented out by DW to make fonts consistent across pages
+body{font-family:arial, 'Hiragino Sans GB',Tahoma, Arial, Helvetica, STHeiti;font-size: 14px;} */
+.days-hours-heatmap{padding: 20px 0 20px 0;width: 500px;margin: 0 auto;}
+.days-hours-heatmap .calibration{margin-bottom: 15px;width:400px;}
+.days-hours-heatmap .calibration .group{display: inline-block;}
+.days-hours-heatmap .calibration .description{width:108px;}
+.days-hours-heatmap .calibration .description>label:last-child{float:right;}
+.days-hours-heatmap .calibration>.display-control{float:right;}
+.days-hours-heatmap .calibration>.display-control label{vertical-align: top;}
+.days-hours-heatmap .calibration>.display-control input[type='radio']{cursor: pointer;}
+
+.days-hours-heatmap .heatmap .axis path{display: none;}
+.days-hours-heatmap .heatmap .axis line{fill: none;stroke: #000;shape-rendering: crispEdges;}
+.days-hours-heatmap .heatmap .axis text{font-size: 12px}

@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 
   <!-- Favicon -->
   <!-- Generated from http://www.favicon-generator.org/ -->
@@ -52,16 +53,11 @@
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="howitworks.html">How It Works</a></li>
+          <li><a href="ourstory.html">Our Story</a></li>
         </ul>
       </nav>
     </div>
-    <!--
-    <div class="row">
-      <div class="col-6 warningNote">
-        Our predictor is really slow (like 20 sec). We know. Please be patient.
-      </div>
-    </div>
-    -->
+
     <!-- Main area -->
     <div class="row">
       <div class="col-6">
@@ -71,194 +67,177 @@
         </p>
       </div>
     </div>
-    <!-- User input panel -->
+
+    <!-- Dynamic Slider input-->
     <div class="row">
-      <h2 class="schools-text">Which schools would you like to consider? </h2>
-      <div id="school-select">
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="Brown" checked class="custom"> Brown
-          <br>
-          <input type="checkbox" name="colleges" value="CalTech" checked> Cal Tech
-          <br>
-          <input type="checkbox" name="colleges" value="CarnegieMellon" checked> Carnegie Mellon
-          <br>
-          <input type="checkbox" name="colleges" value="Columbia" checked> Colombia
-          <br>
-          <input type="checkbox" name="colleges" value="Cornell" checked> Cornell
-          <br>
+      <div class="col-4 demographics-text">
+        <h2>Your Student Profile: </h2>
+        <form method="post" id="user_info">
+          <div class="row slider-row">
+            <div class="col-2">
+              <label for="gpa"> GPA (unweighted):</label>
+            </div>
+            <div class="col-4">
+              <input type="range" id="gpa" min="0.0" max="4.0" step="0.01" class="interactive-slider" oninput="showValue('current-gpa', this.value)">
+              <span id="current-gpa">2.0</span>
+            </div>
+          </div>
+          <div class="row slider-row">
+            <div class="col-2">
+              <label for="sat">SAT Composite Score:</label>
+            </div>
+            <div class="col-4">
+              <input type="range" id="sat" min="0" max="2400" step="10" class="interactive-slider" oninput="showValue('current-sat', this.value)">
+              <span id="current-sat">1200</span>
+            </div>
+          </div>
+          <div class="row slider-row">
+            <div class="col-2">
+              <label for="act">ACT Composite Score:</label>
+            </div>
+            <div class="col-4">
+              <input type="range" id="act" min="0" max="36" class="interactive-slider" oninput="showValue('current-act', this.value)">
+              <span id="current-act">18</span>
+            </div>
+          </div>
+          <div class="row slider-row">
+            <div class="col-2">
+              <label for="num_ap">Number of AP Exams:</label>
+            </div>
+            <div class="col-4">
+              <input type="range" id="num_ap" min="0" max="10" class="interactive-slider" oninput="showValue('current-num-ap', this.value)">
+              <span id="current-num-ap">5</span>
+            </div>
+          </div>
+          <div class="row slider-row">
+            <div class="col-2">
+              <label for="ave_ap">Average AP Exam Score:</label>
+            </div>
+            <div class="col-4">
+              <input type="range" id="ave_ap" min="0" max="5" step="0.1" class="interactive-slider" oninput="showValue('current-ave-ap', this.value)">
+              <span id="current-ave-ap">2.5</span>
+            </div>
+          </div>
+          <div class="row slider-row">
+            <div class="col-2">
+              <label for="num_sat">Number of SAT Subject Tests:</label>
+            </div>
+            <div class="col-4">
+              <input type="range" id="num_sat" min="0" max="10" class="interactive-slider" oninput="showValue('current-num-sat', this.value)">
+              <span id="current-num-sat">5</span>
+            </div>
+          </div>
+      </div>
+      <div class="col-2 demographics-text">
+        <h2>About You:</h2>
+        <div class="row">
+          <div class="col-3">Gender:</div>
+          <div class="col-3">
+            <select id="gender" class="dropdown">
+              <option value="-1">Male</option>
+              <option value="1">Female</option>
+              <option value="0">Other</option>
+            </select>
+          </div>
         </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="Dartmouth" checked> Dartmouth
-          <br>
-          <input type="checkbox" name="colleges" value="Duke" checked> Duke
-          <br>
-          <input type="checkbox" name="colleges" value="Emory" checked> Emory
-          <br>
-          <input type="checkbox" name="colleges" value="Georgetown" checked> Georgetown
-          <br>
-          <input type="checkbox" name="colleges" value="Harvard" checked> Harvard
-          <br>
+        <div class="row">
+          <div class="col-3">Race:</div>
+          <div class="col-3">
+            <select id="race" class="dropdown">
+              <option value="1">African American/Black</option>
+              <option value="2">Hispanic/Latino</option>
+              <option value="0">Asian</option>
+              <option value="-1">Middle Eastern</option>
+              <option value="3">Pacific Islander</option>
+              <option value="4">Native American</option>
+              <option value="-2" selected>White</option>
+              <option value="5">Other</option>
+            </select>
+          </div>
         </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="JohnsHopkins" checked> Johns Hopkins
-          <br>
-          <input type="checkbox" name="colleges" value="MIT" checked> MIT
-          <br>
-          <input type="checkbox" name="colleges" value="Northwestern" checked> Northwestern
-          <br>
-          <input type="checkbox" name="colleges" value="NotreDame" checked> Notre Dame
-          <br>
-          <input type="checkbox" name="colleges" value="Princeton" checked> Princeton
-          <br>
-        </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="Rice" checked> Rice
-          <br>
-          <input type="checkbox" name="colleges" value="Stanford" checked> Stanford
-          <br>
-          <input type="checkbox" name="colleges" value="UCB" checked> UCB
-          <br>
-          <input type="checkbox" name="colleges" value="UChicago" checked> UChicago
-          <br>
-          <input type="checkbox" name="colleges" value="UCLA" checked> UCLA
-          <br>
-        </div>
-        <div class="col-md-2">
-          <input type="checkbox" name="colleges" value="UPenn" checked> UPenn
-          <br>
-          <input type="checkbox" name="colleges" value="USC" checked> USC
-          <br>
-          <input type="checkbox" name="colleges" value="Vanderbilt" checked> Vanderbilt
-          <br>
-          <input type="checkbox" name="colleges" value="WashU" checked> WashU
-          <br>
-          <input type="checkbox" name="colleges" value="Yale" checked> Yale
-          <br>
+        <div class="row">
+          <div class="col-3">Type of High School:</div>
+          <div class="col-3">
+            <select id="hs" class="dropdown">
+              <option value="0" selected>Public</option>
+              <option value="1">Private</option>
+              <option value="2">Parochial</option>
+              <option value="3">Homeschool</option>
+            </select>
+          </div>
         </div>
       </div>
-      <br>
+
     </div>
 
+    <!-- School choice and sort order -->
+    <div id="school-select" class="row slider-row">
+      <div class="col-3 text-right">
+        <label for="school-choice">Filter schools: &nbsp;</label>
+        <select id="school-choice" class="dropdown">
+          <option value="all" selected>All schools</option>
+          <option value="ivy">Ivy League Only</option>
+          <option value="nonivy">Non Ivy League</option>
+          <option value="1">Northeast Region</option>
+          <option value="2">West Coast Region</option>
+          <option value="3">Midwest Region</option>
+          <option value="4">Mid-Atlantic Region</option>
+        </select>
+      </div>
+      <div class="col-3">
+        <label for="sortOrder">Sort by:&nbsp;</label>
+        <input name="sortOrder" type="radio" checked value="name">&nbsp;School name&nbsp;
+        <input name="sortOrder" type="radio" value="prob">&nbsp;Best chance &nbsp;&nbsp;
+        <br>
+      </div>
+    </div>
+    <div class="row slider-row">
+      <div class="col-3">
+        <input type="button" value="Save Scenario" id="save" class="col-right">
+      </div>
+      <div class="col-3">
+        <input type="button" value="Clear All Scenarios" id="clear">
+      </div>
+    </div>
+    </form>
 
-    <!-- Visualization & Static input -->
+    <!-- Visualizations -->
     <div class="row">
       <div class="col-md-6">
         <div id="chart-area"></div>
       </div>
-      <div class="col-md-4">
-        <br>
-        <br>
-        <h2>Tell us about you:</h2> Gender:
-        <select id="gender" class="dropdown">
-          <option value="-1">Male</option>
-          <option value="1">Female</option>
-          <option value="0">Other</option>
-        </select>
-        <br>
-        <br> Race:
-        <select id="race" class="dropdown">
-          <option value="1">African American/Black</option>
-          <option value="2">Hispanic/Latino</option>
-          <option value="0">Asian</option>
-          <option value="-1">Middle Eastern</option>
-          <option value="3">Pacific Islander</option>
-          <option value="4">Native American</option>
-          <option value="-2" selected>White</option>
-          <option value="5">Other</option>
-        </select>
-        <br>
-        <br> Type of High School:
-        <select id="hs">
-          <option value="0" selected>Public</option>
-          <option value="1">Private</option>
-          <option value="2">Parochial</option>
-          <option value="3">Homeschool</option>
-        </select>
-        <br>
-        <br>
-      </div>
     </div>
-
-    <br>
-    <br>
-
-    <!-- Dynamic Slider input-->
     <div class="row">
-      <div class="col-6">
-        <div class="interaction-text">
-          <h2>Expected GPA and Test Scores: </h2>
-          <form method="post" id="user_info">
-            <label for="gpa"> GPA (unweighted):
-              <span id="gpa-value"></span>
-            </label>
-            <input type="range" id="gpa" min="0.0" max="4.0" step="0.01" class="interactive-slider" oninput="showValue('current-gpa', this.value)">
-            <span id="current-gpa">2.0</span>
-            <br>
-            <label for="sat">SAT Composite Score:
-              <span id="sat-value"></span>
-            </label>
-            <input type="range" id="sat" min="0" max="2400" step="10" class="interactive-slider" oninput="showValue('current-sat', this.value)">
-            <span id="current-sat">1200</span>
-            <br>
-            <label for="act">ACT Composite Score:
-              <span id="act-value"></span>
-            </label>
-            <input type="range" id="act" min="0" max="36" class="interactive-slider" oninput="showValue('current-act', this.value)">
-            <span id="current-act">18</span>
-            <br>
-            <label for="num_ap">Number of AP Exams Taken:
-              <span id="num-ap-value"></span>
-            </label>
-            <input type="range" id="num_ap" min="0" max="10" class="interactive-slider" oninput="showValue('current-num-ap', this.value)">
-            <span id="current-num-ap">5</span>
-            <br>
-            <label for="ave_ap">Average AP Exam Score:
-              <span id="ave-ap-value"></span>
-            </label>
-            <input type="range" id="ave_ap" min="0" max="5" step="0.1" class="interactive-slider" oninput="showValue('current-ave-ap', this.value)">
-            <span id="current-ave-ap">2.5</span>
-            <br>
-            <label for="num_sat">Number of SAT Subject Tests Taken:
-              <span id="num-sat-value"></span>
-            </label>
-            <input type="range" id="num_sat" min="0" max="10" class="interactive-slider" oninput="showValue('current-num-sat', this.value)">
-            <span id="current-num-sat">5</span>
-            <br>
-            <br>
-            <input type="submit" value="Save Scenario" class="button">
-            <br>
-            <br>
-          </form>
-        </div>
+      <div class="col-md-6">
+        <p>Touch or use your mouse to explore the 3D visualization. Pinch to zoom in/out:</p>
+        <div id="three-area"></div>
       </div>
     </div>
-  </div>
-
-  <!-- Prediction Visualization -->
-  <div class="row">
-    <div class="col-6">
-      <div id="prediction-viz"></div>
-      <div id="result"></div>
-    </div>
-  </div>
-
-  <!-- filler and footer -->
-  <div id="wrapper_footer"></div>
   </div>
   <footer id="footer">
     <a href="http://www.cs171.org/">CS171</a> Team Braavos
   </footer>
 
-  <!-- Use jQuery from CDN -->
   <script src="js/jquery.min.js"></script>
   <script src="js/queue.v1.min.js"></script>
   <script src="js/d3.min.js"></script>
   <script src="js/d3-tip.min.js"></script>
+  <script src="js/cookies.js"></script>
+  <script src="js/histogram.js"></script>
+  <script src="js/three.min.js"></script>
+  <script src="js/innovation3d.js"></script>
   <script src="js/globals.js"></script>
+  <script src="js/drillDownViz.js"></script>
   <script src="js/predict.js"></script>
   <script src="js/predictViz.js"></script>
-  <script src="js/drillDownViz.js"></script>
   <script src="js/interactive.js"></script>
+  <!-- Three.js dependencies -->
+  <script src="js/SkyShader.js"></script>
+  <script src="js/TrackballControls.js"></script>
+  <script src="js/AnimationClipCreator.js"></script>
+  <script src="js/Detector.js"></script>
+  <script src="js/utils/GeometryUtils.js"></script>
+  <script src='js/dat.gui.min.js'></script>
 </body>
 
 </html>

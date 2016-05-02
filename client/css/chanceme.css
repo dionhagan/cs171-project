@@ -1,6 +1,7 @@
 /* CS171, Team Braavos */
 /* Geometry Calculation in Sass */
-h3, h1, label, button, nav {
+h1,
+h3, nav {
   font-family: "Roboto", "League Spartan", "Avenir Black", "futura_md_btbold", Arial, sans-serif;
 }
 
@@ -9,14 +10,16 @@ html {
   box-sizing: border-box;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
 
 body {
   height: 100%;
   font-size: 100%;
-  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 h1 {
@@ -30,7 +33,7 @@ h1 {
 .wrapper {
   width: 97%;
   max-width: 1200px;
-  margin: 0  auto;
+  margin: 0 auto;
   float: none;
   background-color: #fff;
 }
@@ -66,7 +69,7 @@ footer {
   margin-top: 1em;
   color: #999;
   font-size: 0.8em;
-  background-color: rgba(220, 20, 60, 0.2);
+  background-color: lightgray;
   text-align: center;
 }
 
@@ -198,6 +201,14 @@ nav ul a:hover {
   margin-left: 52%;
 }
 
+.col-right {
+  float: right;
+}
+
+.text-right {
+  text-align: right;
+}
+
 /*** Media queries ***/
 /* Small mobile portrait Screen Sizes */
 @media only screen and (max-width: 479px) {
@@ -208,6 +219,9 @@ nav ul a:hover {
   }
   .col-4-6 {
     width: 100%;
+  }
+  .text-right {
+    text-align: left;
   }
 }
 
@@ -249,7 +263,7 @@ header h1 {
 /* Small header */
 @media only screen and (max-width: 479px) {
   header {
-    background: url(../img/gates-sm.jpg) no-repeat;
+    background: url("../img/gates-sm.jpg") no-repeat;
     width: 100%;
     height: 6em;
   }
@@ -263,7 +277,7 @@ header h1 {
 /* Medium header */
 @media only screen and (min-width: 480px) and (max-width: 767px) {
   header {
-    background: url(../img/gates-lg.jpg) no-repeat;
+    background: url("../img/gates-lg.jpg") no-repeat;
     height: 10em;
   }
   header h1 {
@@ -276,7 +290,7 @@ header h1 {
 /* Large header */
 @media only screen and (min-width: 768px) {
   header {
-    background: url(../img/gates-lg.jpg) no-repeat;
+    background: url("../img/gates-lg.jpg") no-repeat;
     height: 12em;
   }
   header h1 {
@@ -286,21 +300,17 @@ header h1 {
   }
 }
 
-/* chart */
-.interaction-text {
-  margin-left: 50px;
-  font-family: 'Roboto', sans-serif;
-}
-
-.schools-text {
-  margin-left: 80px;
-  font-family: 'Roboto', sans-serif;
+.demographics-text {
+  font-size: 0.75em;
+  vertical-align: baseline;
 }
 
 .d3-tip {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
   border-radius: 2px;
 }
 
@@ -311,36 +321,11 @@ header h1 {
 }
 
 .interactive-slider {
-  width: 350px;
-  margin-top: 5px;
+  width: 25em;
 }
 
-.interactive-slider {
-  width: 310px;
-}
-
-#gpa {
-  margin-left: 131px;
-}
-
-#sat {
-  margin-left: 103px;
-}
-
-#act {
-  margin-left: 104px;
-}
-
-#num_ap {
-  margin-left: 60px;
-}
-
-#ave_ap {
-  margin-left: 90px;
-}
-
-#num_sat {
-  margin-left: 5px;
+.slider-row {
+  margin-top: 0.8em;
 }
 
 .dropdown select {
@@ -369,7 +354,11 @@ header h1 {
   border-color: darkslategrey;
 }
 
-.warningNote {
-  background-color: red;
-  font-size: 2.5em;
+.jumbotron {
+  padding: 10px;
+}
+
+.tip-text {
+  font-weight: bold;
+  font-size: 10pt;
 }

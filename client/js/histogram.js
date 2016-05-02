@@ -1,27 +1,36 @@
-var Histogram = function(_parentElement, _factor) {
+var Histogram = function(_parentElement, _category) {
   this.parentElement = _parentElement;
-  this.category =  _factor
-  this.addSelectors();
-  this.updateData();
+  this.data = p171.data.raw;
+  for (label in p171.data.labels) {
+      if (p171.data.labels[label] == _category) this.category = label
+    }
+  this.createElements();
+  this.wrangleData();
   this.initVis();
 }
 
 Histogram.prototype.initVis = function () {
   var vis = this;
 
-  vis.margin = { top: 40, right: 60, bottom: 60, left: 5 };
-
-  vis.width = 800 - vis.margin.left - vis.margin.right,
-  vis.height = 400 - vis.margin.top - vis.margin.bottom;
+  vis.margin = { top: 40, right: 270, bottom: 60, left:20};
+  vis.width = p171.DD.wrapperWidth- vis.margin.left - vis.margin.right,
+  vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
   // SVG drawing area
   vis.svg = vis.parentElement.append("svg")
       .attr("width", vis.width + vis.margin.left + vis.margin.right)
       .attr("height", vis.height + vis.margin.top + vis.margin.bottom)
+      .attr("class","histogram")
     .append("g")
       .attr("transform", "translate(" + vis.margin.left + "," + vis.margin.top + ")");
 
+  vis.createFilters(colleges=true, applicants=true, offset=10)
   vis.bins = 10;
+  
+  if (vis.category in p171.data.nomFactors) {
+    vis.xScale = d3.scale.ordinal()
+      .rangeRoundBands([0, vis.width]);
+  }
   
   vis.x = d3.scale.linear()
     .range([0, vis.width]);
@@ -31,33 +40,76 @@ Histogram.prototype.initVis = function () {
 
   vis.xAxis = vis.svg.append("g")
     .attr({
-      class: "x-axis",
+      class: "x-axis axis",
       transform: "translate(0,"+vis.height+")"
     })
+
+  var closeButton = vis.svg.append("g") 
+
+  closeButton.append("rect")
+    .attr({
+      height: 20,
+      width: 60,
+      fill: "lightsteelblue",
+      opacity: 0.6,
+      x: vis.width + vis.margin.left + 20,
+      y: vis.height - 15
+    })
+    .on("click", function(d) {
+      d3.select(this.parentNode.parentNode.parentNode.parentNode).html("")
+    })
+
+  closeButton.append("text")
+    .attr({
+      x: vis.width + vis.margin.left + 25,
+      y: vis.height
+    })
+    .text("Close")
+    .on("click", function(d) {
+      d3.select(this.parentNode.parentNode.parentNode.parentNode).html("")
+    })
+
 
   vis.updateVis();
 }
 
+Histogram.prototype.createFilters = createFilters
+
 Histogram.prototype.updateVis = function() {
   var vis = this;
   
-  vis.updateData();
+  vis.wrangleData();
 
   var min = Math.min(...vis.displayData);
   var max = Math.max(...vis.displayData);
 
-  vis.x
-    .domain([min, max])
+  if (vis.category in p171.data.nomFactors) {
+    vis.xScale
+      .domain(p171.data.nomFactors[vis.category])
+  } else {
+    vis.x
+      .domain([min, max])
+  }
+
 
   vis.histogramData = d3.layout.histogram()
     .bins(vis.x.ticks(vis.bins))
     (vis.displayData);
 
+  if (vis.category in p171.data.nomFactors) {
+    vis.histogramData = vis.histogramData.filter(function(d) {
+      return d.length > 0
+    })
+  }
+
+    
   vis.y
     .domain([0, d3.max(vis.histogramData, function(d){ return d.y; })]);
 
+  var xScale = (vis.category in p171.data.nomFactors) ? vis.xScale : vis.x;
+  
   var xAxis = d3.svg.axis()
-    .scale(vis.x)
+    .scale(xScale)
     .orient("bottom");
   
   vis.bar = vis.svg.selectAll(".bar")
@@ -76,6 +128,19 @@ Histogram.prototype.updateVis = function() {
         x: function(d,i){ return i*barWidth; },
         width: barWidth,
         height: function(d) { return vis.height - vis.y(d.y); },
+      })
+      .style("fill", function(d, i) {
+        if (i+1 < vis.histogramData.length) {
+          var nextBin = vis.histogramData[i+1];
+          if ((p171.user[vis.category] > d.x) && (p171.user[vis.category] <= nextBin.x)) {
+            return "green";
+          }
+        } else if (p171.user[vis.category] > d.x) {
+          return "green"
+        } else {
+          return "lightgreen";
+        }
+        
       });
 
   vis.bar.exit().remove();  
@@ -90,12 +155,13 @@ Histogram.prototype.updateVis = function() {
     .transition().duration(750)
     .attr({
       class:"labels",
-      y: function(d) { return vis.y(d.y)+20; },
-      x: function(d,i){ return (i*barWidth) + (0.4*barWidth); },
-      fill: "white"
+      y: function(d) { return vis.y(d.y)-10; },
+      x: function(d,i){ return (i*barWidth) + (0.2*barWidth); },
+      fill: "steelblue"
     })
     .text(function(d){
-      return d.y;
+      var pct = ((d.y / vis.displayData.length)*100).toFixed(1)
+      return pct+"%";
     })
 
   vis.labels.exit().remove();
@@ -105,68 +171,45 @@ Histogram.prototype.updateVis = function() {
     .call(xAxis);
 }
 
-Histogram.prototype.updateData = function() {
+Histogram.prototype.wrangleData = function() {
   var vis = this;
 
-  var college = vis.collegeSelector.property('value');
-  // var category = vis.categorySelector.property('value');
+  var filteredData = vis.data.filter(function(d){
 
-  for (label in p171.data.labels) {
-    if (vis.category == p171.data.labels[label]) vis.category = label;
-  }
+    var collegeFilter = p171.DD.filters[d.collegeID],
+        factorFilter = true;
 
-  vis.displayData = p171.data.colleges[college][vis.category];
+    // Filter out application types
+    for (factor in p171.DD.filters) {
+      if (typeof p171.DD.filters[factor] == "object") {
+
+        for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
+
+          var subFactor = p171.data.nomFactors[factor][subFactorIndex];
+          var isChecked = p171.DD.filters[factor][subFactor];
+
+          if (!isChecked) {
+            if (subFactorIndex==0 && d[factor]==1) {
+              factorFilter = false
+            } else if (subFactorIndex==1 && d[factor]==-1) {
+              factorFilter = false;
+            }
+          }
+        }
+      } 
+    }
+
+    return collegeFilter && factorFilter && d.acceptStatus == 1;
+  });
+
+
+  
+  vis.displayData = filteredData.map(function(d) {
+    return d[vis.category];
+  });
+
 }
 
-Histogram.prototype.addSelectors = function() {
-  var vis = this;
+Histogram.prototype.createElements =createElements;
 
-  var options = p171.data.mainFactors;
-
-  /*
-  vis.categorySelector = vis.parentElement.append("select")
-    .attr({
-      id:'category-selector',
-    })
-    .on('change', function(){
-      vis.updateVis();
-    });
-
-  for (var optionIndex=0; optionIndex<options.length; optionIndex++) {
-    var category = options[optionIndex];
-    var option = vis.categorySelector.append("option")
-      .attr({
-        value:category
-      })
-      .text(category);
-  }
-
-  vis.categorySelector
-    .property('value','admissionstest');
-  */
-
-  vis.parentElement.append("div")
-    .text("Select a college: ")
-
-  vis.collegeSelector = vis.parentElement.append("select")
-    .attr({
-      id:"college-selector"
-    })
-    .on('change', function(d) {
-      vis.updateVis();
-    });
-
-  var colleges = Object.keys(p171.data.colleges);
-
-  for (var collegeIndex=0; collegeIndex<colleges.length; collegeIndex++) {
-    var college = colleges[collegeIndex];
-    var option = vis.collegeSelector.append("option")
-      .attr({
-        value:college
-      })
-      .text(college);
-  }
-
-  vis.collegeSelector
-    .property('value','All');
-}
+Histogram.prototype.showFilters = showFilters;

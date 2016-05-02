@@ -1,5 +1,7 @@
 "use strict";
 
+// TODO: remove? not used?
+
 function updatePredictionViz(predictions) {
     var outerWidth  = $("#prediction-viz").width(), // resize based on screen width
       outerHeight = outerWidth * p171.aspect, // maintain aspect ratio

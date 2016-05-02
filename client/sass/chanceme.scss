@@ -1,28 +1,24 @@
 /* CS171, Team Braavos */
-
 @import "chanceme/variables";
 @import "chanceme/mixins";
-
 /*** Main Styles ***/
 html {
   box-sizing: border-box;
 }
-
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: inherit;
 }
-
 body {
   height: 100%;
   font-size: 100%;
-  font-family: "Roboto","Helvetica Neue",Helvetica,$safeFonts;
+  font-family: "Raleway","Helvetica Neue",Helvetica,$safeFonts;
 }
-
-
-h3, label, button {
+h1,
+h3 {
   @extend %heading-fonts;
 }
-
 h1 {
   @extend h3;
   color: black;
@@ -31,60 +27,51 @@ h1 {
   text-transform: uppercase;
   width: 66%;
 }
-
 .wrapper {
   width: 97%;
   max-width: 1200px;
-  margin: 0  auto;
+  margin: 0 auto;
   float: none;
   background-color: #fff;
 }
-
 h3 {
   font-weight: bold;
   margin-top: 1em;
   margin-bottom: 0;
 }
-
 .wrapper {
   img {
     @include img-defaults;
   }
-
   /* For non-"picture" images */
   .img-responsive {
     @include img-defaults(responsive);
   }
 }
-
 footer {
   position: absolute;
-  width:100%;
+  width: 100%;
   clear: both;
   padding: 2em 0;
   margin-top: 1em;
   color: #999;
   font-size: 0.8em;
-  background-color: transparentize($shadowColor,0.8);
+  background-color: lightgray; //transparentize($shadowColor,0.8);
   text-align: center;
 }
-
 /*** Panel ***/
 .panel {
   font-size: 0.9em;
   box-shadow: gray 3px 5px 10px;
-
   .fieldset {
     margin-bottom: 0.7em;
   }
-
   label {
     display: inline-block;
     vertical-align: top;
     margin-right: 0.5em;
     text-shadow: rgba(220, 20, 60, 0.2) 1px 1px 0, rgba(220, 20, 60, 0.2) 1px 1px 0, rgba(220, 20, 60, 0.2) 2px 2px 0;
   }
-
   li {
     list-style: none;
     select {
@@ -95,40 +82,33 @@ footer {
     }
   }
 }
-
 .panel-heading {
   background-color: black;
 }
-
 .panel-title {
-  color:white;
+  color: white;
   text-align: center;
   margin: 0;
   padding: 1em;
   background-color: black;
 }
-
 .panel-footer {
   text-align: center;
   margin-top: 1em;
   padding: 0.25em;
-
   button {
     box-shadow: crimson 2px 5px 10px;
   }
 }
-
 /*** Navigation ***/
 nav {
   background-color: darkred;
   @extend %heading-fonts;
-
   ul {
     margin: 0;
     padding: 0;
     list-style-type: none;
     overflow: auto;
-
     a {
       color: saturate(white, 100%);
       text-decoration: none;
@@ -139,25 +119,21 @@ nav {
         bottom: 0.75em;
       }
       float: left;
-
       &:hover {
         color: #a16100;
       }
     }
   }
 }
-
-
 /*** Grid system - 6 columns ***/
 .row::after {
-    @include row-after;
+  @include row-after;
 }
 [class*='col-'] {
   margin-left: 4%;
   float: left;
   min-height: 1px;
 }
-
 .col-1 {
   width: 12%;
 }
@@ -185,9 +161,13 @@ nav {
 .col-offset-3 {
   margin-left: 52%;
 }
-
+.col-right {
+  float: right;
+}
+.text-right {
+  text-align: right;
+}
 /*** Media queries ***/
-
 /* Small mobile portrait Screen Sizes */
 @media only screen and (max-width: $smallPixelMax) {
   [class*='col-'] {
@@ -198,12 +178,12 @@ nav {
   .col-4-6 {
     width: 100%;
   }
+  .text-right {
+    text-align: left;
+  }
 }
-
 /* Medium screen width for larger phones and tablets */
-@media only screen and
-  (min-width: ($smallPixelMax + 1)) and (max-width: $mediumPixelMax)  {
-
+@media only screen and (min-width: ($smallPixelMax + 1)) and (max-width: $mediumPixelMax) {
   .col-1,
   .col-2,
   .col-3 {
@@ -214,49 +194,43 @@ nav {
   .col-6 {
     width: 92%;
   }
-
   .col-offset-1,
   .col-offset-2,
   .col-offset-3 {
-    margin-left: 4%
+    margin-left: 4%;
   }
   .col-4-6 {
     width: 92%;
   }
 }
-
-@media only screen and
-  (min-width: ($mediumPixelMax + 1))  {
-    .col-4-6 {
-      width: 60%;
-    }
+@media only screen and (min-width: ($mediumPixelMax + 1)) {
+  .col-4-6 {
+    width: 60%;
+  }
 }
-
 /*** Headers ***/
 header h1 {
   text-align: center;
   color: white;
   text-shadow: 2px 5px 5px black;
 }
-
 /* Small header */
-@media only screen and (max-width: $smallPixelMax)  {
+@media only screen and (max-width: $smallPixelMax) {
   header {
-    background: url(../img/gates-sm.jpg) no-repeat;
+    background: url("../img/gates-sm.jpg") no-repeat;
     width: 100%;
     height: 6em;
     h1 {
       padding: 0.75em;
       font-size: 1.25em;
-      margin-top:0;
+      margin-top: 0;
     }
   }
 }
-
 /* Medium header */
-@media only screen and (min-width: ($smallPixelMax + 1)) and (max-width: $mediumPixelMax)  {
+@media only screen and (min-width: ($smallPixelMax + 1)) and (max-width: $mediumPixelMax) {
   header {
-    background: url(../img/gates-lg.jpg) no-repeat;
+    background: url("../img/gates-lg.jpg") no-repeat;
     height: 10em;
     h1 {
       padding: 1em;
@@ -265,11 +239,10 @@ header h1 {
     }
   }
 }
-
 /* Large header */
-@media only screen and (min-width: ($mediumPixelMax + 1))  {
+@media only screen and (min-width: ($mediumPixelMax + 1)) {
   header {
-    background: url(../img/gates-lg.jpg) no-repeat;
+    background: url("../img/gates-lg.jpg") no-repeat;
     height: 12em;
     h1 {
       padding: 1.25em;
@@ -278,65 +251,29 @@ header h1 {
     }
   }
 }
-
-/* chart */
-
-.interaction-text{
-  margin-left: 50px;
-  font-family: 'Roboto', sans-serif;
+.demographics-text {
+  font-size: 0.75em;
+  vertical-align: baseline;
 }
-
-.schools-text{
-  margin-left: 80px;
-  font-family: 'Roboto', sans-serif;
-}
-
 .d3-tip {
   line-height: 1;
   font-weight: bold;
   padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
   border-radius: 2px;
 }
-
 #interactive-tooltip {
   color: white;
   font-weight: bold;
-  background: darkslategrey
+  background: darkslategrey;
 }
-
-.interactive-slider{
-  width: 350px;
-  margin-top: 5px;
+.interactive-slider {
+  width: 25em;
 }
-
-.interactive-slider{
-  width: 310px;
+.slider-row {
+  margin-top: 0.8em;
 }
-
-#gpa{
-  margin-left: 131px;
-}
-
-#sat{
-  margin-left: 103px;
-}
-
-#act{
-  margin-left: 104px;
-}
-
-#num_ap{
-  margin-left: 60px;
-}
-
-#ave_ap{
-  margin-left: 90px;
-}
-
-#num_sat{
-  margin-left: 5px;
-}
-
 .dropdown select {
   background: transparent;
   width: 100px;
@@ -348,7 +285,6 @@ header h1 {
   height: 34px;
   -webkit-appearance: none;
 }
-
 .dropdown {
   width: 150px;
   height: 30px;
@@ -356,14 +292,15 @@ header h1 {
   overflow: hidden;
   border: 1px solid #ccc;
 }
-
-.button{
+.button {
   background-color: lightgrey;
   border-width: 2px;
   border-color: darkslategrey;
 }
-
-.warningNote {
-  background-color: red;
-  font-size: 2.5em;
+.jumbotron {
+  padding: 10px;
+}
+.tip-text {
+  font-weight: bold;
+  font-size: 10pt;
 }

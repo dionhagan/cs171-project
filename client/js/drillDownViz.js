@@ -1,9 +1,56 @@
+// Add drilldown text to elements
+function addDrillDownText() {
+  for (section in p171.text.drillDown) {
+    var title = p171.text.drillDown[section][0];
+    var content = p171.text.drillDown[section][1];
+    var sectionElement = d3.select('#'+section)
+
+    sectionElement.append("h2")
+      .text(title)
+
+    sectionElement.append("div")
+      .html(content)
+  }
+}
+  
+
 var DrillDownController = function(_parentElement) {
   this.parentElement = d3.select('#'+_parentElement);
-  this.data = p171.data.featureImportance.sort(sortFeatureImportanceData);
+  this.data = p171.data.factorImportance.sort(sortFeatureImportanceData);
   this.factors = {};
   for (var i=0;i<this.data.length;i++) this.factors[this.data[i].name] = {};
+  this.initFilters();
   this.initVis();
+};
+
+DrillDownController.prototype.initFilters = function() {
+  var DD = this;
+
+  DD.filters = {}; 
+
+  var initColleges = "colleges" in localStorage ? JSON.parse(localStorage.getItem("colleges")) : ["Harvard", "Princton","Yale"];
+
+  for (collegeName in p171.data.colleges) {
+    console.log(initColleges)
+    console.log(initColleges.indexOf(collegeName))
+    if (initColleges.indexOf(collegeName) >= 0) DD.filters[collegeName] = true;
+    else DD.filters[collegeName] = false;
+  } 
+
+  // Get factors that need to be filtered
+  var factorsToFilter = Object.keys(p171.data.nomFactors);
+
+  // Create a form group for each application factor 
+  for (var factorIndex=0; factorIndex<factorsToFilter.length; factorIndex++) {
+    var factor = factorsToFilter[factorIndex];
+
+    DD.filters[factor] = {}
+    
+    for (var subFactorIndex=0; subFactorIndex<2; subFactorIndex++) {
+        var subFactor = p171.data.nomFactors[factor][subFactorIndex];
+        DD.filters[factor][subFactor] = true;
+    }
+  }
 };
 
 // Create initial vizualization
@@ -11,13 +58,15 @@ DrillDownController.prototype.initVis = function() {
   var DD = this;
 
   // Create dimensions for the visualization based on current window size
-  DD.margin = {top: 60, right: 315, bottom: 60, left: 220};
-  DD.width = window.innerWidth - DD.margin.left - DD.margin.right;
-  DD.height = 40 - DD.margin.top - DD.margin.bottom;
+  DD.wrapperWidth = +d3.select('#overall_factors').style('width').replace('px','');
+  DD.subPlotWidth = DD.wrapperWidth -400;
+  DD.margin = {top: 60, right: 20, bottom: 60, left: 20};
+  DD.width = DD.wrapperWidth - DD.margin.left - DD.margin.right;
+  DD.height = window.innerHeight - DD.margin.top - DD.margin.bottom;
 
   // Create the X and Y scale
   DD.xScale = d3.scale.linear()
-    .range([0, DD.width]).nice()
+    .range([0, DD.width - 200]).nice()
     .domain([
       d3.min(DD.data, function(f) { return f.effect; }),
       d3.max(DD.data, function(f) { return f.effect; })
@@ -43,7 +92,7 @@ DrillDownController.prototype.initVis = function() {
         class: "bar-svg"
       })
       .attr("width", DD.width + DD.margin.right - 5)
-      .attr("height", DD.Height)
+      .attr("height", DD.height)
       .attr("transform", "translate(0,"+DD.width+")")
       .append("g");
     
@@ -56,8 +105,7 @@ DrillDownController.prototype.initVis = function() {
         class: "more-details row"
       })
 
-    moreDetails.append("div").attr({class: "col-md-3 text"})
-    moreDetails.append("div").attr({class: "col-md-7 chart"})
+    moreDetails.append("div").attr({class: "chart"})
 
     DD.factors[factor.name].moreDetails = moreDetails;
   }
@@ -69,7 +117,7 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
   var DD = this;
 
   // Define characteristics of each bar
-  var barHeight = 35,
+  var barHeight = DD.height / DD.data.length
       barYPos = function(d, i){ return (barHeight*i)+(i*2); },
       barClass = "factor-bar";
 
@@ -86,7 +134,7 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
       
   var bars = barGroup.append("rect")
       .attr({
-        x: 300,
+        x: 200,
         y: 0,
         height: barHeight,
         width: function(feature){ return 0 ;},
@@ -110,7 +158,7 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
   labels
     .append("rect")
       .attr({
-        x: 100,
+        x: 0,
         y: 0,
         height: barHeight,
         width: 200,
@@ -122,7 +170,7 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
     .append("text")
       .attr({
         fill:'white',
-        x: 100,
+        x: 0,
         y: 20
       })
       .text(function(d){ return d.name; });
@@ -135,15 +183,23 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
   barGroup.select(".effect-values")
     .transition().duration(1500)
     .attr("x", function(feature) { 
-      var pos = 300+DD.xScale(feature.effect);
-      return pos > 350 ? pos - 55: 300;
+      var pos = 200+DD.xScale(feature.effect);
+      return pos > 250 ? pos - 55: 200;
     });
 
   // Create interaction behaviors for vis elements
   barGroup
     .on("click", function(d) {
+      for (factor in DD.factors) {
+        var moreDetailsSection = DD.factors[factor].moreDetails
+        moreDetailsSection.select(".text")
+          .text("")
+        moreDetailsSection.select(".chart")
+          .html("")
+        delete DD.factors[factor].vis.subPlot;
+      }
       DD.createMoreDetails(this);
-    });
+    })
 
   return {
     svg: svg,
@@ -153,9 +209,6 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
     valueLable: valueLabel
   };
 };
-
-// Add interaction behavior for bars and labels
-// Create bars for graph
 
 
 // Create more-details section for a given factor
@@ -170,49 +223,106 @@ DrillDownController.prototype.createMoreDetails = function(element) {
   var chartElement = factor.moreDetails.select(".chart"),
       textElement = factor.moreDetails.select(".text");
 
+  var charts = {}
+  for (label in p171.data.labels) { 
+    if (p171.data.labels[label] == factorID) {
+      charts = drillDownCharts[label];
+    }
+  }
+
   if (chartElement.html() == "") {
     // Create initial visualization
-    factor.vis.subPlot = new Histogram(chartElement, factorID);
+    factor.vis.subPlot = new charts[Object.keys(charts)[0]](chartElement, factorID);
     
     // Add text to describe the data
     textElement
       .html(p171.text.drillDown.overall_factors[1])
 
-    var charts = {
-      histogram: Histogram, 
-      scatter: Scatter
-    };
-
-    // Create buttons to change the visualization
-    for (chartType in charts) {
-      textElement.append("div")
-        .attr({
-          class:"select-chart-type",
-          id:chartType
-        })
-        .text(chartType)
-        .on("click", function(d) {
-          var chartID = d3.select(this).property("id");
-          chartElement.html("");
-          factor.vis.subPlot = new charts[chartID](chartElement, factorID)
-        })
+    if (Object.keys(charts).length > 1) {
+      // Create buttons to change the visualization
+      for (chartType in charts) {
+        textElement.append("div")
+          .attr({
+            class:"select-chart-type",
+            id:chartType
+          })
+          .text(chartType)
+          .on("click", function(d) {
+            var chartID = d3.select(this).property("id");
+            chartElement.html("");
+            factor.vis.subPlot = new charts[chartID](chartElement, factorID)
+          })
+      }
     }
-    
-
   }
-
 }
 
 
-// Close more-details section 
 
-// Open more-details section
+DrillDownController.prototype.updateSubPlots = function() {
+  var DD = this; 
 
-// Remove chart from element
+  for (factorID in DD.factors) {
+    var factorVis = DD.factors[factorID].vis;
+    if ("subPlot" in factorVis) factorVis.subPlot.updateVis();
+  }
+
+  DD.heatmap.updateVis();
+  DD.scatter.updateVis();
+}
 
 
-
-
-
+var drillDownCharts = {
+    "admissionstest": {
+      Distribution: Histogram,
+    },
+    "acceptrate": {},
+    "GPA": {
+      Distribution: Histogram,
+    },
+    "averageAP": {
+      Distribution: Histogram,
+      Scatter: Scatter
+    },
+    "size": {},
+    "AP": {
+      Distribution: Histogram
+    },
+    "SATsubject": {
+      Distribution: Histogram
+    },
+    "female": {
+      Distribution: Histogram,
+      Effect: EffectGraph
+    },
+    "schooltype":  {
+      Distirbution: Histogram
+    },
+    "MinorityRace": {
+      Distribution: Histogram,
+      Effect: EffectGraph
+    },
+    "earlyAppl": {
+      Distribution: Histogram,
+      Effect: EffectGraph
+    },
+    "outofstate": {
+      Distribution: Histogram
+    },
+    "public": {
+      Distribution: Histogram
+    },
+    "alumni": {
+      Distribution: Histogram
+    },
+    "international": {
+      Distribution: Histogram,
+      Effect: EffectGraph
+    },
+    "sports": {
+      Distribution: Histogram,
+      Effect: EffectGraph
+    }
+}
 
 
