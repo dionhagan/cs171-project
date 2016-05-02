@@ -150,12 +150,12 @@ InteractiveVis.prototype.initVis = function(callback) {
         d3.selectAll(".point").remove();
         vis.counter = 1;
         vis.scenarios = [vis.displayData];
-        vis.saveScenario(vis.scenarios);
+        vis.updateVis();
         vis.counter = vis.counter + 1;
       }
       else { 
         vis.scenarios[vis.counter - 1] = vis.displayData;
-        vis.saveScenario(vis.scenarios);
+        vis.updateVis();
         vis.counter = vis.counter + 1;
       }
     });
@@ -232,8 +232,9 @@ InteractiveVis.prototype.updateVis = function() {
     }
   }
 
+  vis.newScenarios = [];
   vis.newScenarios = vis.scenarios.map(function (scenario) {
-      return scenario.map(function (d) {
+      return scenario.filter(function (d) {
          var keep = false;
          for (var k = 0; k < vis.newData.length; k++) {
             if (d.college == vis.newData[k].college) {
@@ -243,6 +244,8 @@ InteractiveVis.prototype.updateVis = function() {
          return false;
       });
   });
+
+  console.log(vis.newScenarios);
 
   if (p171.sortOrder == "name") {
     // sort increasing
@@ -328,11 +331,14 @@ InteractiveVis.prototype.updateVis = function() {
 
   vis.circle.exit().remove();
 
-  if (vis.scenarios[0] != null) {
-    vis.saveScenario(vis.scenarios);
+  d3.select("#school-choice")
+  .on("change", function () { d3.selectAll(".point").remove();});
+
+  if (vis.newScenarios.length != 0) {
+    vis.saveScenario(vis.newScenarios);
   }
   else {
-    return false;
+    vis.saveScenario(vis.scenarios);
   }
 }
 
@@ -394,10 +400,40 @@ InteractiveVis.prototype.saveScenario = function(data) {
 
   vis.points
       .attr("class", "point")
-      .attr("transform", "translate(20,5)")
       .attr("r", 4.5)
       .attr("cx", function(d) { return vis.x(d.college); })
-      .attr("cy", function(d) { return vis.y(d.prob); });
+      .attr("cy", function(d) { return vis.y(d.prob); })
+      .on("mouseover", vis.tip2.show)
+      .on("mouseout", vis.tip2.hide);
+
+  if(vis.choice == "all"){
+    vis.points
+        .attr("transform", "translate(20,5)");
+  }
+  else if(vis.choice == "ivy"){
+    vis.points
+        .attr("transform", "translate(55,5)");
+  }
+  else if(vis.choice == "nonivy"){
+    vis.points
+        .attr("transform", "translate(28,5)");
+  }
+  else if(vis.choice == "1"){
+    vis.points
+        .attr("transform", "translate(45,5)");
+  }
+  else if(vis.choice == "2"){
+    vis.points
+        .attr("transform", "translate(90,5)");
+  }
+  else if(vis.choice == "3"){
+    vis.points
+        .attr("transform", "translate(90,5)");
+  }
+  else if(vis.choice == "4"){
+    vis.points
+        .attr("transform", "translate(115,5)");
+  }
 
   vis.points.exit()
      .transition().duration(800)
