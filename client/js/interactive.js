@@ -140,7 +140,9 @@ InteractiveVis.prototype.initVis = function(callback) {
       localStorage.setItem("sortOrder", p171.sortOrder);
     }
     sortOrder[i].addEventListener('click', function(e) {
+      d3.selectAll(".point").remove();
       vis.updateSortOrder(e);
+      vis.updateVis();
     }, false);
   }
 
