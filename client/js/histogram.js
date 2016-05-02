@@ -4,6 +4,7 @@ var Histogram = function(_parentElement, _category) {
   for (label in p171.data.labels) {
       if (p171.data.labels[label] == _category) this.category = label
     }
+  if (this.category in p171.data.nomFactors) this.subFactors = p171.data.nomFactors[this.category].reverse()
   this.createElements();
   this.wrangleData();
   this.initVis();
@@ -12,7 +13,7 @@ var Histogram = function(_parentElement, _category) {
 Histogram.prototype.initVis = function () {
   var vis = this;
 
-  vis.margin = { top: 40, right: 270, bottom: 60, left:20};
+  vis.margin = { top: 60, right: 270, bottom: 60, left:20};
   vis.width = p171.DD.wrapperWidth- vis.margin.left - vis.margin.right,
   vis.height = 600 - vis.margin.top - vis.margin.bottom;
 
@@ -45,6 +46,9 @@ Histogram.prototype.initVis = function () {
     })
 
   var closeButton = vis.svg.append("g") 
+    .attr({
+      class: "close-button"
+    })
 
   closeButton.append("rect")
     .attr({
@@ -69,6 +73,29 @@ Histogram.prototype.initVis = function () {
       d3.select(this.parentNode.parentNode.parentNode.parentNode).html("")
     })
 
+  var title = "Distribution for "+p171.data.labels[vis.category]
+
+  vis.title = vis.svg.append("g")
+    .attr({
+      transform: "translate(0,-50)"
+    })
+
+  vis.title.append("rect")
+    .attr({
+      fill: "none",
+      stroke: "steelblue",
+      "stroke-width": "1.5px",
+      height: 25,
+      width: title.length * 8
+    })
+
+  vis.title.append("text")
+    .attr({
+      x: 5, 
+      y: 16
+    })
+    .text(title);
+
 
   vis.updateVis();
 }
@@ -80,21 +107,30 @@ Histogram.prototype.updateVis = function() {
   
   vis.wrangleData();
 
-  var min = Math.min(...vis.displayData);
-  var max = Math.max(...vis.displayData);
-
   if (vis.category in p171.data.nomFactors) {
     vis.xScale
-      .domain(p171.data.nomFactors[vis.category])
+      .domain(vis.subFactors)
+      vis.displayData.remove(0)
   } else {
+    var min = Math.min(...vis.displayData);
+    var max = Math.max(...vis.displayData);
+
     vis.x
       .domain([min, max])
   }
 
 
+
+
   vis.histogramData = d3.layout.histogram()
     .bins(vis.x.ticks(vis.bins))
     (vis.displayData);
+  
+  if (vis.category in p171.data.nomFactors) {
+    if (vis.histogramData[0].length > 0) vis.histogramData[9].push(1)
+    if (vis.histogramData[9].length > 0) vis.histogramData[0].push(-1)
+  }
+
 
   if (vis.category in p171.data.nomFactors) {
     vis.histogramData = vis.histogramData.filter(function(d) {
@@ -213,3 +249,14 @@ Histogram.prototype.wrangleData = function() {
 Histogram.prototype.createElements =createElements;
 
 Histogram.prototype.showFilters = showFilters;
+
+Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
