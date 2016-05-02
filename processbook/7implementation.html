@@ -181,7 +181,12 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Describe the intent and functionality of the interactive visualizations you implemented. Provide clear and well-referenced images showing the key design and interaction elements.</p>
+<h2 id="Contents">Contents<a class="anchor-link" href="#Contents">&#182;</a></h2><ul>
+<li><a href="#architecture">System Architecture</a></li>
+<li><a href="#libraries">Dependencies and Libraries</a></li>
+<li><a href="#difficulties">Technical Difficulties</a></li>
+<li><a href="#git">git, gh-pages, Process Book</a></li>
+</ul>
 
 </div>
 </div>
@@ -191,24 +196,13 @@ div#notebook {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="architecture"></a></p>
 <h2 id="System-Architecture">System Architecture<a class="anchor-link" href="#System-Architecture">&#182;</a></h2><p>The following diagram provides a high level overview of the system architecture:</p>
 <p><img src="SystemArchitecture.png" alt="System Architecture"></p>
-<p>The majority of the processing is performed in client-side JavaScript. The prediction calculations are currently performed in Python-based webservice hosted on Heroku, as the implementation is using Sci-kit Learn's <a href="http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">RandomForest</a> library. Unfortunately, there is significant latency when using the webservice, with delays up t0 10 seconds for a single prediction. This does not meet our current goals of having a very interactive, game-like experience when performing predictions.</p>
-<p>If time permits, we will attempt again to replace the webservice with a client-based Random Forest JavaScript implementation, such as <a href="https://github.com/karpathy/forestjs">Karpathy's</a>. We attempted some initial tests but
-there were unsuccessful.</p>
+<p>The majority of the processing is performed in client-side JavaScript. The prediction calculations are currently performed in Python-based webservice hosted on Heroku, as the implementation is using Sci-kit Learn's <a href="http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">RandomForest</a> library. Initially, there was significant latency when using the webservice, with delays up to 20 seconds for a single prediction. This does not meet our goals of having a very interactive, game-like experience when performing predictions.</p>
+<p>We unsuccessfully attempted to replace the webservice with a client-based Random Forest JavaScript implementation, such as <a href="https://github.com/karpathy/forestjs">Karpathy's</a>.</p>
 <p>Update 4/18/2016. We did some further investigation and found that Karpathy's implementation does not appear to provide the prediction probabilities in a useful (or perhaps even accurate) fashion. The next library we will try is from <a href="https://github.com/jfrazelle/random-forest-classifier">JFrazelle</a>.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><a id="wsperf"></a></p>
-<h2 id="Solving-the-Webservice-Performance-Problem">Solving the Webservice Performance Problem<a class="anchor-link" href="#Solving-the-Webservice-Performance-Problem">&#182;</a></h2><p>April 20, 2016</p>
-<p>Today, we made major progress in solving the web service performance problem. It turns out that when being hosted on Heroku, the webservice was retraining the entire Random Forest for every single prediction request. We made three changes to the web service that <strong>dropped the prediction time from at least 20 seconds to 2 seconds</strong>:</p>
+<p>Update April 20, 2016. Today, we made major progress in solving the web service performance problem. It turns out that when being hosted on Heroku, the webservice was retraining the entire Random Forest for every single prediction request. We made three changes to the web service that <strong>dropped the prediction time from at least 20 seconds to 2 seconds</strong>:</p>
 <ul>
 <li>We trained the Random Forest on our development machines and persisted the result in a file (using Python pickling). We tried the using recommended Sci-kit <a href="http://scikit-learn.org/stable/tutorial/basic/tutorial.html#model-persistence">jobload</a> but that generated 2 GB of 5000 persistence files! <ul>
 <li>We also looked into using Redis, but that had other complications. It wasn't clear if we could store a 300 MB string in Redis. It would have involved other dependencies in the webservice, and the performance improvement may not have been great. Given we were reading a static Random Forest object, there was likely little advantage to using Redis.</li>
@@ -218,6 +212,186 @@ there were unsuccessful.</p>
 <li>We reduced the number of gunicorn threads from unlimited to 2 based on a <a href="http://stackoverflow.com/questions/12079582/error-r14-memory-quota-exceeded-not-visible-in-new-relic">Stackoverflow Suggestion</a> that worked out really well. It had the added advantage of keeping the classifier in memory more frequently.</li>
 </ul>
 <p>We believe that the performance is adequate enough for now. We will turn our attention to the innovative visualization.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="libraries"></a></p>
+<h2 id="Dependent-Libraries-and-Tools">Dependent Libraries and Tools<a class="anchor-link" href="#Dependent-Libraries-and-Tools">&#182;</a></h2><p>The Prediction and Drill down visualizations were implemented in <a href="https://d3js.org/">D3</a>. The Innovative (3d) visualization was implemented in <a href="http://threejs.org/">three.js</a>.</p>
+<p>In addition to aforementioned Scikit Learn Random Forest library, we also used a Python script to convert the Process book from iPython / <a href="http://jupyter.org/">Jupyter</a> notebooks to static HTML. Each chapter is a separate notebook, which is then loaded in a single HTML page, accessed via <a href="https://jquery.com/">jQuery</a> (The process book is only piece that uses jQuery - the client code does not).</p>
+<p>The public website and process book were hosted via <a href="https://help.github.com/articles/creating-project-pages-manually/">GitHub pages</a>. As mentioned previously, the web service was hosted on <a href="https://www.heroku.com/">Heroku</a>.</p>
+<p>For the grid layout, we re-used a custom CSS grid layout from a prior class. We did not use Bootstrap, Foundation or any other CSS framework for multiple reasons: 1) we did not want a lot of extra bloat for the layouts 2) we did not want the CSS framework possibly interfering with our visualization areas 3) we had finer control for media queries and other responsive techniques in order to support mobile devices in the future. We did use <a href="http://sass-lang.com/">Sass</a> at compile time to standardize the majority of our CSS.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="difficulties"></a></p>
+<h2 id="Technical-Difficulties-Encountered">Technical Difficulties Encountered<a class="anchor-link" href="#Technical-Difficulties-Encountered">&#182;</a></h2><p>In the course of implementing a large project with multiple authors and dependencies, we encountered a number of challenges.</p>
+<h3 id="3D-Visualization">3D Visualization<a class="anchor-link" href="#3D-Visualization">&#182;</a></h3><p>The 3D visualization was the most technically challenging portion of the project. The three.js library is not as well documented and does not have as many sample files as D3. Learning about cameras, Phong Meshs, light sources, sphere turbidity and other details while imagining a new visualization in 3D was <em>interesting</em>. There are probably two labs worth of material just on building 3d visualizations, perhaps even enough material for an entire course if virtual and augmented reality are included.</p>
+<h3 id="Web-Service-Challenges">Web Service Challenges<a class="anchor-link" href="#Web-Service-Challenges">&#182;</a></h3><p>Implementation of a custom webservice was challenging. We encountered numerous problems:</p>
+<ol>
+<li><strong>Heroku out-of-memory errors</strong> Heroku would run out of memory on a regular basis even when the web service would correctly locally. We discovered that Heroku was spawning too many threads to service requests. By lowering the number of threads, memory usage dropped while improving reliability and response time. This was counter-intuitive.</li>
+<li><strong>Cross-domain web service requests</strong> In Lab 8, we learned how to consume a web service through a proxy. In our
+case, we had to add the capability of accessing our own web service from any domain by implementing the <code>Access-Control-Allow-Origin</code> header.</li>
+</ol>
+<h3 id="JavaScript-Challenges">JavaScript Challenges<a class="anchor-link" href="#JavaScript-Challenges">&#182;</a></h3><ol>
+<li><strong>Calling the web service</strong> Prior to Lab 8 and the web service changes, we implemented a provisional solution using JSONP. After the web service improvement, we did not use D3 to access the web service, instead relying on the lower level <code>XMLHttpRequest()</code> request in JavaScript in order to have finer grained control.</li>
+<li><strong><code>&lt;object&gt; is not defined</code></strong> When the code base continued to grow especially with the incorporation of three.js, we started encountering load errors where D3 would load the data files before the browser had completed loading all the pre-requisite JavaScript files, leading to sporadic error messages and failed visualizations. We solved this by wrapping the D3 <code>queue()</code> call inside <code>window.addEventListener("load",...</code>.</li>
+<li><strong>Sharing Data Between Pages</strong> We used a combination of cookies and <code>localStorage</code> to share data between the multiple pages. Performance was sufficient so we did not optimize further. There is ample room for further optimization such as caching the CSV data files in localStorage.</li>
+</ol>
+<h3 id="Other">Other<a class="anchor-link" href="#Other">&#182;</a></h3><ol>
+<li><strong>Publishing to PDF</strong> Jupyter notebooks offer the possibility of publishing to PDF. We split the process book into multiple chapters to allow modular updates (since Jupyter is not a git-friendly format). Unfortunately, recombining multiple PDFs together led to low quality results. Exporting to HTML, with some manipulation, proved more robust.</li>
+<li>As is all too common, a <strong>bad commit to git</strong> led to dysfunctional git repository. We lost a day rebuilding the HEAD and manually merging the changes.</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a id="git"></a></p>
+<h2 id="git-Usage">git Usage<a class="anchor-link" href="#git-Usage">&#182;</a></h2><p>Since we were working concurrently on multiple parts of this
+project, <code>git</code> was be very useful tool to ensure that we can
+work in parallel, even on the same code, without interference.</p>
+<p>Here are our internal notes on using git, and publishing the site and process book to gh-pages.</p>
+<h3 id="Copy-this-repository-to-your-machine">Copy this repository to your machine<a class="anchor-link" href="#Copy-this-repository-to-your-machine">&#182;</a></h3><p><code>git clone git@github.com:wihl/cs171-project.git</code></p>
+<h3 id="Creating-a-branch">Creating a branch<a class="anchor-link" href="#Creating-a-branch">&#182;</a></h3><p>This will create a new branch in the code. You can do anything you
+want in this branch and it will not affect anything in master,
+until a merge is done (see below).</p>
+
+<pre><code>cd cs171-project
+git checkout -b newbranch
+git push origin newbranch
+git push --set-upstream origin newbranch</code></pre>
+<p>The <code>push origin</code> is needed to send the branch to github, which you
+will need to do before pushing the branch so everyone else can see
+it.</p>
+<p>From this point do whatever edits you want. Create a subdirectory,
+add files, make changes.</p>
+<h3 id="Commit-early-and-regularly">Commit early and regularly<a class="anchor-link" href="#Commit-early-and-regularly">&#182;</a></h3><p>Do not leave your code unbackedup on your machine. I commit every
+time I add something new and useful that works. It could be as little
+as 2-3 lines of code.</p>
+<p>This is the same as in class, although now you will be committing just
+to your branch.</p>
+<p>Assuming you are in the cs171-project directory</p>
+
+<pre><code>git add .
+git commit -m "&lt;one line summary of what changed&gt;"
+git push</code></pre>
+<h3 id="See-what-others-have-done">See what others have done<a class="anchor-link" href="#See-what-others-have-done">&#182;</a></h3><p>To grab a fresh local copy of everything in the github repository, use
+<code>git fetch</code>. Any new branches anyone else has created will be moved
+down.</p>
+<p>To switch to their branch, while leaving yours untouched use
+<code>git checkout otherbranch</code>. To get back to your branch <code>git checkout mybranch</code>.</p>
+<h3 id="Merging---Step-1">Merging - Step 1<a class="anchor-link" href="#Merging---Step-1">&#182;</a></h3><p>The first step in merging is to merge the latest master branch into
+your branch</p>
+
+<pre><code>git fetch
+git merge origin/master</code></pre>
+<p>If there are any conflicts, like two people having written to the same
+file in the same place, it will let you know. It is pretty smart
+about merging different pieces of code or file that do not impact each
+other. This is one of git's most amazing features.</p>
+<p>After you have reconciled any merge conflicts, you can commit
+the merged master into your branch, which are the same commands as
+before</p>
+
+<pre><code>git add .  
+git commit -m "I merged in master"  
+git push</code></pre>
+<p>Now your branch has all of master and all of your new stuff</p>
+<h3 id="Merging---Step-2">Merging - Step 2<a class="anchor-link" href="#Merging---Step-2">&#182;</a></h3><p>Now that you are fully up to date in your branch, you can update master:</p>
+
+<pre><code>git checkout master  
+git merge newbranch    
+git status    
+git push</code></pre>
+<p>Now your code has been integrated into master. Your work is done.</p>
+<p>Create a new branch to start on another unit of work (or keep
+working on the same branch if it isn't done yet).</p>
+<p>It is a good idea to not wait too long to merge into master. Once it is
+in a stable state, ready to use by others if not feature complete, do
+the merge into master.</p>
+<h3 id="That's-It">That's It<a class="anchor-link" href="#That's-It">&#182;</a></h3><p><code>git</code> has many powerful features like pull requests and code reviews,
+but I don't think we need them for this project.</p>
+<h2 id="Using-GitHub-Pages">Using GitHub Pages<a class="anchor-link" href="#Using-GitHub-Pages">&#182;</a></h2><p>The <a href="https://help.github.com/articles/creating-project-pages-manually/">gh-pages</a> branch is where the public facing information
+lives. Per the github docs, this branch is an orphan. You
+might as well consider it being two repositories in one.</p>
+<p>Since it is effectively two repositories, I keep two
+copies of the repository on my local hard drive:</p>
+<p>Primary copy:</p>
+
+<pre><code>cd &lt;wherever you put projects&gt;
+git clone git@github.com:wihl/cs171-project.git</code></pre>
+<p>This creates a <code>cs171-project</code> directory in your current location.</p>
+<p>Then I make secondary copy in a parallel directory <strong>not under cs171-project</strong>.</p>
+<p>So while still in the current directory, not in the cs171-project directory:</p>
+
+<pre><code>mkdir projectwebsite
+cd projectwebsite
+git clone git@github.com:wihl/cs171-project.git
+cd cs171-project
+git checkout gh-pages</code></pre>
+<p>So now I have</p>
+
+<pre><code>./cs171-project
+./projectwebsite/cs171-project # gh-pages branch</code></pre>
+<h3 id="Contents-of-gh-pages">Contents of <code>gh-pages</code><a class="anchor-link" href="#Contents-of-gh-pages">&#182;</a></h3><p>There are two subdirectories: <code>./client</code> and <code>./processbook</code></p>
+<p>We also use a CNAME to have a well defined public facing URL (vis.chanceme.info) instead of the default <code>wihl.github.io/cs171-project</code>.</p>
+<p>When the user navigates to <a href="http://vis.chanceme.info">vis.chanceme.info</a>, a small <code>index.html</code> file redirects them to the client code.</p>
+<p>If the user explicitly navigates to <a href="http://vis.chanceme.info/processbook">vis.chanceme.info/processbook</a>, they skip over the small <code>index.html</code> and land on the process book.</p>
+<h3 id="How-to-Release-a-New-Public-Version">How to Release a New Public Version<a class="anchor-link" href="#How-to-Release-a-New-Public-Version">&#182;</a></h3><p>Given the file structure above, releasing a new public version
+of the client consists of copying the client code from the master
+repository into the repository having the gh-pages branch.</p>
+
+<pre><code>cd &lt;wherever you put projects&gt;
+cd cs171-project
+cp -r client ../projectwebsite/cs171-project/
+cd ../projectwebsite/cs171-project</code></pre>
+<p>Now the files are staged. Check them on your local machine with a webserver, such as:</p>
+
+<pre><code>python -m SimpleHTTPServer 8888 &amp;
+open http://localhost:8888</code></pre>
+<p>If you are happy with results, publish it to the public:</p>
+
+<pre><code>git add .
+git commit -m "awesome new features"
+git push</code></pre>
+<p>About a minute after the push is done, it will be live.</p>
+<h3 id="Updating-the-Process-Book(s)">Updating the Process Book(s)<a class="anchor-link" href="#Updating-the-Process-Book(s)">&#182;</a></h3><p>The process books are stored in iPython/Jupyter notebooks.</p>
+
+<pre><code>cd &lt;wherever you put projects&gt;/cs171-project/processbook
+jupyter notebook</code></pre>
+<p>and then open the notebook you want to modify.</p>
+<p>When you are done, and are ready to publish a new version of the
+process book, there is a convenient script in the processbook directory called <code>publish.py</code></p>
+<p>This script converts the Jupyter notebooks to HTML, stitches them together, copies the results to the project website and updates the processbook
+index page.</p>
+<p>Once it has done it's thing, check it and then publish it publicly.</p>
+
+<pre><code>python publish.py
+cd ../../projectwebsite/cs171-project
+python -m SimpleHTTPServer 8888 &amp;
+open http://localhost:8888/processbook</code></pre>
+<p>If it all looks good, then publish it to the public:</p>
+
+<pre><code>git add .
+git commit -m "updates to processbook"
+git push</code></pre>
+<p>And then check it: <a href="http:/vis.chanceme.info/processbook">vis.chanceme.info/processbook</a></p>
 
 </div>
 </div>

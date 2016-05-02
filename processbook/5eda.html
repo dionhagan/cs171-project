@@ -186,6 +186,52 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Factor-Effects">Factor Effects<a class="anchor-link" href="#Factor-Effects">&#182;</a></h2><p>In order to provide details on the factor effects, we used two approaches. Overall effects were provided by the Sci-kit Learn <a href="http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html">Random Forest</a> classification, specifically the feature_importance property. In order to extract factors per school, we used Linear Mixed Model analysis using the following R code:</p>
+
+<pre><code>library(lmerTest)
+library(RJSONIO)
+##this is just one example of how LMER may be used to investigate
+##college-by-college differences. 
+
+datanormed&lt;-read.csv("../client/data/collegedata_normalized.csv")
+
+factors = c('canAfford','female','MinorityGender','MinorityRace','international','sports', 'earlyAppl')
+effects = list()
+
+for (i in factors) {
+  f &lt;- paste("acceptStatus~", i, "+(1+", i, "|name)")
+  print (f)
+  model&lt;-glmer(as.formula(f),family="binomial",data=datanormed)
+  df&lt;-data.frame(matrix(nrow=25,ncol=2))
+  df$names&lt;-row.names(coef(model)$name)
+  df$vals&lt;-coef(model)$name[,2]
+  df$X1 = NULL
+  df$X2 = NULL
+  effects[[i]] = df
+}
+
+outJS = toJSON(effects)
+write(outJS,"../client/data/factors.json")</code></pre>
+<p>We sketched a number of different means of comparing factor effects such as bar charts, maps, treemaps, ultimately deciding that a heatmap provided the best contrast and least cognitive load of interpretability for our audience.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Predictions">Predictions<a class="anchor-link" href="#Predictions">&#182;</a></h2><p>For the predictions, we started with a line graph so the applicant could easily see relative positioning between the different schools. After even a little user testing, we switched to a more intuitive scatterplot approach.</p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
