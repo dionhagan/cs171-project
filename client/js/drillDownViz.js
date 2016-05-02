@@ -28,7 +28,7 @@ DrillDownController.prototype.initFilters = function() {
 
   DD.filters = {}; 
 
-  var initColleges = "colleges" in localStorage ? JSON.parse(localStorage.getItem("colleges")) : ["Harvard", "Princton","Yale"];
+  var initColleges = "colleges" in localStorage ? JSON.parse(localStorage.getItem("colleges")) : ["Harvard", "Princeton","Yale"];
 
   for (collegeName in p171.data.colleges) {
     console.log(initColleges)
@@ -117,7 +117,7 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
   var DD = this;
 
   // Define characteristics of each bar
-  var barHeight = DD.height / DD.data.length
+  var barHeight = 50
       barYPos = function(d, i){ return (barHeight*i)+(i*2); },
       barClass = "factor-bar";
 
@@ -307,9 +307,6 @@ var drillDownCharts = {
       Effect: EffectGraph
     },
     "outofstate": {
-      Distribution: Histogram
-    },
-    "public": {
       Distribution: Histogram
     },
     "alumni": {

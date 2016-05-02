@@ -74,6 +74,26 @@ text.effect-values {
   z-index: 100;
 }
 
+g.factor-bar-graph rect {
+  cursor: pointer;
+}
+
+g.college-filters rect {
+  cursor: pointer;
+}
+
+rect.heat-cell {
+  cursor: pointer;
+}
+
+circle.points {
+  cursor: pointer;
+}
+
+g.back_to_heapmap rect {
+  cursor: pointer;
+}
+
 /* Drill Down Style*/
 h2 {
   text-align: center;
