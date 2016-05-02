@@ -154,7 +154,7 @@ Heatmap.prototype.updateAxes = function(xDomain, yDomain) {
         transform: function(school) {
           return "rotate(90) translate(60,0)";
         }
-      }); 
+      })
 
   vis.yAxisGroup
     .transition().duration(300)
@@ -167,6 +167,7 @@ Heatmap.prototype.updateAxes = function(xDomain, yDomain) {
           return "rotate(90) translate(50,20)";
         }
       })
+      .style("font-size",12)
       .text(function(d) { 
         if (d == "Underrepresented Minority") return  "Underrep. Min."
         else if (d == "International Student") return "Intnl Student"
@@ -336,9 +337,9 @@ Heatmap.prototype.createBarGraph = function() {
 
   returnTab.append("rect")
     .attr({
-      x: vis.width + vis.margin.left + 25,
+      x: vis.width + vis.margin.left ,
       y: vis.height - 20,
-      width: 80,
+      width: 65,
       height: 20,
       fill: "steelblue"
     })
@@ -351,8 +352,9 @@ Heatmap.prototype.createBarGraph = function() {
 
   returnTab.append("text")
     .attr({
-      x: vis.width + vis.margin.left + 35,
-      y: vis.height - 5
+      x: vis.width + vis.margin.left + 10,
+      y: vis.height - 5, 
+      fill: "white"
     })
     .style("color","white")
     .text("Back")

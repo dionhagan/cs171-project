@@ -44,6 +44,32 @@ Histogram.prototype.initVis = function () {
       transform: "translate(0,"+vis.height+")"
     })
 
+  var closeButton = vis.svg.append("g") 
+
+  closeButton.append("rect")
+    .attr({
+      height: 20,
+      width: 60,
+      fill: "lightsteelblue",
+      opacity: 0.6,
+      x: vis.width + vis.margin.left + 20,
+      y: vis.height - 15
+    })
+    .on("click", function(d) {
+      d3.select(this.parentNode.parentNode.parentNode.parentNode).html("")
+    })
+
+  closeButton.append("text")
+    .attr({
+      x: vis.width + vis.margin.left + 25,
+      y: vis.height
+    })
+    .text("Close")
+    .on("click", function(d) {
+      d3.select(this.parentNode.parentNode.parentNode.parentNode).html("")
+    })
+
+
   vis.updateVis();
 }
 

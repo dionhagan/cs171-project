@@ -199,7 +199,7 @@ DrillDownController.prototype.createBarsAndLabels = function(factor, svg) {
         delete DD.factors[factor].vis.subPlot;
       }
       DD.createMoreDetails(this);
-    });
+    })
 
   return {
     svg: svg,
