@@ -77,17 +77,6 @@ InteractiveVis.prototype.initVis = function(callback) {
 
   vis.svg.call(vis.tip);
 
-  // declare graph components
-  vis.line = d3.svg.line()
-    .interpolate("linear");
-
-  vis.chart = vis.svg.append("path")
-    .attr("class", "line")
-    .attr("fill", "none")
-    .attr("stroke", "white")
-    .attr("stroke-width", "1.5px");
-
-
   // attach event listeners to sliders
   vis.gpa_slider = d3.select("#gpa")
     .on("change", function() {
@@ -157,28 +146,25 @@ InteractiveVis.prototype.initVis = function(callback) {
 
   d3.select("#save")
     .on("click", function() {
-
-      if (vis.counter == 5) {
-        d3.selectAll(".point").remove();
+      if (vis.counter > 4) {
+        d3.selectAll(".series").remove();
         vis.counter = 1;
         vis.scenarios = [vis.displayData];
-        vis.saveScenario(vis.scenarios[0]);
-        return false;
+        vis.saveScenario(vis.scenarios);
+        vis.counter = vis.counter + 1;
       }
-
-      vis.scenarios[vis.counter - 1] = vis.displayData;
-
-      vis.saveScenario(vis.scenarios);
-
-      vis.counter = vis.counter + 1;
+      else { 
+        vis.scenarios[vis.counter - 1] = vis.displayData;
+        vis.saveScenario(vis.scenarios);
+        vis.counter = vis.counter + 1;
+      }
     });
 
   d3.select("#clear")
     .on("click", function() {
-      d3.selectAll(".point").remove();
+      d3.selectAll(".series").remove();
       vis.counter = 1;
-      vis.scenarios = [];
-      vis.saveScenario(vis.scenarios[0]);
+      vis.scenarios = [vis.displayData];
     });
 
   // first time through
@@ -339,8 +325,8 @@ InteractiveVis.prototype.updateVis = function() {
       return vis.y(d.prob)
     });
 
-  // vis.circle.exit().remove();
-  // vis.points.exit().remove();
+  //vis.circle.exit().remove();
+  // vis.points.exit().remove(); 
 }
 
 function showValue(elementID, newValue) {
@@ -349,6 +335,8 @@ function showValue(elementID, newValue) {
 
 InteractiveVis.prototype.saveScenario = function(data) {
   var vis = this; 
+
+  console.log(vis.counter);
 
   var savedColor = ["blue", "green", "orange", "purple"];
 
@@ -373,6 +361,8 @@ InteractiveVis.prototype.saveScenario = function(data) {
   for (var i = 0; i < data.length; i++) {
     vis.series.push(data[i]);
   }
+
+  console.log(vis.series);
 
   vis.points = vis.svg.selectAll(".series")
     .data(vis.series)
