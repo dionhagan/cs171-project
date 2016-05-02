@@ -264,6 +264,25 @@ InteractiveVis.prototype.updateVis = function() {
     });
   }
 
+  vis.newScenarios.map(function (scenario) {
+    if (p171.sortOrder == "name") {
+      // sort increasing
+      scenario.sort(function(a, b) {
+        // Ref: http://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
+        var nameA = a.college.toLowerCase(),
+        nameB = b.college.toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      });
+    } else {
+      // we are sorting by probability - sort decreasing
+      scenario.sort(function(a, b) {
+        return b.prob - a.prob;
+      });
+    }
+  });
+
   vis.x.domain(vis.newData.map(function(d) {
     return d.college;
   }));
