@@ -179,9 +179,9 @@ function storeData(err, collegeList, appData, appDataNorm, factorImportance, fac
 }
 
 function createVis() {
-  //p171.featureImportanceVis = new FeatureImportanceVis("feature-importance-vis");
-  //p171.hist = new Histogram("distribution");
-  //p171.scatter = new Scatter("scatter-plot");
+  // p171.featureImportanceVis = new FeatureImportanceVis("feature-importance-vis");
+  // p171.hist = new Histogram("distribution");
+  // p171.scatter = new Scatter("scatter-plot");
 
   // Determine which visualization to display based on the page
   if (window.location.pathname.indexOf("howitworks") >= 0) {

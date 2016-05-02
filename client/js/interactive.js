@@ -147,7 +147,7 @@ InteractiveVis.prototype.initVis = function(callback) {
   d3.select("#save")
     .on("click", function() {
       if (vis.counter > 4) {
-        d3.selectAll(".series").remove();
+        d3.selectAll(".point").remove();
         vis.counter = 1;
         vis.scenarios = [vis.displayData];
         vis.saveScenario(vis.scenarios);
@@ -162,9 +162,9 @@ InteractiveVis.prototype.initVis = function(callback) {
 
   d3.select("#clear")
     .on("click", function() {
-      d3.selectAll(".series").remove();
+      d3.selectAll(".point").remove();
       vis.counter = 1;
-      vis.scenarios = [vis.displayData];
+      vis.scenarios = [];
     });
 
   // first time through
@@ -232,16 +232,17 @@ InteractiveVis.prototype.updateVis = function() {
     }
   }
 
-  // vis.newScenarios = [];
-  // for (var k = 0; k < vis.scenarios.length; k++) {
-  //   for (var i = 0; i < vis.allSchools.length; i++) {
-  //     for (var j = 0; j < vis.displayData.length; j++) {
-  //       if (vis.scenarios[k][j].college == vis.allSchools[i]) {
-  //         vis.newScenarios.push(vis.scenarios[k][j]);
-  //       }
-  //     }
-  //   }  
-  // }
+  vis.newScenarios = vis.scenarios.map(function (scenario) {
+      return scenario.map(function (d) {
+         var keep = false;
+         for (var k = 0; k < vis.newData.length; k++) {
+            if (d.college == vis.newData[k].college) {
+              return true;
+            }
+         }
+         return false;
+      });
+  });
 
   if (p171.sortOrder == "name") {
     // sort increasing
@@ -271,7 +272,7 @@ InteractiveVis.prototype.updateVis = function() {
     .attr("dy", ".15em")
     .attr("transform", "rotate(-65)");
 
-  vis.circle = vis.svg.selectAll("circle")
+  vis.circle = vis.svg.selectAll(".dot")
     .data(vis.newData);
 
   vis.choice = document.getElementById('school-choice').value;
@@ -325,8 +326,14 @@ InteractiveVis.prototype.updateVis = function() {
       return vis.y(d.prob)
     });
 
-  //vis.circle.exit().remove();
-  // vis.points.exit().remove(); 
+  vis.circle.exit().remove();
+
+  if (vis.scenarios[0] != null) {
+    vis.saveScenario(vis.scenarios);
+  }
+  else {
+    return false;
+  }
 }
 
 function showValue(elementID, newValue) {
@@ -356,28 +363,79 @@ InteractiveVis.prototype.saveScenario = function(data) {
 
   vis.svg.call(vis.tip2);
 
-  vis.series = [vis.newData];
+  vis.seriesData = [];
 
   for (var i = 0; i < data.length; i++) {
-    vis.series.push(data[i]);
+    vis.seriesData.push(data[i]);
   }
 
-  console.log(vis.series);
+  console.log(vis.seriesData);
 
-  vis.points = vis.svg.selectAll(".series")
-    .data(vis.series)
-  .enter().append("g")
-    .attr("class", "series")
-    .style("fill", function(d, i) { return savedColor[i - 1]; })
-  .selectAll(".point")
+  vis.series = vis.svg.selectAll(".series")
+    .data(vis.seriesData);
+
+  vis.series
+  .enter().append("g");
+
+  vis.series
+    .attr("class", ".series")
+    .style("fill", function(d, i) { return savedColor[i]; });
+
+  vis.series.exit()
+    .transition().duration(800)
+    .style('opacity', 0)
+    .remove();
+
+  vis.points = vis.series.selectAll(".point")
     .data(function(d) { return d; });
 
   vis.points
-    .enter().append("circle")
+    .enter().append("circle");
+
+  vis.points
       .attr("class", "point")
       .attr("transform", "translate(20,5)")
       .attr("r", 4.5)
       .attr("cx", function(d) { return vis.x(d.college); })
       .attr("cy", function(d) { return vis.y(d.prob); });
+
+  vis.points.exit()
+     .transition().duration(800)
+     .style('opacity', 0)
+     .remove();
+
+  // vis.series = vis.svg.selectAll(".series")
+  //   .data(vis.seriesData);
+
+  // vis.series
+  //   .enter().append("g");
+
+  // vis.series
+  //   .attr("class", "series");
+
+  // // vis.series.exit()
+  // //   .transition().duration(800)
+  // //   .style('opacity', 0)
+  // //   .remove();
+
+  // vis.points = vis.series.selectAll(".point")
+  //   .data(function(d) { return d; });
+
+  // vis.points = vis.series
+  //   .enter().append("circle")
+  //     .attr("class", "point")
+  //     .attr("transform", "translate(20,5)")
+  //     .attr("r", 4.5)
+  //     .attr("cx", function(d) { console.log(d[0].college); return vis.x(d[0].college); })
+  //     .attr("cy", function(d) { return vis.y(d[0].prob); })
+  //     .style("fill", function(d, i, seriesNum) { return vis.z(seriesNum); })
+  //     .style('opacity', 0)
+  //     .transition().duration(800)
+  //     .style('opacity', 1);
+
+  // vis.points.exit()
+  //    .transition().duration(1000)
+  //    .style('opacity', 0)
+  //    .remove();
 
 }
