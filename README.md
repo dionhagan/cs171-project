@@ -17,7 +17,7 @@ David Wihl
 
 [Process Book](http://vis.chanceme.info/processbook)
 
-[Screencast](https://www.youtube.com/watch?v=ReiCsgWBUbA) (also found locally in `deliverables/teambraavos_final.mp4`)
+[Screencast](https://youtu.be/UG_e2PLbQAM) (also found locally in `deliverables/teambraavos_final.mp4`)
 
 ## git Directory Structure
 
