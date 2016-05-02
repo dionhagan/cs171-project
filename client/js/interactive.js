@@ -78,50 +78,17 @@ InteractiveVis.prototype.initVis = function(callback) {
   vis.svg.call(vis.tip);
 
   // attach event listeners to sliders
-  vis.gpa_slider = d3.select("#gpa")
-    .on("change", function() {
-      predict();
-    });
 
-  vis.sat_slider = d3.select("#sat")
-    .on("change", function() {
-      predict();
-    });
-
-  vis.act_slider = d3.select("#act")
-    .on("change", function() {
-      predict();
-    });
-
-  vis.num_ap_slider = d3.select("#num_ap")
-    .on("change", function() {
-      predict();
-    });
-
-  vis.ave_ap_slider = d3.select("#ave_ap")
-    .on("change", function() {
-      predict();
-    });
-
-  vis.num_sat_slider = d3.select("#num_sat")
-    .on("change", function() {
+  vis.sliders = d3.selectAll(".interactive-slider")
+    .on("change", function () {
       predict();
     });
 
   // attach event listeners to dropdowns
 
-  vis.gender_menu = d3.select("#gender")
-    .on("change", function() {
-      predict();
-    });
-
-  vis.race_menu = d3.select("#race")
-    .on("change", function() {
-      predict();
-    });
-
-  vis.hs_menu = d3.select("#hs")
-    .on("change", function() {
+  vis.dropdowns = d3.selectAll(".dropdown")
+    .on("change", function () {
+      d3.selectAll(".point").remove();
       predict();
     });
 
