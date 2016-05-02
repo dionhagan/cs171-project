@@ -16,12 +16,12 @@ import subprocess
 chapter_list = [
     ['1','1overview','Overview'],
     ['2','2related','Related Work'],
-    ['3','3questions','Questions Addressed'],
-    ['4','4data','Data Sources'],
-    ['5','5eda','Exploratory Data Analysis'],
-    ['6','6evolution','Evolution'],
-    ['7','7implementation','Implementation'],
-    ['8','8evaluation','Evaluation']
+#    ['3','3questions','Questions Addressed'],
+    ['3','4data','Data Sources'],
+    ['4','5eda','Exploratory Data Analysis'],
+    ['5','6evolution','Evolution'],
+    ['6','7implementation','Implementation'],
+    ['7','8evaluation','Evaluation']
     ]
 
 DESTDIR = '../../projectwebsite/cs171-project/processbook/'
