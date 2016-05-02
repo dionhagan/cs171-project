@@ -162,7 +162,7 @@ function storeData(err, collegeList, appData, appDataNorm, factorImportance, fac
       applicants[d.studentID].colleges[d.collegeID].appliedEarly = d.earlyAppl
     } else {
       applicants[d.studentID] = {}
-      applicants[d.studentID].app = {} 
+      applicants[d.studentID].app = {}
       applicants[d.studentID].colleges = {}
     }
   })
@@ -192,6 +192,6 @@ function createVis() {
   } else {
     predictRandom();
     p171.lineChart = new InteractiveVis('chart-area');
-    //p171.innovation3d = new Innovation3d('three-area');
+    p171.innovation3d = new Innovation3d('three-area');
   }
 }

@@ -1,3 +1,15 @@
+/*
+ * 3D Visualization, uses three.js
+ *
+ *  Scene has an unusual coordinate system:
+ *  Origin is 0,0,0
+ *  y is the vertical axis
+ *  x = -500 is deep into the scene
+ *  z = +250 is left of scene
+ *  z = -250 is right of scene
+ */
+
+
 var Innovation3d = function(_parentElement) {
   this.parentElement = _parentElement;
 
@@ -11,7 +23,7 @@ Innovation3d.prototype.initVis = function(callback) {
   vis.innerHeight = vis.innerWidth * vis.aspectratio;
   vis.zoneSize = 250;
   vis.zoneHeight = 200;
-  vis.college3d = [];
+  vis.college3d = []; //list of college objects
 
   // Colors
   vis.color = {};
@@ -30,28 +42,20 @@ Innovation3d.prototype.initVis = function(callback) {
     steps: 1
   };
   var loader = new THREE.FontLoader();
-  loader.load('fonts/optimer_regular.typeface.js', function(response) {
-    vis.options.font = response;
-    vis.buildBackground(response);
-    vis.wrangleData();
-  });
 
   var mesh, geometry;
-
   var sunLight, pointLight, ambientLight;
-
   var gui, shadowCameraHelper, shadowConfig = {
-
     shadowCameraVisible: false,
     shadowCameraNear: 750,
     shadowCameraFar: 4000,
     shadowCameraFov: 30,
     shadowBias: -0.0002
-
   };
 
   vis.clock = new THREE.Clock();
 
+  // remove any previous DOM items and add back new ones
   if (document.getElementById(vis.parentElement).childNodes.length > 0) {
     document.getElementById(vis.parentElement).removeChild(document.getElementById(vis.parentElement).childNodes[0]);
   }
@@ -60,14 +64,11 @@ Innovation3d.prototype.initVis = function(callback) {
 
 
   // CAMERA
-
   vis.camera = new THREE.PerspectiveCamera(45, vis.innerWidth / vis.innerHeight, 2, 1000000);
-  vis.camera.position.set(6 * vis.zoneSize, 4 * vis.zoneHeight, 100);
+  vis.camera.position.set(1340, 700, 125); //6 * vis.zoneSize, 4 * vis.zoneHeight, 100);
 
   // SCENE
-
   vis.scene = new THREE.Scene();
-  //vis.scene.fog = new THREE.Fog(0, 1000, 10000);
 
   // TEXTURES
   var textureLoader = new THREE.TextureLoader();
@@ -88,11 +89,7 @@ Innovation3d.prototype.initVis = function(callback) {
   textureLava.wrapS = textureLava.wrapT = THREE.RepeatWrapping;
   textureLava.format = THREE.RGBFormat;
 
-  //
-
-
   // GROUND
-
   var groundMaterial = new THREE.MeshPhongMaterial({
     shininess: 80,
     color: 0xffffff,
@@ -101,7 +98,6 @@ Innovation3d.prototype.initVis = function(callback) {
   });
 
   var planeGeometry = new THREE.PlaneBufferGeometry(100, 100);
-
   var ground = new THREE.Mesh(planeGeometry, groundMaterial);
   ground.position.set(0, 0, 0);
   ground.rotation.x = -Math.PI / 2;
@@ -111,7 +107,6 @@ Innovation3d.prototype.initVis = function(callback) {
   vis.scene.add(ground);
 
   // MATERIALS
-
   var materialPhong = new THREE.MeshPhongMaterial({
     shininess: 50,
     color: 0xffffff,
@@ -119,11 +114,7 @@ Innovation3d.prototype.initVis = function(callback) {
     map: textureLava
   });
 
-  // Objects are added in WrangleData()
-
-
   // LIGHTS
-
   ambientLight = new THREE.AmbientLight(0xffffff); //0x3f2806);
   vis.scene.add(ambientLight);
 
@@ -142,13 +133,11 @@ Innovation3d.prototype.initVis = function(callback) {
   vis.scene.add(sunLight);
 
   // SHADOW CAMERA HELPER
-
   shadowCameraHelper = new THREE.CameraHelper(sunLight.shadow.camera);
   shadowCameraHelper.visible = shadowConfig.shadowCameraVisible;
   vis.scene.add(shadowCameraHelper);
 
   // SKY
-
   var sky, sunSphere;
   sky = new THREE.Sky();
   vis.scene.add(sky.mesh);
@@ -190,7 +179,6 @@ Innovation3d.prototype.initVis = function(callback) {
 
 
   // RENDERER
-
   vis.renderer = new THREE.WebGLRenderer({
     antialias: true
   });
@@ -220,7 +208,7 @@ Innovation3d.prototype.initVis = function(callback) {
   vis.controls.keys = [65, 83, 68];
 
   // EVENTS
-
+  // The 3D visualization is responsive and works on mobile devices
   window.addEventListener('resize', onWindowResize, false);
 
   function onWindowResize(event) {
@@ -233,8 +221,15 @@ Innovation3d.prototype.initVis = function(callback) {
     vis.controls.handleResize();
   }
 
+  // load font asynchrononously. Once the font is loaded, the drawing can proceed
+  loader.load('fonts/optimer_regular.typeface.js', function(response) {
+    vis.options.font = response;
+    vis.buildBackground(response);
+    vis.wrangleData();
+  });
 }
 
+// Create the theatre
 Innovation3d.prototype.buildBackground = function(myFont) {
   var vis = this;
   var x, y, z, cube, angle, textGeometry, zoneLabel;
@@ -260,11 +255,9 @@ Innovation3d.prototype.buildBackground = function(myFont) {
 
   for (var zone = 0; zone < 6; zone++) {
     // pi /16 stones per semi-circle
-    //console.log("brick y",(zone * vis.zoneHeight) + vis.zoneHeight );
     for (var stone = 0; stone < 17; stone++) {
       angle = stone * Math.PI / 16 - (Math.PI / 2);
       r = (zone + 1) * vis.zoneSize;
-      //console.log("angle:" + angle * 57.3 + ",r=", r);
       z = Math.sin(angle) * r;
       x = -Math.sqrt(Math.pow(r, 2) - Math.pow(z, 2));
 
@@ -275,48 +268,37 @@ Innovation3d.prototype.buildBackground = function(myFont) {
         x, 0, z, angle));
     }
     // don't label the outermost band
-    if (zone == 5) continue;
-    zoneLabel = String((4 - zone) * 20) + "%-" + String((4 - zone + 1) * 20) + "%";
+    if (zone == 0) continue;
+    zoneLabel = String((zone - 1) * 20) + "%-" + String((zone) * 20) + "%";
     textGeometry = new THREE.TextGeometry(zoneLabel, options);
 
     var mesh = new THREE.Mesh(textGeometry, textMaterial);
     mesh.rotation.y = 1.5;
-    mesh.position.set(30 * zone + 80, 20, (zone + 1) * vis.zoneSize + 50);
+    mesh.position.set(30 * zone + 80, 20, -(zone * (vis.zoneSize - 20) - 75));
 
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     vis.scene.add(mesh);
   }
-
 }
 
+// Add a colored object to the scene
 Innovation3d.prototype.addObjectColor = function addObjectColor(geometry, color, x, y, z, ry) {
   function addObject(geometry, material, x, y, z, ry) {
-
     var tmpMesh = new THREE.Mesh(geometry, material);
-
-    //tmpMesh.material.color.offsetHSL(0.1, -0.1, 0);
-
     tmpMesh.position.set(x, y, z);
-
     tmpMesh.rotation.y = ry;
-
     tmpMesh.castShadow = true;
     tmpMesh.receiveShadow = true;
-
     return tmpMesh;
-
   }
+
   var material = new THREE.MeshPhongMaterial({
     color: color
   });
 
   return addObject(geometry, material, x, y, z, ry);
-
 }
-
-
-
 
 Innovation3d.prototype.wrangleData = function() {
   var vis = this;
@@ -325,43 +307,18 @@ Innovation3d.prototype.wrangleData = function() {
   drawColleges();
   vis.updateVis();
 
-
-  function addCubes(predictions, cube) {
-    var zoneCount = [0, 0, 0, 0, 0];
-    var zone;
-    var x, z, alt;
-    //console.log(predictions);
-    for (var i = 0; i < predictions.length; i++) {
-      zone = Math.floor(predictions[i].prob * 100 / 20);
-      x = zone * (-vis.zoneSize);
-      z = zoneCount[zone] * vis.zoneSize;
-      alt = (zoneCount[zone] % 2 == 0) ? 1 : -1;
-      z *= alt;
-      zoneCount[zone]++;
-      // close
-      vis.scene.add(vis.addObjectColor(cube, 0x00ff00, x, vis.zoneHeight, z, 0));
-    }
-    /*
-            addObjectColor(smallCube, 0x00ff00, -500, 50, 00, 0); // far
-            addObjectColor(smallCube, 0x00ff00, -250, 50, 00, 0); //middle
-            addObjectColor(smallCube, 0x00ff00, 0, 50, 00, 0); // close
-            addObjectColor(smallCube, 0x00ff00, 0, 50, -250, 0); // close right
-            addObjectColor(smallCube, 0x00ff00, 0, 50, 250, 0); // close left
-    */
-  }
-
-
   function drawColleges() {
 
     var zoneCount = [0, 0, 0, 0, 0];
     var zone;
-    var x, y, z, r, alt, angle;
+    var x, y, z, r, alt, angle, rotation;
     var cube;
+    var MAXITEMS = 12;
 
     for (var i = 0; i < p171.predictions.length; i++) {
+      // remove previous schools prior to adding them back
       if (vis.college3d[i]) {
         vis.scene.remove(vis.college3d[i]._3dmesh);
-        vis.scene.remove(vis.college3d[i]._3dbox);
         vis.college3d[i] = null;
       }
       if (vis.selectedSchools.indexOf(p171.predictions[i].college) < 0) continue;
@@ -369,18 +326,33 @@ Innovation3d.prototype.wrangleData = function() {
 
       // switch sides from left to right of center
       alt = (zoneCount[zone] % 2 == 0) ? 1 : -1;
-      angle = alt * zoneCount[zone] * Math.PI / 10;
-      r = (5 - zone) * vis.zoneSize;
+      // is there still space in this zone?
+      if (zoneCount[zone] < 7) {
+        angle = alt * zoneCount[zone] * Math.PI / MAXITEMS;
+        r = (zone + 1) * vis.zoneSize;
+        rotation = angle + Math.PI / 2;
+      } else {
+        // offset the items and move them closer
+        angle = alt * (zoneCount[zone] % MAXITEMS) * Math.PI / MAXITEMS + 0.5 * (Math.PI / MAXITEMS);
+        if (alt > 0) {
+          rotation = 5 / 8 * Math.PI;
+          r = (zone + 1) * vis.zoneSize - 200;
+        } else {
+          rotation = 0;
+          r = (zone + 1) * vis.zoneSize - 100;
+        }
+      }
+
       z = Math.sin(angle) * r;
       x = -Math.sqrt(Math.pow(r, 2) - Math.pow(z, 2));
-      y = (4 - zone) * vis.zoneHeight/ 2 + 150;
-      //console.log("zone,r,angle,x,z",p171.predictions[i].college,zone,r,angle*57.3,x,z);
+      y = (zone) * vis.zoneHeight / 2 + 150;
+      //console.log("zoneCount, zone,r,angle,x,z",p171.predictions[i].college,zoneCount[zone],zone,r,angle*57.3,x,z);
 
       zoneCount[zone]++;
-      vis.options.size = Math.max(20,(5- zone)* 10);
+      vis.options.size = Math.max(20, (zone) * 9);
       var textGeometry = new THREE.TextGeometry(p171.predictions[i].college, vis.options);
       var textMaterial = new THREE.MeshBasicMaterial({
-        color: vis.color.black, //p171.predictions[i].color,
+        color: vis.color.black, // was: p171.predictions[i].color,
         vertexColors: THREE.FaceColors,
         wireframe: false,
         opacity: 1.0,
@@ -390,29 +362,19 @@ Innovation3d.prototype.wrangleData = function() {
       });
 
       var mesh = new THREE.Mesh(textGeometry, textMaterial);
-      if (angle < (-Math.PI / 2)) {
-        mesh.rotation.y = angle - Math.PI / 2;
-      } else {
-        mesh.rotation.y = angle + Math.PI / 2;
-      }
-      if (angle > (Math.PI / 2)) {
-        mesh.rotation.y = angle - Math.PI / 2;
-      } else {
-        mesh.rotation.y = angle + Math.PI / 2;
-      }
-
+      mesh.rotation.y = rotation;
       mesh.position.set(x, y, z);
-
       mesh.castShadow = true;
       mesh.receiveShadow = true;
       vis.college3d[i] = {};
       vis.college3d[i]['_3dmesh'] = mesh;
       vis.scene.add(vis.college3d[i]['_3dmesh']);
 
-      // get size of resulting mesh
+      // to get size of resulting mesh
       //var box = new THREE.Box3().setFromObject(mesh);
       //console.log(p171.predictions[i].college,box.min, box.max, box.size());
 
+      // to add flag poles
       //cube = new THREE.BoxGeometry(1, 2*y, 10);
       //vis.college3d[i]['_3dbox'] = vis.addObjectColor(cube, 0x000000, x, 0, z, 0);
       //vis.scene.add(vis.college3d[i]['_3dbox']);
@@ -427,9 +389,9 @@ Innovation3d.prototype.updateVis = function() {
   // slow animation to 20 fps save CPU time
   // Ref: http://stackoverflow.com/questions/11285065/limiting-framerate-in-three-js-to-increase-performance-requestanimationframe
   function animate() {
-    setTimeout( function() {
+    setTimeout(function() {
       requestAnimationFrame(animate);
-    },1000/20.);
+    }, 1000 / 20.);
     render();
   }
 
